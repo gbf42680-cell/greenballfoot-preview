@@ -2107,6 +2107,85 @@
  #gbf-methode .gbf-mise-souscarte{padding:9px;}
  #gbf-methode .gbf-budget-split{padding:9px;}
 }
+
+/* V47 — Badge Stratégie principale à proximité immédiate du titre CombiMax. */
+#gbf-methode .method-column--bets .gbf-combimax-title-row {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  column-gap:10px;
+  row-gap:4px;
+  margin:0 0 3px;
+}
+#gbf-methode .method-column--bets .gbf-combimax-title-row h3 {
+  margin:0;
+  flex:0 0 auto;
+}
+#gbf-methode .method-column--bets .gbf-combimax-title-row .gbf-text-card-tag--principal {
+  display:inline-flex;
+  flex:0 1 auto;
+  align-items:center;
+  margin:0;
+  padding:4px 7px;
+  font-size:var(--gbf-fs-small);
+  white-space:normal;
+  overflow-wrap:normal;
+  line-height:1.25;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row > .gbf-text-card-header {
+  align-items:flex-start;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row .gbf-text-card-header-main {
+  min-width:0;
+  flex:1 1 0;
+}
+/* Cinq niveaux de texte moins imposants, sur tout le document. */
+#gbf-methode {
+  --gbf-fs-title:25px;
+  --gbf-fs-section:19px;
+  --gbf-fs-sub:15px;
+  --gbf-fs-body:13px;
+  --gbf-fs-small:11px;
+}
+/* Quelques tailles antérieures restaient codées en dur. */
+#gbf-methode .method-column--bets .gbf-paris-title-main {
+  font-size:var(--gbf-fs-section);
+}
+#gbf-methode .method-column--bets .gbf-paris-title-subtitle,
+#gbf-methode .gbf-combimax-title-row + p,
+#gbf-methode .gbf-text-card--solo .gbf-solo-subtitle,
+#gbf-methode .gbf-text-card-tag,
+#gbf-methode .gbf-txt-action,
+#gbf-methode .gbf-txt-bet-group {
+  line-height:1.35;
+}
+#gbf-methode .gbf-bets-solo-summary .gbf-solo-live-heading {
+  font-size:var(--gbf-fs-sub);
+}
+#gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo > .gbf-solo-subtitle {
+  font-size:var(--gbf-fs-body);
+}
+@media(max-width:740px) {
+  #gbf-methode {
+    --gbf-fs-title:22px;
+    --gbf-fs-section:18px;
+    --gbf-fs-sub:14px;
+    --gbf-fs-body:13px;
+    --gbf-fs-small:11px;
+  }
+  #gbf-methode .method-column--bets .gbf-combimax-title-row {
+    column-gap:7px;
+    row-gap:4px;
+  }
+  #gbf-methode .method-column--bets .gbf-combimax-title-row .gbf-text-card-tag--principal {
+    margin:0;
+    padding:4px 6px;
+  }
+  #gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo > .gbf-solo-subtitle {
+    font-size:var(--gbf-fs-body);
+    line-height:1.4;
+  }
+}
 </style>
 <!-- GreenBallFoot Methode : aperçu GitHub Pages, publication depuis main/root, 2026-11-09 -->
 </head>
@@ -2173,7 +2252,10 @@
           <header class="gbf-text-card-header">
             <span class="gbf-text-card-emblem"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-trophy"></use></svg></span>
             <div class="gbf-text-card-header-main">
-              <h3 id="gbf-text-combimax-title">CombiMax</h3>
+              <div class="gbf-combimax-title-row">
+                <h3 id="gbf-text-combimax-title">CombiMax</h3>
+                <span class="gbf-text-card-tag gbf-text-card-tag--principal">Stratégie principale</span>
+              </div>
               <p>Une stratégie combinée sur 4 matchs</p>
               <section class="gbf-bets-combi-scenarios" aria-label="Les deux scénarios CombiMax">
                 <p class="gbf-combimax-result-label">Permet de l'emporter :</p>
@@ -2181,7 +2263,6 @@
                 <div class="gbf-combimax-cas"><span class="gbf-combimax-num">2</span><span>Si tous les favoris gagnent</span></div>
               </section>
             </div>
-            <span class="gbf-text-card-tag">Stratégie principale</span>
           </header>
         </div>
         <div class="gbf-txt-stats" aria-label="Composition du CombiMax">

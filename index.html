@@ -1926,6 +1926,65 @@
   }
   #gbf-methode .gbf-bets-solo-summary {padding:10px 12px;}
 }
+
+/* V42 — Titres, scénarios et étiquettes harmonisés dans la carte Les paris. */
+#gbf-methode .method-column--bets .gbf-paris-formules-summary {
+  margin:9px 0 17px;
+  text-align:center;
+  color:#1c5c81;
+  font-size:var(--gbf-fs-sub);
+  line-height:1.35;
+  font-weight:800;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row {
+  display:block;
+  margin-bottom:14px;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row > .gbf-text-card-header {
+  display:flex;
+  align-items:flex-start;
+  flex-wrap:nowrap;
+  gap:12px;
+  height:auto;
+  padding:4px 0 14px;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row .gbf-text-card-header-main {
+  min-width:0;
+  flex:1 1 auto;
+}
+#gbf-methode .method-column--bets .gbf-bets-combi-scenarios {
+  display:block;
+  margin:12px 0 0;
+  padding:0;
+  border:0;
+  background:none;
+}
+#gbf-methode .method-column--bets .gbf-bets-combi-scenarios .gbf-combimax-result-label {
+  margin:0 0 6px;
+  color:#244d61;
+  font-size:var(--gbf-fs-body);
+  font-weight:800;
+  line-height:1.4;
+}
+#gbf-methode .method-column--bets .gbf-bets-combi-scenarios .gbf-combimax-cas {
+  margin:6px 0 0 15px;
+  color:#30574c;
+  font-weight:700;
+}
+#gbf-methode .gbf-text-card--solo .gbf-text-card-tag--solo {
+  color:#246848;
+  background:#e5f3e9;
+  border:1px solid #c6e4d1;
+}
+@media(max-width:740px) {
+  #gbf-methode .method-column--bets .gbf-combimax-head-row > .gbf-text-card-header {
+    flex-wrap:wrap;
+  }
+  #gbf-methode .method-column--bets .gbf-combimax-head-row .gbf-text-card-tag,
+  #gbf-methode .gbf-text-card--solo .gbf-text-card-tag--solo {
+    margin-left:52px;
+  }
+}
 </style>
 <!-- GreenBallFoot Methode : aperçu GitHub Pages, publication depuis main/root, 2026-11-09 -->
 </head>
@@ -1975,7 +2034,7 @@
 </aside>
 <div class="method-column method-column--bets" aria-labelledby="gbf-bets-title">
     <h2 id="gbf-bets-title">LES PARIS</h2>
-    <p class="gbf-paris-formules-summary">2 formules de paris : <strong>CombiMax</strong> et <strong>Solo Live</strong></p>
+    <p class="gbf-paris-formules-summary"><strong>CombiMax</strong> &amp; <strong>Solo Live</strong></p>
     <div class="gbf-text-cards" aria-label="Présentations textuelles CombiMax et Solo Live">
       <svg class="gbf-txt-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
   <symbol id="gbf-icon-trophy" viewBox="0 0 24 24"><path d="M7 4h10v6a5 5 0 0 1-10 0V4Zm0 2H4v2a4 4 0 0 0 3 4m10-6h3v2a4 4 0 0 1-3 4M12 15v5m-5 1h10"/></symbol>
@@ -1995,14 +2054,14 @@
             <div class="gbf-text-card-header-main">
               <h3 id="gbf-text-combimax-title">CombiMax</h3>
               <p>Une stratégie combinée sur 4 matchs</p>
+              <section class="gbf-bets-combi-scenarios" aria-label="Les deux scénarios CombiMax">
+                <p class="gbf-combimax-result-label">Permet de l'emporter :</p>
+                <div class="gbf-combimax-cas"><span class="gbf-combimax-num">1</span><span>En cas de match nul</span></div>
+                <div class="gbf-combimax-cas"><span class="gbf-combimax-num">2</span><span>Si tous les favoris gagnent</span></div>
+              </section>
             </div>
             <span class="gbf-text-card-tag">Stratégie principale</span>
           </header>
-          <section class="gbf-bets-combi-scenarios" aria-label="Les deux scénarios CombiMax">
-            <p class="gbf-combimax-title"><u>Le Combimax</u> (système de 12 paris) permet de l'emporter :</p>
-    <div class="gbf-combimax-cas"><span class="gbf-combimax-num">1</span><span class="">En cas de match nul</span></div>
-    <div class="gbf-combimax-cas"><span class="gbf-combimax-num">2</span><span>Si tous les favoris gagnent</span></div>
-          </section>
         </div>
         <div class="gbf-txt-stats" aria-label="Composition du CombiMax">
           <div class="gbf-txt-stat"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-calendar"></use></svg><span>4 matchs sélectionnés</span></div>
@@ -2029,6 +2088,7 @@
           <span class="gbf-text-card-emblem"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-shield"></use></svg></span>
           <!-- Titre officiel de la carte : Solo Live (sans « Stratégie »). -->
           <div class="gbf-text-card-header-main"><h3 id="gbf-text-solo-title">Solo Live</h3></div>
+          <span class="gbf-text-card-tag gbf-text-card-tag--solo">Stratégie complémentaire</span>
         </header>
         <section class="gbf-bets-solo-summary" aria-label="Les quatre objectifs du Solo Live">
           <p class="gbf-solo-live-note">

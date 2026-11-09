@@ -1579,6 +1579,102 @@
     font-size:14px;
   }
 }
+
+/* V39 — Échelle typographique unifiée : 5 niveaux, sans changer la disposition.
+   Titres 28 | sections 21 | sous-titres 17 | texte 14 | détails 12 px. */
+#gbf-methode {
+  --gbf-fs-title:28px;
+  --gbf-fs-section:21px;
+  --gbf-fs-sub:17px;
+  --gbf-fs-body:14px;
+  --gbf-fs-small:12px;
+  font-size:var(--gbf-fs-body);
+  line-height:1.45;
+}
+/* 1 — Identité principale. */
+#gbf-methode h1.gbf-method-title {
+  font-size:var(--gbf-fs-title);
+  line-height:1.2;
+}
+#gbf-methode h1.gbf-method-title .gbf-method-subtitle {
+  font-size:var(--gbf-fs-body);
+  line-height:1.25;
+}
+/* 2 — Titres de grandes cartes et sigles distinctifs des indices. */
+#gbf-methode .method-column h2,
+#gbf-methode .method-column--calculateur.gbf-calculateur h2,
+#gbf-methode .gbf-formules-heading h3,
+#gbf-methode .gbf-text-card-header h3,
+#gbf-methode .method-column .index-acronym {
+  font-size:var(--gbf-fs-section);
+  line-height:1.25;
+}
+/* 3 — Accroches, rubriques internes et intitulés des sous-cartes. */
+#gbf-methode .gbf-hypothese p.gbf-hypothese-postulat,
+#gbf-methode .gbf-main-layout .gbf-strategie-card .gbf-hypothese-texte,
+#gbf-methode .method-column--indices > .gbf-consequence p.gbf-consequence-text,
+#gbf-methode .gbf-combimax-title,
+#gbf-methode .gbf-hypothese .gbf-solo-live-note .gbf-solo-live-heading,
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte h3,
+#gbf-methode .gbf-budget-split h3,
+#gbf-methode .gbf-txt-section-title,
+#gbf-methode .gbf-split-value b,
+#gbf-methode .gbf-more-details > summary,
+#gbf-methode .gbf-content .gbf-chapter,
+#gbf-methode .gbf-content .gbf-index-title,
+#gbf-methode .gbf-content h3 {
+  font-size:var(--gbf-fs-sub);
+  line-height:1.35;
+}
+/* 4 — Tous les textes de lecture et libellés opérationnels. */
+#gbf-methode .method-column .indices-lead,
+#gbf-methode .method-column .index-name,
+#gbf-methode .method-column .index-desc,
+#gbf-methode .formula,
+#gbf-methode .gbf-combimax-cas,
+#gbf-methode .gbf-hypothese .gbf-hypothese-combimax .gbf-solo-live-note,
+#gbf-methode .gbf-hypothese .gbf-solo-live-note .gbf-solo-live-desc,
+#gbf-methode .method-column--calculateur.gbf-calculateur p,
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte p,
+#gbf-methode .method-column--calculateur .gbf-calculateur-criteres,
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte .gbf-calculateur-criteres,
+#gbf-methode .gbf-budget-split .gbf-split-intro,
+#gbf-methode .gbf-text-card-header p,
+#gbf-methode .gbf-txt-stat,
+#gbf-methode .gbf-txt-bet-label,
+#gbf-methode .gbf-txt-intro,
+#gbf-methode .gbf-txt-action strong,
+#gbf-methode .gbf-txt-action p,
+#gbf-methode .gbf-split-value small,
+#gbf-methode .gbf-content,
+#gbf-methode .gbf-content .gbf-subhead {
+  font-size:var(--gbf-fs-body);
+  line-height:1.45;
+}
+/* 5 — Notes et détails : une seule petite taille lisible. */
+#gbf-methode .disclaimer,
+#gbf-methode .gbf-text-card-tag,
+#gbf-methode .gbf-txt-pari,
+#gbf-methode .gbf-txt-pari strong,
+#gbf-methode .gbf-split-value em,
+#gbf-methode .gbf-split-foot {
+  font-size:var(--gbf-fs-small);
+  line-height:1.35;
+}
+/* Les éléments de navigation, références secondaires et icônes conservent
+   leur rôle visuel ; les chiffres et le contenu restent inchangés. */
+@media(max-width:740px) {
+  #gbf-methode {
+    --gbf-fs-title:23px;
+    --gbf-fs-section:19px;
+    --gbf-fs-sub:16px;
+  }
+  #gbf-methode .gbf-txt-bet-group {
+    grid-template-columns:minmax(0,1fr);
+    gap:6px;
+  }
+}
+
 </style>
 <!-- GreenBallFoot Methode : aperçu GitHub Pages, publication depuis main/root, 2026-11-09 -->
 </head>

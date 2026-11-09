@@ -2186,6 +2186,79 @@
     line-height:1.4;
   }
 }
+
+/* V48 — Badges au plus près des deux titres, cadres légèrement renforcés. */
+#gbf-methode .gbf-text-card--combi {
+  border:1px solid #d1a04e;
+  border-top:4px solid #c19037;
+  background:linear-gradient(150deg,#fffdf8 0%,#fff9eb 100%);
+  box-shadow:0 3px 12px rgba(151,103,35,.13);
+}
+#gbf-methode .gbf-text-card--solo {
+  border:1px solid #76b08d;
+  border-top:4px solid #2f9566;
+  background:linear-gradient(150deg,#fbfffc 0%,#eff9f2 100%);
+  box-shadow:0 3px 12px rgba(35,115,75,.13);
+}
+#gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo {
+  grid-template-columns:42px minmax(0,1fr);
+}
+#gbf-methode .gbf-text-card-header--solo > .gbf-text-card-header-main {
+  grid-column:2;
+  min-width:0;
+}
+#gbf-methode .gbf-solo-title-row {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  column-gap:10px;
+  row-gap:4px;
+  margin:0;
+  min-width:0;
+}
+#gbf-methode .gbf-solo-title-row h3 {
+  margin:0;
+  flex:0 0 auto;
+}
+#gbf-methode .gbf-solo-title-row .gbf-text-card-tag--solo {
+  display:inline-flex;
+  align-items:center;
+  margin:0;
+  padding:4px 7px;
+  font-size:var(--gbf-fs-small);
+  line-height:1.25;
+  white-space:normal;
+}
+#gbf-methode .gbf-text-card-header--solo > .gbf-solo-subtitle {
+  grid-column:2/-1;
+  grid-row:2;
+  margin:0;
+  color:#355747;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo {
+    grid-template-columns:36px minmax(0,1fr);
+    row-gap:5px;
+  }
+  #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-emblem {
+    grid-row:1;
+  }
+  #gbf-methode .gbf-text-card-header--solo > .gbf-solo-subtitle {
+    grid-column:1/-1;
+    grid-row:2;
+    margin:3px 0 0;
+    font-size:var(--gbf-fs-body);
+    line-height:1.4;
+  }
+  #gbf-methode .gbf-solo-title-row {
+    column-gap:7px;
+    row-gap:4px;
+  }
+  #gbf-methode .gbf-solo-title-row .gbf-text-card-tag--solo {
+    padding:4px 6px;
+    margin:0;
+  }
+}
 </style>
 <!-- GreenBallFoot Methode : aperçu GitHub Pages, publication depuis main/root, 2026-11-09 -->
 </head>
@@ -2288,8 +2361,12 @@
       <article class="gbf-text-card gbf-text-card--solo" aria-labelledby="gbf-text-solo-title">
         <header class="gbf-text-card-header gbf-text-card-header--solo">
           <span class="gbf-text-card-emblem"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-shield"></use></svg></span>
-          <div class="gbf-text-card-header-main"><h3 id="gbf-text-solo-title">Solo Live</h3></div>
-          <span class="gbf-text-card-tag gbf-text-card-tag--solo">Stratégie complémentaire</span>
+          <div class="gbf-text-card-header-main">
+            <div class="gbf-solo-title-row">
+              <h3 id="gbf-text-solo-title">Solo Live</h3>
+              <span class="gbf-text-card-tag gbf-text-card-tag--solo">Stratégie complémentaire</span>
+            </div>
+          </div>
           <p class="gbf-solo-subtitle">Des paris ajustés à l’évolution de la série pour protéger les mises et optimiser le résultat final.</p>
         </header>
         <section class="gbf-bets-solo-summary" aria-label="Les quatre objectifs du Solo Live">

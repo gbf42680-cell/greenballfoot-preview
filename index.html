@@ -2026,6 +2026,87 @@
   line-height:1.3;
   text-transform:none;
 }
+
+/* V46 : meilleure lisibilité mobile et mise en page verticale resserrée. */
+#gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo {
+ display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;
+ column-gap:10px;row-gap:5px;padding:0 0 9px;
+}
+#gbf-methode .gbf-text-card-header--solo > .gbf-text-card-emblem{grid-column:1;grid-row:1;}
+#gbf-methode .gbf-text-card-header--solo > .gbf-text-card-header-main{grid-column:2;grid-row:1;min-width:0;}
+#gbf-methode .gbf-text-card-header--solo > .gbf-text-card-tag--solo{
+ grid-column:3;grid-row:1;justify-self:end;margin:0;white-space:nowrap;
+}
+#gbf-methode .gbf-text-card-header--solo > .gbf-solo-subtitle{
+ grid-column:2/-1;grid-row:2;min-width:0;max-width:100%;
+ margin:0;padding:0;color:#3c5b50;font-size:var(--gbf-fs-body);font-weight:600;
+ line-height:1.4;letter-spacing:normal;white-space:normal;overflow-wrap:break-word;text-wrap:pretty;
+}
+/* Densité : espaces réduits, taille de texte préservée. */
+#gbf-methode{padding:8px 9px 15px;}
+#gbf-methode h1.gbf-method-title{min-height:80px;padding:7px 12px;margin-bottom:10px;}
+#gbf-methode .method-columns.gbf-main-layout.gbf-one-column-layout{gap:10px;margin-bottom:10px;}
+#gbf-methode .gbf-one-column-layout > .gbf-postulat-card{padding:12px 14px;}
+#gbf-methode .gbf-one-column-layout > .gbf-strategie-card{padding:12px 14px;}
+#gbf-methode .method-column--indices,#gbf-methode .method-column--bets{padding:11px;}
+#gbf-methode .method-column h2{padding:9px 12px;margin-bottom:9px;}
+#gbf-methode .method-column--indices > .gbf-consequence{margin-bottom:8px;}
+#gbf-methode .method-column--indices > .gbf-consequence p.gbf-consequence-text{padding:9px 11px;}
+#gbf-methode .method-column .indices-lead{margin-bottom:7px;padding:7px 9px;}
+#gbf-methode .method-column--indices .cards{gap:8px;}
+#gbf-methode .method-column .index-card{min-height:0;padding:10px 12px;}
+#gbf-methode .method-column .index-name{margin-bottom:3px;}
+#gbf-methode .formula{margin-top:7px;}
+#gbf-methode .disclaimer{margin-top:5px;}
+#gbf-methode .gbf-text-cards{gap:10px;}
+#gbf-methode .gbf-text-card{padding:11px 12px;}
+#gbf-methode .method-column--bets h2#gbf-bets-title{padding:9px 12px;margin-bottom:10px;}
+#gbf-methode .gbf-text-card-header{padding-bottom:9px;}
+#gbf-methode .method-column--bets .gbf-combimax-head-row{margin-bottom:8px;}
+#gbf-methode .method-column--bets .gbf-bets-combi-scenarios{margin-top:8px;}
+#gbf-methode .gbf-txt-stats{gap:6px;margin:8px 0 10px;}
+#gbf-methode .gbf-txt-stat{padding:6px 8px;}
+#gbf-methode .gbf-txt-section-title{margin-bottom:5px;padding-bottom:5px;}
+#gbf-methode .gbf-txt-bet-group{padding:7px 0;}
+#gbf-methode .gbf-bets-solo-summary{margin:8px 0 0;padding:9px 11px;}
+#gbf-methode .gbf-bets-solo-summary .gbf-solo-live-heading{margin-bottom:5px;}
+#gbf-methode .gbf-bets-solo-summary .gbf-combimax-cas{margin-top:4px;}
+#gbf-methode .gbf-bets-solo-summary + .gbf-txt-solo-main{margin-top:8px;}
+#gbf-methode .gbf-txt-actions{gap:6px;}
+#gbf-methode .gbf-txt-action{gap:9px;padding:8px 10px;}
+#gbf-methode .method-column--calculateur.gbf-calculateur{padding:11px 12px;}
+#gbf-methode .method-column--calculateur.gbf-calculateur h2{margin-bottom:9px;padding:9px;}
+#gbf-methode .gbf-mises-full .gbf-mise-souscartes{gap:9px;}
+#gbf-methode .gbf-mise-souscarte{padding:10px 12px;}
+#gbf-methode .gbf-budget-split{padding:10px 12px;}
+@media(max-width:740px){
+ #gbf-methode{padding:6px 6px 12px;}
+ #gbf-methode h1.gbf-method-title{min-height:72px;padding:6px 7px;margin-bottom:8px;}
+ #gbf-methode .method-columns.gbf-main-layout.gbf-one-column-layout{gap:8px;margin-bottom:8px;}
+ #gbf-methode .gbf-one-column-layout > .gbf-postulat-card,
+ #gbf-methode .gbf-one-column-layout > .gbf-strategie-card{padding:10px 11px;}
+ #gbf-methode .method-column--indices,#gbf-methode .method-column--bets{padding:8px;}
+ #gbf-methode .method-column .index-card{padding:9px 8px;}
+ #gbf-methode .gbf-text-card{padding:9px;}
+ #gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo{
+  grid-template-columns:36px minmax(0,1fr);column-gap:9px;row-gap:4px;padding-bottom:8px;
+ }
+ #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-emblem{
+  width:36px;height:36px;grid-column:1;grid-row:1/3;
+ }
+ #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-emblem .gbf-txt-icon{width:23px;height:23px;}
+ #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-header-main{grid-column:2;grid-row:1;}
+ #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-tag--solo{
+  grid-column:2;grid-row:2;justify-self:start;margin:0;white-space:normal;
+ }
+ #gbf-methode .gbf-text-card-header--solo > .gbf-solo-subtitle{
+  grid-column:1/-1;grid-row:3;margin:4px 0 0;font-size:14px;line-height:1.4;text-align:left;
+ }
+ #gbf-methode .gbf-txt-action{padding:7px 8px;}
+ #gbf-methode .method-column--calculateur.gbf-calculateur{padding:9px;}
+ #gbf-methode .gbf-mise-souscarte{padding:9px;}
+ #gbf-methode .gbf-budget-split{padding:9px;}
+}
 </style>
 <!-- GreenBallFoot Methode : aperçu GitHub Pages, publication depuis main/root, 2026-11-09 -->
 </head>
@@ -2124,11 +2205,11 @@
         </section>
       </article>
       <article class="gbf-text-card gbf-text-card--solo" aria-labelledby="gbf-text-solo-title">
-        <header class="gbf-text-card-header">
+        <header class="gbf-text-card-header gbf-text-card-header--solo">
           <span class="gbf-text-card-emblem"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-shield"></use></svg></span>
-          <!-- Titre officiel de la carte : Solo Live (sans « Stratégie »). -->
-          <div class="gbf-text-card-header-main"><h3 id="gbf-text-solo-title">Solo Live</h3><p class="gbf-solo-subtitle">Des paris ajustés à l’évolution de la série pour protéger les mises et optimiser le résultat final.</p></div>
+          <div class="gbf-text-card-header-main"><h3 id="gbf-text-solo-title">Solo Live</h3></div>
           <span class="gbf-text-card-tag gbf-text-card-tag--solo">Stratégie complémentaire</span>
+          <p class="gbf-solo-subtitle">Des paris ajustés à l’évolution de la série pour protéger les mises et optimiser le résultat final.</p>
         </header>
         <section class="gbf-bets-solo-summary" aria-label="Les quatre objectifs du Solo Live">
           <p class="gbf-solo-live-note">

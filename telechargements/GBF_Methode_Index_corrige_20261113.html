@@ -2331,6 +2331,18 @@
   #gbf-methode .gbf-content .gbf-ifh-description {font-size:12px;}
 }
 
+
+/* Légende pédagogique des symboles CombiMax. */
+#gbf-methode .gbf-combimax-legende {
+  margin:5px 0 11px; padding:9px 12px;
+  color:#3b594b; background:rgba(238,247,243,.9);
+  border:1px solid #cbded4; border-left:3px solid #7db39d;
+  border-radius:6px; font-size:var(--gbf-fs-small,12px);
+  line-height:1.55; font-weight:450; overflow-wrap:break-word;
+}
+#gbf-methode .gbf-combimax-legende b {font-weight:800;color:#12593f;}
+#gbf-methode .gbf-combimax-legende strong {font-weight:800;color:#1e573e;}
+
 </style>
 <!-- GreenBallFoot Methode : aperçu GitHub Pages, publication depuis main/root, 2026-11-09 -->
 </head>
@@ -2346,7 +2358,7 @@
 </aside>
 <div class="method-column method-column--indices" aria-labelledby="gbf-indices-title">
   <div class="gbf-consequence" aria-label="Conséquence">
-    <p class="gbf-consequence-text"><span class="gbf-consequence-arrow" aria-hidden="true">→</span><span>4 indices complémentaires pour mieux témoigner du facteur humain</span></p>
+    <p class="gbf-consequence-text"><span class="gbf-consequence-arrow" aria-hidden="true">→</span><span>4 indices complémentaires pour une évaluation sportive plus complète.</span></p>
   </div>
     <h2 id="gbf-indices-title">1) Présélectionner les matchs : LES INDICES</h2>
     <p class="indices-lead" style="font-weight:500;line-height:1.5;text-align:left"><strong>L’Indice Global (IG) résulte de la combinaison pondérée de trois indices complémentaires : la force statistique (IGBF), la dynamique récente (IFx) et le contexte humain (ICN).</strong> L’IG est calculé pour les 6 premiers du classement dynamique de chacun des 5 championnats et pour les équipes historiques. L’IG permet de classer les équipes. Il ne représente pas une probabilité de victoire.</p>
@@ -2417,6 +2429,7 @@
           <div class="gbf-txt-stat"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-chart"></use></svg><span>3 simples</span></div>
         </div>
         <h4 class="gbf-txt-section-title">Les 12 paris</h4>
+        <p class="gbf-combimax-legende" role="note" aria-label="Légende des symboles des paris"><strong>Lire les paris :</strong> <b>1</b> = victoire du favori ; <b>N</b> = match nul ; <b>2</b> = victoire de l’adversaire ; <b>–</b> = match non inclus dans le pari.</p>
         <section class="gbf-txt-bet-group" aria-label="Un combiné principal">
           <div class="gbf-txt-bet-label"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-layers"></use></svg><strong>1 combiné principal</strong></div>
           <div class="gbf-txt-bets"><span class="gbf-txt-pari"><span>Pari 1 :</span><strong>1111</strong></span></div>
@@ -2463,7 +2476,7 @@
   </div>
 </section>
 <aside class="method-column method-column--calculateur gbf-calculateur gbf-mises-full" aria-labelledby="gbf-calculateur-title">
-    <h2 id="gbf-calculateur-title"><span class="gbf-mises-title-main">3) MISES</span><span class="gbf-mises-title-subtitle">CombiMax + Solo Live (éventuel(s)) = Pourcentage évolutif de la Bankroll</span></h2>
+    <h2 id="gbf-calculateur-title"><span class="gbf-mises-title-main">3) MISES</span><span class="gbf-mises-title-subtitle">CombiMax et interventions éventuelles Solo Live : un budget défini en pourcentage de la bankroll.</span></h2>
     <div class="gbf-mise-souscartes">
       <section class="gbf-mise-souscarte gbf-mise-souscarte--combi" aria-labelledby="gbf-mise-combi-title">
         <h3 id="gbf-mise-combi-title">CombiMax</h3>
@@ -2498,7 +2511,7 @@
           <div class="gbf-split-value gbf-split-value--simples"><b id="gbf-pct-simples">32,3 %</b><small>CombiMax Simples</small><em>Paris de 10 à 12 · 38 % des 85 %</em></div>
           <div class="gbf-split-value gbf-split-value--solo"><b id="gbf-pct-solo">15 %</b><small>Solo Live</small><em>Interventions éventuelles</em></div>
         </div>
-        <p class="gbf-split-foot">Exemple : 85 % pour les 12 paris CombiMax (62 % combinés/couvertures, 38 % CombiMax Simples) et 15 % pour le Solo Live. Les curseurs ne placent aucun pari.</p>
+        <p class="gbf-split-foot"><strong>Exemple pédagogique uniquement, sans lien obligatoire avec la répartition appliquée aux différentes séries.</strong> Ici, 85 % sont affectés aux 12 paris CombiMax (62 % combinés/couvertures, 38 % CombiMax Simples) et 15 % au Solo Live. Les curseurs permettent seulement de simuler une répartition : ils ne placent aucun pari.</p>
       </section>
     </div>
   </aside>

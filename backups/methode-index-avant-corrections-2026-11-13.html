@@ -1,0 +1,2581 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<title>La méthode GreenBallFoot</title>
+<style>
+    /* Méthode GreenBallFoot — esthétique des cartes de l'accueil V5/V6.
+       Fonds translucides sombres + textes très contrastés, avec une marge
+       d'accessibilité même si l'intégration est affichée sur fond clair. */
+    #gbf-methode {
+      --gbf-white:#ffffff; --gbf-cream:#fff0c5;
+      --gbf-mint:#d5ffe9; --gbf-muted:#ecf7ef;
+      font:400 14px/1.38 Arial,Helvetica,sans-serif;
+      color:var(--gbf-white); max-width:780px; margin:0 auto;
+      padding:9px 7px 12px; box-sizing:border-box; background:transparent;
+    }
+    #gbf-methode *,#gbf-methode *::before,#gbf-methode *::after {box-sizing:border-box;}
+    #gbf-methode h1 {
+      margin:0 0 10px; text-align:center; font-size:clamp(21px,2.8vw,25px);
+      line-height:1.18; font-weight:850; color:#fff3cd;
+      text-shadow:0 2px 5px rgba(0,0,0,.93),0 0 3px rgba(0,0,0,.8);
+    }
+    #gbf-methode h2 {
+      margin:15px 0 5px; text-align:center; font-size:clamp(18px,2.4vw,21px);
+      line-height:1.2; color:#fff3cd; font-weight:850;
+      text-shadow:0 2px 5px rgba(0,0,0,.95);
+    }
+    #gbf-methode p {margin:0;}
+    #gbf-methode .step,#gbf-methode .index-card {
+      position:relative; overflow:hidden;
+      background:rgba(9,34,28,.74);
+      border:1px solid rgba(91,209,157,.79);
+      border-radius:12px;
+      box-shadow:0 3px 10px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.12);
+      backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+      color:#fff;
+    }
+    #gbf-methode .step {padding:8px 12px;text-align:center;}
+    #gbf-methode .step-title {
+      font-size:14px; font-weight:800; line-height:1.26; margin:0 0 2px;
+      color:#ffffff; text-shadow:0 1px 2px rgba(0,0,0,.75);
+    }
+    #gbf-methode .step-desc {
+      font-size:12.5px; line-height:1.34; color:#e9f5ec;
+      text-shadow:0 1px 2px rgba(0,0,0,.45);
+    }
+    #gbf-methode .step--green {
+      background:rgba(3,66,45,.73); border-color:rgba(112,234,167,.86);
+    }
+    #gbf-methode .step--gold {
+      background:rgba(81,54,18,.73); border-color:rgba(255,202,94,.86);
+    }
+    #gbf-methode .step--gold .step-title {color:#ffe2a0;}
+    #gbf-methode .arrow {
+      text-align:center; height:16px; line-height:16px; font-size:18px;
+      font-weight:700; color:#ffe3a3; user-select:none;
+      text-shadow:0 1px 4px rgba(0,0,0,.95);
+    }
+    #gbf-methode .branches {display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    #gbf-methode .branches .step {min-width:0;padding:9px 8px;}
+    #gbf-methode .branches .step:last-child {
+      background:rgba(23,50,89,.75);border-color:rgba(125,182,247,.85);
+    }
+    #gbf-methode .branches .step:last-child .step-title {color:#deefff;}
+    #gbf-methode .indices-lead {
+      margin:0 0 9px; color:#ffffff; font-size:12.5px;
+      text-align:center; font-weight:650;
+      text-shadow:0 1px 4px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,.95);
+    }
+    #gbf-methode .cards {
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
+    }
+    #gbf-methode .index-card {
+      min-width:0;min-height:117px;padding:10px 10px 11px;
+      background:rgba(12,44,34,.74);
+      border-color:rgba(126,204,166,.7);
+    }
+    #gbf-methode .index-card:nth-child(2) {
+      background:rgba(25,44,66,.73);border-color:rgba(136,181,230,.75);
+    }
+    #gbf-methode .index-card:nth-child(3) {
+      background:rgba(62,45,18,.74);border-color:rgba(237,186,94,.82);
+    }
+    #gbf-methode .index-card--global {
+      background:rgba(3,74,50,.75);border-color:rgba(108,238,169,.86);
+    }
+    #gbf-methode .index-acronym {
+      margin:0 0 5px;font-size:21px;font-weight:900;line-height:1.05;
+      color:#ffe7a7; text-shadow:0 1px 3px rgba(0,0,0,.7);
+    }
+    #gbf-methode .index-name {
+      margin:0 0 5px;font-size:13px;font-weight:800;line-height:1.22;
+      color:#ffffff;text-shadow:0 1px 2px rgba(0,0,0,.6);
+    }
+    #gbf-methode .index-desc {
+      font-size:11.8px;line-height:1.37;color:#f6faf6;
+      text-shadow:0 1px 2px rgba(0,0,0,.35);
+    }
+    #gbf-methode .formula,#gbf-methode .disclaimer {
+      text-align:center;text-shadow:0 1px 4px rgba(0,0,0,1),0 2px 6px rgba(0,0,0,.9);
+    }
+    #gbf-methode .formula {
+      margin:10px 0 0;font-size:13px;font-weight:800;color:#ffdfa0;
+    }
+    #gbf-methode .disclaimer {margin:6px 0 0;font-size:11.5px;color:#ffffff;}
+    @media(max-width:680px) {
+      #gbf-methode {padding:8px 5px 12px;}
+      #gbf-methode .cards {grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}
+      #gbf-methode .index-card {min-height:114px;}
+    }
+    @media(max-width:390px) {
+      #gbf-methode .step {padding:8px 7px;}
+      #gbf-methode .step-title {font-size:13px;}
+      #gbf-methode .branches {gap:6px;}
+      #gbf-methode .branches .step {padding:8px 6px;}
+      #gbf-methode .index-card {padding:9px 8px;}
+      #gbf-methode .index-acronym {font-size:20px;}
+      #gbf-methode .index-name {font-size:12.5px;}
+      #gbf-methode .index-desc {font-size:11.6px;}
+    }
+  
+    /* Titres et légendes hors cartes : lisibles sur fond clair comme sur fond sombre. */
+    #gbf-methode h1,#gbf-methode h2 {
+      color:#143f2d; background:rgba(255,255,255,.93);
+      text-shadow:none; border-radius:8px; padding:6px 10px;
+    }
+    #gbf-methode .indices-lead,#gbf-methode .formula,#gbf-methode .disclaimer {
+      color:#1b4534; text-shadow:none;
+      background:rgba(255,255,255,.91);
+      border-radius:6px; padding:5px 7px;
+    }
+    /* Développement dépliable : léger, compact, et isolé de la mise en page des cartes */
+    #gbf-methode .gbf-more {
+      margin:22px 0 8px; color:#1c2e26; text-shadow:none;
+    }
+    #gbf-methode .gbf-more-details {
+      border:1px solid rgba(115,185,145,.75);
+      border-radius:11px; overflow:hidden;
+      box-shadow:0 2px 10px rgba(0,0,0,.12);
+    }
+    #gbf-methode .gbf-more-details > summary {
+      list-style:none; cursor:pointer;
+      padding:13px 18px; background:rgba(5,75,51,.79);
+      color:#fff; font-size:17px; font-weight:800; line-height:1.35;
+      display:flex; justify-content:space-between; align-items:center;
+      text-shadow:0 1px 2px rgba(0,0,0,.5);
+    }
+    #gbf-methode .gbf-more-details > summary::-webkit-details-marker {display:none}
+    #gbf-methode .gbf-more-details > summary::after {
+      content:'+'; font-weight:400; font-size:23px; line-height:1; margin-left:16px;
+    }
+    #gbf-methode .gbf-more-details[open] > summary::after {content:'−'}
+    #gbf-methode .gbf-more-details > summary:focus-visible {outline:2px solid #efcc84;outline-offset:-3px}
+    #gbf-methode .gbf-content {
+      background:rgba(255,255,255,.97); color:#1c2822;
+      padding:19px 23px 22px; font-size:14px; line-height:1.54;
+      overflow-wrap:break-word; text-shadow:none;
+    }
+    #gbf-methode .gbf-content p {margin:0 0 14px}
+    #gbf-methode .gbf-content .original-rule {
+      font-family:Arial,Helvetica,sans-serif; font-size:13px; line-height:1.2;
+      letter-spacing:0; white-space:nowrap; overflow:hidden;
+      margin:6px 0 15px; max-width:100%; color:#5c7567;
+    }
+    #gbf-methode .gbf-content strong {font-weight:750}
+    #gbf-methode .gbf-content h3 {
+      font-size:15px; font-weight:800; line-height:1.3;
+      margin:17px 0 9px; color:#194c36;
+    }
+    #gbf-methode .gbf-content ul,
+    #gbf-methode .gbf-content ol {margin:9px 0 16px; padding-left:25px}
+    #gbf-methode .gbf-content li {margin:0 0 8px}
+    @media(max-width:570px) {
+      #gbf-methode .gbf-more {margin-top:17px}
+      #gbf-methode .gbf-more-details > summary {padding:12px 13px; font-size:16px}
+      #gbf-methode .gbf-content {padding:16px 13px 20px; font-size:13.5px}
+      #gbf-methode .gbf-content .original-rule {font-size:12px}
+      #gbf-methode .gbf-content h3 {font-size:14px}
+    }
+
+/* V4 — Contrastée, colorée, et translucide sans perdre le texte d'origine. */
+#gbf-methode {
+  --gbf-forest:#075b40; --gbf-emerald:#06875c; --gbf-sapphire:#174b94;
+  --gbf-gold:#d5a345; --gbf-ink:#13372b;
+  max-width:840px;
+  padding:12px 10px 18px;
+  color:var(--gbf-ink);
+}
+#gbf-methode h1 {
+  margin:0 0 17px; padding:14px 18px 17px;
+  border:1px solid rgba(110,218,163,.85);
+  border-bottom:4px solid #d6ac58;
+  border-radius:16px;
+  background:linear-gradient(130deg,rgba(2,73,49,.9),rgba(6,122,83,.78));
+  color:#fff;
+  text-shadow:0 1px 1px rgba(0,0,0,.16);
+  font-size:clamp(22px,2.7vw,28px); line-height:1.23;
+  box-shadow:0 6px 16px rgba(4,48,32,.12);
+}
+#gbf-methode h2 {
+  margin:20px 0 8px;padding:9px 12px;
+  color:#fff; background:linear-gradient(100deg,rgba(10,70,126,.95),rgba(33,106,169,.82));
+  border:1px solid rgba(109,170,224,.72);border-left:5px solid #dcb45d;
+  border-radius:10px; text-align:left; font-size:20px;
+  text-shadow:none;box-shadow:0 4px 12px rgba(14,59,110,.09);
+}
+#gbf-methode .step {
+  border-radius:12px; padding:10px 14px;
+  background:linear-gradient(110deg,rgba(7,72,52,.82),rgba(11,133,87,.70));
+  border:1px solid rgba(66,178,124,.72);
+  box-shadow:0 4px 10px rgba(11,50,35,.12);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+}
+#gbf-methode .step:nth-of-type(3) {
+  background:linear-gradient(110deg,rgba(11,68,108,.84),rgba(31,108,169,.72));
+  border-color:rgba(113,179,231,.75);
+}
+#gbf-methode .step--green {
+  background:linear-gradient(110deg,rgba(5,94,61,.88),rgba(12,153,97,.74));
+  border-color:rgba(121,219,169,.8);
+}
+#gbf-methode .step-title {font-size:15px;line-height:1.32;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+#gbf-methode .step-desc {font-size:12.6px;color:#f2fff7;text-shadow:none}
+#gbf-methode .step--gold {
+  background:linear-gradient(120deg,rgba(113,75,24,.9),rgba(204,143,37,.73));
+  border:1px solid rgba(232,184,81,.87);
+}
+#gbf-methode .step--gold .step-title {color:#fff2cc}
+#gbf-methode .branches .step:last-child {
+  background:linear-gradient(120deg,rgba(12,55,112,.88),rgba(30,106,195,.7));
+  border-color:rgba(121,176,234,.77);
+}
+#gbf-methode .branches .step:last-child .step-title {color:#fff}
+#gbf-methode .arrow {height:20px;line-height:20px;color:#b1842d;text-shadow:none;font-size:19px}
+#gbf-methode .indices-lead {
+  margin:0 0 11px;padding:7px 11px;color:#1e543e;
+  border-radius:7px;background:rgba(230,246,236,.92);
+  border:1px solid rgba(123,188,148,.43);
+  font-weight:700;text-shadow:none;
+}
+#gbf-methode .cards {gap:10px}
+#gbf-methode .index-card {
+  min-height:147px;padding:12px 11px;
+  background:linear-gradient(155deg,rgba(6,83,59,.86),rgba(9,154,97,.72));
+  border-color:rgba(105,209,159,.85);
+  border-top:4px solid #81d7a1;
+  box-shadow:0 5px 13px rgba(18,50,40,.12);
+}
+#gbf-methode .index-card:nth-child(2) {
+  background:linear-gradient(155deg,rgba(12,58,116,.9),rgba(39,129,203,.72));
+  border-color:rgba(128,179,229,.85);border-top-color:#91c4f4;
+}
+#gbf-methode .index-card:nth-child(3) {
+  background:linear-gradient(155deg,rgba(99,66,20,.91),rgba(191,127,36,.74));
+  border-color:rgba(243,200,123,.84);border-top-color:#f7d07b;
+}
+#gbf-methode .index-card--global {
+  background:linear-gradient(155deg,rgba(3,66,51,.92),rgba(5,117,80,.81));
+  border-color:rgba(106,216,167,.86);border-top-color:#f2cb6e;
+}
+#gbf-methode .index-acronym {font-size:23px;color:#ffe5a0;text-shadow:none}
+#gbf-methode .index-name {font-size:13.5px;color:#fff;text-shadow:none;margin-bottom:7px}
+#gbf-methode .index-desc {font-size:12px;color:#fff;text-shadow:none;line-height:1.41}
+#gbf-methode .formula {
+  margin:12px 0 0;padding:10px 12px;font-size:14px;
+  color:#073b2a;background:rgba(243,215,142,.88);
+  border:1px solid #d2a349;border-radius:9px;text-shadow:none;
+}
+#gbf-methode .disclaimer {
+  margin:6px 0 0;padding:6px 7px;
+  background:rgba(238,247,240,.95); color:#315846;text-shadow:none;
+}
+#gbf-methode .gbf-more {margin-top:19px}
+#gbf-methode .gbf-more-details {
+  border-radius:13px;border:1px solid rgba(42,142,98,.67);
+  box-shadow:0 6px 17px rgba(7,56,39,.13);
+}
+#gbf-methode .gbf-more-details > summary {
+  padding:14px 18px 14px 20px;
+  background:linear-gradient(95deg,rgba(1,79,50,.95),rgba(13,143,89,.83));
+  border-left:5px solid #e4b957;color:#fff;
+  text-shadow:none;font-size:18px;
+}
+#gbf-methode .gbf-more-details > summary::after {
+  display:inline-flex;align-items:center;justify-content:center;
+  content:'+';width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.19);color:#fff;font-size:22px;
+}
+#gbf-methode .gbf-more-details[open] > summary::after {content:'−'}
+#gbf-methode .gbf-more-details > summary:hover {background:linear-gradient(95deg,rgba(1,91,57,.97),rgba(12,159,98,.92))}
+#gbf-methode .gbf-content {
+  background:linear-gradient(180deg,#fcfefc,#fffdf9 52%,#fbfdff);
+  padding:20px 22px 24px;color:#23322b;
+  font-size:14px;line-height:1.52;
+}
+#gbf-methode .gbf-content .original-rule {
+  font-size:0;line-height:0;height:2px;
+  background:linear-gradient(90deg,#d4a243,#91c6a5 50%,transparent 100%);
+  border:0;margin:15px 0 12px;overflow:hidden;
+}
+#gbf-methode .gbf-content .gbf-chapter {
+  font-size:17px;font-weight:850;
+  color:#fff;border-radius:9px;
+  padding:10px 13px;margin:18px 0 11px;
+  letter-spacing:.015em;
+  background:linear-gradient(105deg,#075b40,#0d9b68);
+  box-shadow:0 3px 9px rgba(10,76,53,.13);
+}
+#gbf-methode .gbf-content .gbf-chapter--blue {background:linear-gradient(105deg,#164e98,#318cc7)}
+#gbf-methode .gbf-content .gbf-chapter--gold {background:linear-gradient(105deg,#855919,#c89336)}
+#gbf-methode .gbf-content .gbf-index-title {
+  font-size:16px;font-weight:800;color:#084e37;
+  background:#e9f5ee;border-left:4px solid #15a16b;
+  border-radius:3px 7px 7px 3px;
+  padding:8px 12px;margin:15px 0 6px;
+}
+#gbf-methode .gbf-content .gbf-subhead {
+  color:#146748;font-size:14px;font-weight:750;
+  padding-left:9px;border-left:2px solid #c8a157;
+  margin:0 0 11px;
+}
+#gbf-methode .gbf-content .gbf-value {
+  display:inline-block;color:#154831;background:#f9e8b9;
+  border:1px solid #e5c478;border-radius:999px;
+  padding:6px 14px;margin:1px 0 14px;font-weight:800;
+}
+#gbf-methode .gbf-content .gbf-factor {
+  margin:6px 0;padding:8px 12px;
+  border-left:3px solid #5aad86;
+  border-radius:0 7px 7px 0;
+  background:#f0f7f2;
+}
+#gbf-methode .gbf-content .gbf-factor:nth-of-type(even) {background:#eef5fa;border-left-color:#6aa6d4}
+#gbf-methode .gbf-content .gbf-statement {
+  margin:0 0 7px;padding:3px 10px;
+  border-left:3px solid #d7a144;
+  color:#11513a;font-weight:850;
+}
+#gbf-methode .gbf-content .gbf-warning {
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:7px;
+  background:#fff0d8;color:#814813;
+  border:1px solid #efc88b;font-weight:850;
+}
+#gbf-methode .gbf-content .gbf-formula-detail {
+  background:#e9f2ff;color:#184b89;padding:10px 12px;
+  border:1px solid #bfd4ef;border-radius:8px;font-weight:750;
+}
+#gbf-methode .gbf-content h3 {
+  color:#11563a;font-size:15px;
+  border-bottom:1px solid #cadfd1;
+  padding-bottom:6px;margin:19px 0 9px;
+}
+#gbf-methode .gbf-content li {padding-left:2px;margin-bottom:8px}
+#gbf-methode .gbf-content li::marker {color:#0d9661;font-weight:750}
+@media (max-width:680px) {
+  #gbf-methode {padding:9px 6px 15px}
+  #gbf-methode .cards {gap:8px}
+  #gbf-methode .index-card {min-height:132px;padding:10px}
+  #gbf-methode .index-acronym {font-size:22px}
+  #gbf-methode .index-name {font-size:13px}
+  #gbf-methode .index-desc {font-size:11.6px}
+  #gbf-methode .gbf-content {padding:15px 13px 18px;font-size:13.5px}
+  #gbf-methode .gbf-content .gbf-chapter {font-size:15px}
+  #gbf-methode .gbf-content .gbf-index-title {font-size:14.5px}
+  #gbf-methode h2 {font-size:18px}
+}
+@media (max-width:390px) {
+  #gbf-methode .step-title {font-size:13.6px}
+  #gbf-methode .step-desc {font-size:11.7px}
+}
+
+/* V6 — Deux colonnes : les indices à gauche, les paris à droite.
+   Tout le développement « Pour aller plus loin » reste intact. */
+#gbf-methode { max-width:1060px; padding:14px 12px 22px; }
+#gbf-methode .method-columns {
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(0,.95fr);
+  gap:16px;
+  align-items:stretch;
+  margin:0 0 17px;
+}
+#gbf-methode .method-column {
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  padding:15px;
+  border-radius:17px;
+  border:1px solid rgba(67,145,107,.39);
+  background:linear-gradient(145deg,rgba(236,250,241,.85),rgba(225,243,234,.69));
+  box-shadow:0 6px 20px rgba(17,73,52,.10),inset 0 1px rgba(255,255,255,.8);
+}
+#gbf-methode .method-column--bets {
+  border-color:rgba(84,124,180,.35);
+  background:linear-gradient(145deg,rgba(235,243,254,.86),rgba(241,245,253,.72));
+}
+#gbf-methode .method-column h2 {
+  margin:0 0 12px;
+  padding:11px 12px;
+  text-align:center;
+  font-size:clamp(18px,2.1vw,22px);
+  letter-spacing:.055em;
+  border-radius:10px;
+  border-left:0;
+  border-bottom:3px solid #d9b767;
+  box-shadow:0 3px 11px rgba(18,64,42,.10);
+}
+#gbf-methode .method-column--indices h2 {
+  background:linear-gradient(105deg,rgba(3,91,59,.97),rgba(20,145,93,.87));
+  border-color:#dbb96e;
+}
+#gbf-methode .method-column--bets h2 {
+  background:linear-gradient(100deg,rgba(16,69,133,.98),rgba(43,119,191,.90));
+  border-color:#e3b766;
+}
+#gbf-methode .method-column .indices-lead {
+  margin:0 0 11px;
+  font-size:12.4px;
+  padding:8px 10px;
+}
+#gbf-methode .method-column--indices .cards {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px;
+  align-items:stretch;
+}
+#gbf-methode .method-column .index-card {
+  min-height:152px;
+  padding:15px 13px;
+}
+#gbf-methode .method-column .index-acronym { font-size:24px; }
+#gbf-methode .method-column .index-name { font-size:13.5px; }
+#gbf-methode .method-column .index-desc { font-size:12px; }
+#gbf-methode .method-column--indices .formula { margin-top:12px; }
+#gbf-methode .method-column--indices .disclaimer { margin-top:8px; }
+#gbf-methode .method-column .bets-stack {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:repeat(2,minmax(155px,1fr));
+  gap:15px;
+  flex:1;
+}
+#gbf-methode .bets-stack .step {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:165px;
+  padding:19px 16px;
+  border-radius:13px;
+}
+#gbf-methode .bets-stack .step-title {
+  font-size:clamp(20px,2.3vw,25px);
+  margin:0 0 12px;
+  letter-spacing:.015em;
+}
+#gbf-methode .bets-stack .step-desc {
+  font-size:14px;
+  line-height:1.62;
+  font-weight:600;
+}
+#gbf-methode .bets-stack .step:last-child {
+  background:linear-gradient(120deg,rgba(12,55,112,.91),rgba(30,106,195,.76));
+  border-color:rgba(121,176,234,.8);
+}
+#gbf-methode .bets-stack .step:last-child .step-title { color:#fff; }
+#gbf-methode .gbf-more {margin-top:18px;}
+@media (max-width:740px) {
+  #gbf-methode { max-width:660px; padding:10px 6px 16px; }
+  #gbf-methode .method-columns {grid-template-columns:minmax(0,1fr);gap:14px;}
+  #gbf-methode .method-column {padding:12px;}
+  #gbf-methode .method-column--indices .cards {gap:9px;}
+  #gbf-methode .method-column .bets-stack {grid-template-rows:none;}
+  #gbf-methode .bets-stack .step {min-height:126px;padding:16px 12px;}
+  #gbf-methode .bets-stack .step-title {font-size:21px;margin-bottom:7px;}
+  #gbf-methode .bets-stack .step-desc {font-size:12.9px;line-height:1.5;}
+}
+@media (max-width:400px) {
+  #gbf-methode .method-column {padding:9px;}
+  #gbf-methode .method-column h2 {padding:10px;font-size:18px;}
+  #gbf-methode .method-column--indices .cards {gap:7px;}
+  #gbf-methode .method-column .index-card {padding:10px 9px;min-height:138px;}
+  #gbf-methode .method-column .index-acronym {font-size:21px;}
+  #gbf-methode .method-column .index-name {font-size:12.5px;}
+  #gbf-methode .method-column .index-desc {font-size:11.6px;}
+  #gbf-methode .method-column .indices-lead {font-size:12px;}
+}
+
+
+/* V7 : hypothèse CombiMax, carte immédiatement sous le titre principal. */
+#gbf-methode .gbf-hypothese {
+  position:relative;
+  margin:0 0 18px;
+  padding:20px 25px 21px 29px;
+  border:2px solid rgba(179,124,27,.72);
+  border-left:7px solid #b77f20;
+  border-radius:15px;
+  background:linear-gradient(116deg,rgba(255,245,205,.98),rgba(247,225,158,.93));
+  color:#284326;
+  box-shadow:0 6px 20px rgba(78,65,19,.18),inset 0 1px 0 rgba(255,255,255,.75);
+}
+#gbf-methode .gbf-hypothese .gbf-hypothese-caption {
+  margin:0 0 7px;
+  color:#755019;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.085em;
+  text-transform:uppercase;
+}
+#gbf-methode .gbf-hypothese p.gbf-hypothese-texte {
+  margin:0;
+  font-size:clamp(17px,2vw,21px);
+  line-height:1.48;
+  font-weight:750;
+  color:#224b31;
+  text-shadow:none;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-hypothese {
+    margin-bottom:14px;
+    padding:15px 16px 16px 17px;
+    border-left-width:5px;
+  }
+  #gbf-methode .gbf-hypothese p.gbf-hypothese-texte {
+    font-size:16px;
+    line-height:1.47;
+  }
+}
+
+
+/* V10 : postulat distinct et hypothèse sur deux paragraphes, texte final contrasté. */
+#gbf-methode .gbf-hypothese p.gbf-hypothese-postulat {
+  margin:10px 0 12px;
+  font-size:clamp(16px,1.85vw,19px);
+  line-height:1.47;
+  font-weight:600;
+  color:#5b4624;
+}
+#gbf-methode .gbf-hypothese p.gbf-hypothese-postulat strong,
+#gbf-methode .gbf-hypothese p.gbf-hypothese-texte strong {
+  font-weight:900;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-hypothese p.gbf-hypothese-postulat {
+    font-size:16px;
+    margin:10px 0;
+  }
+}
+#gbf-methode .gbf-hypothese p.gbf-hypothese-combimax {
+  display:table;
+  max-width:100%;
+  margin:13px 0 0;
+  padding:8px 12px;
+  border-left:4px solid #2563a3;
+  border-radius:5px 9px 9px 5px;
+  background:rgba(220,236,250,.94);
+  color:#16446f;
+  font-size:clamp(15px,1.65vw,18px);
+  font-weight:800;
+  line-height:1.4;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-hypothese p.gbf-hypothese-combimax {
+    display:block;
+    font-size:15px;
+    margin-top:11px;
+  }
+}
+
+
+/* V11 — Carte postulat → conséquence → hypothèse → CombiMax, plus colorée. */
+#gbf-methode .gbf-hypothese {
+  padding:19px 21px 21px;
+  border:1px solid rgba(29,108,72,.44);
+  border-top:5px solid #187c58;
+  border-left:1px solid rgba(29,108,72,.44);
+  background:linear-gradient(135deg,rgba(245,252,246,.98),rgba(237,248,253,.96) 65%,rgba(255,248,229,.98));
+  box-shadow:0 11px 27px rgba(18,64,54,.13),inset 0 1px 0 rgba(255,255,255,.85);
+  border-radius:16px;
+}
+#gbf-methode .gbf-hypothese p.gbf-hypothese-caption {
+  text-align:center;
+  margin:0 0 14px;
+  padding:0 0 11px;
+  border-bottom:1px solid rgba(24,124,88,.21);
+  color:#155d42;
+  font-size:clamp(15px,1.72vw,20px);
+  font-weight:900;
+  letter-spacing:.005em;
+  line-height:1.3;
+  text-transform:none;
+}
+#gbf-methode .gbf-postulat-block {
+  padding:13px 17px;
+  border-left:5px solid #e6a329;
+  border-radius:10px;
+  background:linear-gradient(100deg,#fff1ca,#fffaeb);
+  box-shadow:0 3px 10px rgba(154,109,23,.09);
+}
+#gbf-methode .gbf-hypothese p.gbf-hypothese-postulat {
+  margin:0;
+  color:#66420e;
+  font-size:clamp(15.5px,1.7vw,19px);
+  font-weight:600;
+  line-height:1.45;
+}
+#gbf-methode .gbf-hypothese p.gbf-hypothese-postulat strong {color:#986310}
+#gbf-methode .gbf-consequence {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:9px 0 15px 14px;
+}
+#gbf-methode .gbf-consequence-arrow {
+  display:grid;
+  place-items:center;
+  flex:0 0 39px;
+  width:39px;height:39px;
+  border-radius:50%;
+  background:#187b54;
+  color:#fff;
+  font-size:26px;
+  line-height:1;
+  font-weight:900;
+  box-shadow:0 4px 10px rgba(24,123,84,.23);
+}
+#gbf-methode .gbf-consequence p.gbf-consequence-text {
+  flex:1;
+  min-width:0;
+  margin:0;
+  padding:11px 14px;
+  border:1px solid #b3dec5;
+  border-radius:10px;
+  background:linear-gradient(100deg,#d9f5e3,#edfff3);
+  color:#126143;
+  font-size:clamp(15px,1.65vw,18px);
+  line-height:1.35;
+  font-weight:850;
+}
+#gbf-methode .gbf-hypothese-block {
+  padding:13px 17px;
+  background:linear-gradient(100deg,#e5f0ff,#f4f8ff);
+  border-left:5px solid #4a83cf;
+  border-radius:10px;
+}
+#gbf-methode .gbf-hypothese p.gbf-hypothese-texte {
+  margin:0;
+  color:#183f75;
+  line-height:1.44;
+  font-size:clamp(15.5px,1.7vw,19px);
+  font-weight:600;
+}
+#gbf-methode .gbf-hypothese p.gbf-hypothese-texte strong {color:#2561a8}
+#gbf-methode .gbf-hypothese p.gbf-hypothese-combimax {
+  display:block;
+  margin:13px 0 0;
+  padding:12px 17px;
+  border:1px solid #174a78;
+  border-left:5px solid #e5b74c;
+  border-radius:10px;
+  background:linear-gradient(100deg,#134b75,#1e6692);
+  color:#fff;
+  font-size:clamp(15px,1.65vw,18px);
+  line-height:1.45;
+  font-weight:850;
+  box-shadow:0 4px 12px rgba(20,75,117,.18);
+}
+@media (max-width:740px){
+  #gbf-methode .gbf-hypothese {padding:14px 12px 15px;border-top-width:4px}
+  #gbf-methode .gbf-hypothese p.gbf-hypothese-caption {font-size:17px;margin-bottom:12px}
+  #gbf-methode .gbf-postulat-block,#gbf-methode .gbf-hypothese-block {padding:11px 12px}
+  #gbf-methode .gbf-hypothese p.gbf-hypothese-postulat,
+  #gbf-methode .gbf-hypothese p.gbf-hypothese-texte {font-size:15px;line-height:1.48}
+  #gbf-methode .gbf-consequence {margin:8px 0 12px 5px;gap:8px}
+  #gbf-methode .gbf-consequence-arrow {width:32px;height:32px;flex-basis:32px;font-size:22px}
+  #gbf-methode .gbf-consequence p.gbf-consequence-text {padding:10px 11px;font-size:14.5px}
+  #gbf-methode .gbf-hypothese p.gbf-hypothese-combimax {font-size:15px;margin-top:12px;padding:11px 12px}
+}
+
+
+/* V13 — Deuxième flèche vers la droite, en face de l'hypothèse. */
+#gbf-methode .gbf-hypothese-branch {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:0 0 0 14px;
+}
+#gbf-methode .gbf-hypothese-branch .gbf-hypothese-block {
+  flex:1;
+  min-width:0;
+}
+#gbf-methode .gbf-hypothese-branch-arrow {
+  display:grid;
+  place-items:center;
+  flex:0 0 39px;
+  width:39px;
+  height:39px;
+  border-radius:50%;
+  background:#316bb8;
+  color:#fff;
+  font-size:26px;
+  line-height:1;
+  font-weight:900;
+  box-shadow:0 4px 10px rgba(37,94,169,.25);
+}
+/* V13 — Un seul encart CombiMax avec deux scénarios lisibles. */
+#gbf-methode .gbf-hypothese .gbf-hypothese-combimax {
+  display:block;
+  margin:14px 0 0;
+  padding:14px 18px;
+  border:1px solid #174a78;
+  border-left:5px solid #e5b74c;
+  border-radius:11px;
+  background:linear-gradient(110deg,#134b75,#1e6692);
+  color:#fff;
+  box-shadow:0 4px 12px rgba(20,75,117,.18);
+}
+#gbf-methode .gbf-combimax-title {
+  margin:0 0 11px;
+  color:#fff;
+  font-size:clamp(15px,1.65vw,18px);
+  line-height:1.4;
+  font-weight:850;
+}
+#gbf-methode .gbf-combimax-cas {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:8px;
+  color:#fff;
+  font-size:clamp(14px,1.5vw,17px);
+  line-height:1.3;
+  font-weight:650;
+}
+#gbf-methode .gbf-combimax-num {
+  display:grid;
+  place-items:center;
+  flex:0 0 26px;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:#f8d775;
+  color:#153e5a;
+  font-size:14px;
+  font-weight:900;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-hypothese-branch {gap:8px;margin-left:5px;}
+  #gbf-methode .gbf-hypothese-branch-arrow {width:32px;height:32px;flex-basis:32px;font-size:22px;}
+  #gbf-methode .gbf-hypothese .gbf-hypothese-combimax {padding:12px 13px;margin-top:12px;}
+  #gbf-methode .gbf-combimax-title {font-size:15px;}
+  #gbf-methode .gbf-combimax-cas {font-size:14px;}
+}
+
+/* V14 : sous-carte compacte des 12 paris, insérée DANS la carte CombiMax (colonne Paris). */
+#gbf-methode .method-column--bets .bets-stack {
+  grid-template-rows:minmax(0,auto) minmax(115px,1fr);
+}
+#gbf-methode .method-column--bets .step--gold {
+  justify-content:flex-start;
+  padding:15px 13px;
+}
+#gbf-methode .gbf-paris-mini {
+  width:100%; max-width:100%; min-width:0;
+  margin-top:12px;
+  padding:10px 10px 11px;
+  border-radius:10px;
+  border:1px solid rgba(245,208,119,.95);
+  border-left:4px solid #dfad41;
+  background:rgba(255,252,243,.97);
+  color:#343724;
+  box-shadow:0 3px 11px rgba(33,25,7,.18);
+  text-align:left;
+  text-shadow:none;
+}
+#gbf-methode .gbf-paris-mini-title {
+  color:#75511f;
+  font-size:12px;
+  font-weight:850;
+  line-height:1.25;
+  margin:0 0 7px;
+  text-transform:uppercase;
+  letter-spacing:.035em;
+}
+#gbf-methode .gbf-paris-mini-group + .gbf-paris-mini-group {
+  border-top:1px solid rgba(133,110,52,.25);
+  margin-top:7px;
+  padding-top:7px;
+}
+#gbf-methode .gbf-paris-mini-subtitle {
+  color:#3c5945;
+  font-weight:800;
+  font-size:11.5px;
+  line-height:1.2;
+  margin:0 0 5px;
+}
+#gbf-methode .gbf-paris-mini-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:4px;
+}
+#gbf-methode .gbf-paris-mini-grid--principal {grid-template-columns:minmax(0,1fr);}
+#gbf-methode .gbf-paris-mini-grid--simples {grid-template-columns:repeat(3,minmax(0,1fr));}
+#gbf-methode .gbf-paris-mini-bet {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:3px;min-width:0;min-height:24px;
+  padding:4px 5px;
+  border-radius:5px;
+  background:#f0ede1;
+  color:#263a30;
+  font-size:10.5px;
+  line-height:1.1;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+#gbf-methode .gbf-paris-mini-bet strong {font-weight:750;}
+#gbf-methode .gbf-paris-mini-bet code {
+  padding:0;
+  background:transparent;
+  color:#8d5312;
+  font:800 11px/1.1 Arial,Helvetica,sans-serif;
+}
+#gbf-methode .gbf-paris-mini-grid--principal .gbf-paris-mini-bet {
+  max-width:130px;
+  background:#e8eadc;
+}
+@media(max-width:740px) {
+  #gbf-methode .method-column--bets .bets-stack {grid-template-rows:auto auto;}
+  #gbf-methode .method-column--bets .step--gold {padding:13px 11px;}
+  #gbf-methode .gbf-paris-mini {margin-top:9px; padding:9px;}
+}
+@media(max-width:460px) {
+  #gbf-methode .gbf-paris-mini-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #gbf-methode .gbf-paris-mini-grid--principal {grid-template-columns:minmax(0,1fr);}
+  #gbf-methode .gbf-paris-mini-grid--simples {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #gbf-methode .gbf-paris-mini-bet {font-size:11px;padding:4px 7px;}
+  #gbf-methode .gbf-paris-mini-bet code {font-size:11px;}
+}
+
+
+/* V15 — Deux sous-cartes dans la carte Solo (sans toucher à CombiMax). */
+#gbf-methode .bets-stack .step--solo {
+  justify-content:flex-start;
+  padding:15px 13px;
+}
+#gbf-methode .gbf-solo-subcards {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  width:100%;
+  gap:9px;
+  margin-top:2px;
+}
+#gbf-methode .gbf-solo-subcard {
+  min-width:0;
+  border-radius:10px;
+  padding:11px 12px 12px;
+  text-align:left;
+  color:#173951;
+  background:rgba(245,251,255,.97);
+  box-shadow:0 3px 11px rgba(6,24,51,.15);
+  border:1px solid rgba(130,191,229,.92);
+  border-left:4px solid #48b2de;
+  text-shadow:none;
+}
+#gbf-methode .gbf-solo-subcard--autonome {
+  background:rgba(236,251,244,.97);
+  border-color:rgba(117,204,169,.92);
+  border-left-color:#20a77c;
+  color:#174b38;
+}
+#gbf-methode .gbf-solo-subcard h3 {
+  color:inherit;
+  font-size:14px;
+  font-weight:800;
+  line-height:1.25;
+  margin:0 0 5px;
+  padding:0;
+  text-shadow:none;
+}
+#gbf-methode .gbf-solo-subcard p {
+  color:inherit;
+  font-size:12.7px;
+  line-height:1.42;
+  margin:0;
+  padding:0;
+  font-weight:550;
+  text-shadow:none;
+}
+@media(max-width:740px) {
+  #gbf-methode .bets-stack .step--solo {padding:13px 11px;}
+  #gbf-methode .gbf-solo-subcards {gap:8px;}
+}
+
+
+/* V17 — emblème GBF à gauche du titre, sans changer les autres cartes. */
+#gbf-methode h1.gbf-method-title {
+  display:grid;
+  grid-template-columns:80px minmax(0,1fr) 80px;
+  align-items:center;
+  gap:8px;
+  min-height:96px;
+  padding:9px 14px;
+  text-align:center;
+}
+#gbf-methode .gbf-method-title-logo {
+  display:block;
+  width:76px;
+  height:76px;
+  max-width:100%;
+  object-fit:contain;
+  justify-self:center;
+  filter:drop-shadow(0 3px 4px rgba(0,0,0,.30));
+}
+#gbf-methode .gbf-method-title-text {display:block;min-width:0;}
+#gbf-methode .gbf-method-title-balance {display:block;width:100%;}
+@media(max-width:520px) {
+  #gbf-methode h1.gbf-method-title {
+    grid-template-columns:55px minmax(0,1fr) 55px;
+    gap:4px;
+    min-height:79px;
+    padding:7px 6px;
+    font-size:clamp(18px,5vw,23px);
+  }
+  #gbf-methode .gbf-method-title-logo {width:54px;height:54px;}
+}
+@media(max-width:350px) {
+  #gbf-methode h1.gbf-method-title {grid-template-columns:48px minmax(0,1fr) 48px;gap:3px;font-size:18px;}
+  #gbf-methode .gbf-method-title-logo {width:47px;height:47px;}
+}
+
+/* V18 : calculateur dans la colonne INDICES et affichage très compact des 12 paris. */
+#gbf-methode .gbf-calculateur {
+  margin-top:15px;
+  padding:14px 15px 15px;
+  border-radius:12px;
+  border:1px solid rgba(190,129,36,.65);
+  border-left:5px solid #d89425;
+  background:linear-gradient(110deg,rgba(255,244,215,.97),rgba(253,227,163,.9));
+  box-shadow:0 4px 13px rgba(82,57,23,.13),inset 0 1px rgba(255,255,255,.9);
+  color:#473315;
+  text-align:left;
+}
+#gbf-methode .gbf-calculateur h3 {
+  color:#72500c;
+  font-size:clamp(15px,1.8vw,17px);
+  font-weight:850;
+  line-height:1.28;
+  margin:0 0 7px;
+  text-shadow:none;
+}
+#gbf-methode .gbf-calculateur p {
+  color:#45351e;
+  font-size:12.7px;
+  line-height:1.48;
+  font-weight:550;
+  margin:0;
+  text-shadow:none;
+}
+#gbf-methode .method-column--bets .step--gold {padding:12px 11px;}
+#gbf-methode .gbf-paris-mini {
+  margin-top:6px;
+  padding:7px 8px 8px;
+  border-radius:8px;
+}
+#gbf-methode .gbf-paris-mini-title {
+  font-size:11px;
+  line-height:1.1;
+  margin-bottom:4px;
+}
+#gbf-methode .gbf-paris-mini-group {
+  display:grid;
+  grid-template-columns:92px minmax(0,1fr);
+  align-items:center;
+  gap:7px;
+}
+#gbf-methode .gbf-paris-mini-group + .gbf-paris-mini-group {
+  margin-top:4px;
+  padding-top:4px;
+}
+#gbf-methode .gbf-paris-mini-subtitle {
+  font-size:9.7px;
+  line-height:1.12;
+  margin:0;
+}
+#gbf-methode .gbf-paris-mini-grid {gap:3px;}
+#gbf-methode .gbf-paris-mini-grid--principal {grid-template-columns:minmax(0,105px);}
+#gbf-methode .gbf-paris-mini-bet {
+  font-size:9.7px;
+  min-height:20px;
+  line-height:1.08;
+  gap:2px;
+  padding:2px 4px;
+  border-radius:4px;
+}
+#gbf-methode .gbf-paris-mini-bet code {font-size:10px;}
+#gbf-methode .method-column--bets .step--gold .step-desc {line-height:1.28;}
+#gbf-methode .method-column--bets .step--gold .step-title {margin-bottom:5px;}
+@media(max-width:740px) {
+  #gbf-methode .gbf-calculateur {margin-top:12px;padding:12px 12px 13px;}
+  #gbf-methode .method-column--bets .step--gold {padding:11px 10px;}
+  #gbf-methode .gbf-paris-mini {margin-top:5px;padding:7px;}
+}
+@media(max-width:400px) {
+  #gbf-methode .gbf-paris-mini-group {grid-template-columns:70px minmax(0,1fr);gap:5px;}
+  #gbf-methode .gbf-paris-mini-subtitle {font-size:9.1px;}
+  #gbf-methode .gbf-paris-mini-grid {grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;}
+  #gbf-methode .gbf-paris-mini-grid--principal {grid-template-columns:minmax(0,1fr);max-width:92px;}
+  #gbf-methode .gbf-paris-mini-grid--simples {grid-template-columns:repeat(3,minmax(0,1fr));}
+  #gbf-methode .gbf-paris-mini-bet {font-size:8.7px;padding:2px 2px;gap:1px;}
+  #gbf-methode .gbf-paris-mini-bet code {font-size:9px;}
+  #gbf-methode .gbf-paris-mini-bet strong {letter-spacing:-.2px;}
+}
+@media(max-width:340px) {
+  #gbf-methode .gbf-paris-mini-group {grid-template-columns:61px minmax(0,1fr);gap:3px;}
+  #gbf-methode .gbf-paris-mini-grid--couvertures {grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+
+
+/* V19 — Deux cartes vraiment independantes dans la premiere colonne. */
+#gbf-methode .method-column-stack--left {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:16px;
+}
+#gbf-methode .method-column--calculateur.gbf-calculateur {
+  display:flex;
+  flex-direction:column;
+  margin:0;
+  padding:15px;
+  min-width:0;
+  border:1px solid rgba(182,128,40,.62);
+  border-radius:17px;
+  background:linear-gradient(145deg,rgba(255,247,230,.94),rgba(251,225,174,.82));
+  box-shadow:0 6px 20px rgba(93,61,17,.12),inset 0 1px rgba(255,255,255,.86);
+}
+#gbf-methode .method-column--calculateur.gbf-calculateur h2 {
+  color:#fff;
+  font-size:clamp(17px,1.85vw,21px);
+  letter-spacing:.035em;
+  font-weight:800;
+  line-height:1.25;
+  text-align:center;
+  margin:0 0 12px;
+  padding:11px 12px;
+  background:linear-gradient(105deg,#8e5c12,#ca9635);
+  border:0;
+  border-bottom:3px solid #e0c281;
+  border-radius:10px;
+  text-shadow:0 1px 2px rgba(0,0,0,.35);
+  box-shadow:0 3px 11px rgba(92,60,15,.16);
+}
+#gbf-methode .method-column--calculateur.gbf-calculateur p {
+  color:#45351e;
+  font-size:13px;
+  line-height:1.58;
+  padding:3px 3px 5px;
+  margin:0;
+}
+@media(max-width:740px){
+  #gbf-methode .method-column-stack--left{gap:14px;}
+  #gbf-methode .method-column--calculateur.gbf-calculateur{padding:12px;}
+}
+@media(max-width:400px){
+  #gbf-methode .method-column--calculateur.gbf-calculateur{padding:9px;}
+  #gbf-methode .method-column--calculateur.gbf-calculateur h2{font-size:17px;padding:10px 8px;}
+  #gbf-methode .method-column--calculateur.gbf-calculateur p{font-size:12.6px;}
+}
+
+
+/* V20 — Images transmises en remplacement des cartes CombiMax et Solo */
+#gbf-methode .method-column--bets .gbf-method-posters{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  align-content:start;
+  gap:15px;
+  width:100%;
+  min-width:0;
+}
+#gbf-methode .gbf-method-poster{
+  margin:0;
+  padding:0;
+  min-width:0;
+  line-height:0;
+  overflow:hidden;
+  border-radius:14px;
+  border:1px solid rgba(56,126,193,.55);
+  box-shadow:0 5px 16px rgba(13,64,127,.16);
+  background:#0759a4;
+}
+#gbf-methode .gbf-method-poster img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-width:100%;
+  object-fit:contain;
+}
+/* Calculateur : titre conservé et trois critères bien séparés */
+#gbf-methode .method-column--calculateur.gbf-calculateur h2{
+  letter-spacing:0;
+  font-size:clamp(16px,1.6vw,20px);
+  line-height:1.28;
+}
+#gbf-methode .method-column--calculateur.gbf-calculateur p{
+  padding:3px 2px 7px;
+  font-weight:650;
+  line-height:1.5;
+}
+#gbf-methode .method-column--calculateur .gbf-calculateur-criteres{
+  margin:6px 0 0;
+  padding:0 0 0 23px;
+  color:#403317;
+  font-size:13px;
+  line-height:1.5;
+  text-align:left;
+}
+#gbf-methode .gbf-calculateur-criteres li{margin:0 0 10px;padding-left:2px}
+#gbf-methode .gbf-calculateur-criteres li:last-child{margin-bottom:0}
+#gbf-methode .gbf-calculateur-criteres li::marker{font-weight:800;color:#9b6a17}
+@media(max-width:740px){
+  #gbf-methode .method-column--bets .gbf-method-posters{gap:12px}
+  #gbf-methode .method-column--calculateur .gbf-calculateur-criteres{font-size:12.7px}
+}
+@media(max-width:400px){
+  #gbf-methode .gbf-method-poster{border-radius:10px}
+  #gbf-methode .method-column--calculateur.gbf-calculateur h2{font-size:16px}
+  #gbf-methode .method-column--calculateur .gbf-calculateur-criteres{font-size:12.3px;padding-left:21px}
+}
+
+
+/* V21 — MISE : deux sous-cartes distinctes dans la colonne de gauche. */
+#gbf-methode .method-column--calculateur.gbf-calculateur h2 {
+  font-size:clamp(18px,1.9vw,22px);
+  letter-spacing:.055em;
+  margin-bottom:12px;
+}
+#gbf-methode .gbf-mise-souscartes {
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-width:0;
+}
+#gbf-methode .gbf-mise-souscarte {
+  min-width:0;
+  border-radius:13px;
+  padding:15px 14px 14px;
+  box-shadow:0 3px 11px rgba(29,57,40,.09);
+  text-align:left;
+}
+#gbf-methode .gbf-mise-souscarte--combi {
+  border:1px solid rgba(196,139,39,.58);
+  border-left:4px solid #bf8a2d;
+  background:linear-gradient(135deg,#fffdf6,#fff1cc);
+}
+#gbf-methode .gbf-mise-souscarte--solo {
+  border:1px solid rgba(70,164,110,.58);
+  border-left:4px solid #238d59;
+  background:linear-gradient(135deg,#f8fff9,#e4f7e7);
+}
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte h3 {
+  color:#75500d;
+  font-size:clamp(15px,1.65vw,18px);
+  font-weight:800;
+  line-height:1.24;
+  text-shadow:none;
+  margin:0 0 9px;
+}
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte--solo h3 { color:#17673e; }
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte p {
+  font-size:12.7px;
+  line-height:1.5;
+  color:#283d31;
+  font-weight:500;
+  padding:0;
+  margin:0;
+}
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte--combi p {
+  color:#4a3818;
+  font-weight:650;
+}
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte .gbf-calculateur-criteres {
+  margin:9px 0 0;
+  padding-left:21px;
+  line-height:1.46;
+  font-size:12.5px;
+}
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte .gbf-calculateur-criteres li { margin-bottom:7px; }
+@media(max-width:400px) {
+  #gbf-methode .gbf-mise-souscartes {gap:10px;}
+  #gbf-methode .gbf-mise-souscarte {padding:12px 10px;}
+  #gbf-methode .method-column--calculateur .gbf-mise-souscarte h3 {font-size:15px;}
+  #gbf-methode .method-column--calculateur .gbf-mise-souscarte p,
+  #gbf-methode .method-column--calculateur .gbf-mise-souscarte .gbf-calculateur-criteres {font-size:12.1px;}
+}
+
+/* V22 — La mention Solo Live fait partie du même cadre bleu CombiMax. */
+#gbf-methode .gbf-hypothese .gbf-hypothese-combimax .gbf-solo-live-note {
+  display:block;
+  margin:14px 0 0;
+  padding:13px 0 0;
+  border-top:1px solid rgba(255,255,255,.42);
+  color:#fff;
+  font-size:clamp(14px,1.5vw,16px);
+  font-weight:750;
+  line-height:1.45;
+  text-shadow:none;
+}
+@media(max-width:740px){
+  #gbf-methode .gbf-hypothese .gbf-hypothese-combimax .gbf-solo-live-note {
+    margin-top:12px;
+    padding-top:11px;
+    font-size:14px;
+  }
+}
+
+
+/* V23 — Le titre Solo Live reprend la typographie du titre CombiMax. */
+#gbf-methode .gbf-hypothese .gbf-solo-live-note .gbf-solo-live-heading{
+  display:block;
+  color:#fff;
+  font-size:clamp(15px,1.65vw,18px);
+  font-weight:850;
+  line-height:1.4;
+  margin-bottom:5px;
+}
+#gbf-methode .gbf-hypothese .gbf-solo-live-note .gbf-solo-live-desc{
+  display:block;
+  font-weight:650;
+  font-size:clamp(14px,1.5vw,17px);
+  line-height:1.38;
+}
+@media(max-width:740px){
+  #gbf-methode .gbf-hypothese .gbf-solo-live-note .gbf-solo-live-heading{font-size:15px;}
+  #gbf-methode .gbf-hypothese .gbf-solo-live-note .gbf-solo-live-desc{font-size:14px;}
+}
+
+
+/* V25 — Illustration interactive avec deux curseurs et trois parts de budget. */
+#gbf-methode .gbf-budget-split{border:1px solid #8fb5a1;border-radius:13px;padding:14px 13px 15px;background:linear-gradient(145deg,#f7fbf7,#eaf5ed);color:#174333;min-width:0;box-shadow:0 3px 10px #123c3020}
+#gbf-methode .gbf-budget-split h3{font-size:15px;line-height:1.3;margin:0 0 5px;color:#174333;font-weight:800}
+#gbf-methode .gbf-budget-split .gbf-split-intro{font-size:12px;line-height:1.45;margin:0 0 11px;color:#4b6658}
+#gbf-methode .gbf-split-slider{height:46px;position:relative;touch-action:pan-y;user-select:none;margin-bottom:7px}
+#gbf-methode .gbf-split-track{position:absolute;left:10px;right:10px;top:16px;height:16px;display:flex;overflow:hidden;border:1px solid #aab7ae;border-radius:999px;box-shadow:inset 0 1px 3px #07371c30}
+#gbf-methode .gbf-split-segment{height:100%;transition:width .08s;min-width:0}
+#gbf-methode .gbf-split-segment--combi{background:#287e4b}
+#gbf-methode .gbf-split-segment--simples{background:#dba532}
+#gbf-methode .gbf-split-segment--solo{background:#357cb7}
+#gbf-methode .gbf-split-slider input[type=range]{position:absolute;inset:0;width:100%;height:46px;margin:0;outline-offset:0;background:transparent;appearance:none;-webkit-appearance:none;pointer-events:none;cursor:ew-resize}
+#gbf-methode .gbf-split-slider input[type=range]::-webkit-slider-runnable-track{background:transparent;border:0;height:15px}
+#gbf-methode .gbf-split-slider input[type=range]::-moz-range-track{background:transparent;border:0;height:15px}
+#gbf-methode .gbf-split-slider input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:25px;height:25px;border-radius:50%;border:3px solid white;background:#1d5d43;box-shadow:0 0 0 2px #18543a,0 2px 6px #071d1550;pointer-events:auto;cursor:ew-resize;margin-top:-5px}
+#gbf-methode .gbf-split-slider input[type=range]::-moz-range-thumb{width:21px;height:21px;border-radius:50%;border:3px solid white;background:#1d5d43;box-shadow:0 0 0 2px #18543a,0 2px 6px #071d1550;pointer-events:auto;cursor:ew-resize}
+#gbf-methode .gbf-split-slider input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 5px #357cb775}
+#gbf-methode .gbf-split-slider input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 5px #357cb775}
+#gbf-methode .gbf-split-slider .gbf-split-handle-one{z-index:4}
+#gbf-methode .gbf-split-slider .gbf-split-handle-two{z-index:3}
+#gbf-methode .gbf-split-labels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+#gbf-methode .gbf-split-value{display:flex;flex-direction:column;gap:3px;border-radius:9px;padding:9px 6px;min-width:0;text-align:center;border:1px solid #adc6b6;background:white}
+#gbf-methode .gbf-split-value b{font-size:clamp(15px,2vw,19px);font-weight:850;line-height:1}
+#gbf-methode .gbf-split-value small{font-size:10px;line-height:1.22;color:#344a40;font-weight:650}
+#gbf-methode .gbf-split-value em{font-size:9px;color:#617769;font-style:normal;line-height:1.2}
+#gbf-methode .gbf-split-value--combi b{color:#267e48}
+#gbf-methode .gbf-split-value--simples b{color:#9a6c03}
+#gbf-methode .gbf-split-value--solo b{color:#226ca6}
+#gbf-methode .gbf-split-foot{font-size:10.4px;color:#63776c;margin:10px 0 0;line-height:1.35;text-align:center}
+@media(max-width:420px){#gbf-methode .gbf-budget-split{padding:12px 9px}#gbf-methode .gbf-split-labels{gap:4px}#gbf-methode .gbf-split-value{padding:8px 4px}#gbf-methode .gbf-split-value small{font-size:9px}#gbf-methode .gbf-split-value em{font-size:8px}}
+
+
+/* V27 — Bureau : deux colonnes 50/50, hauteurs parfaitement alignées.
+   Les infographies restent entières et le smartphone garde une seule colonne. */
+@media (min-width:741px) {
+  #gbf-methode .method-columns {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:stretch;
+  }
+  #gbf-methode .method-column-stack--left {
+    height:100%;
+    min-height:100%;
+  }
+  #gbf-methode .method-column--calculateur.gbf-calculateur {
+    flex:1 1 auto;
+  }
+  #gbf-methode .method-column--bets {
+    height:100%;
+    display:flex;
+    flex-direction:column;
+  }
+  #gbf-methode .method-column--bets .gbf-method-posters {
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  #gbf-methode .method-column--bets .gbf-method-poster {
+    flex:0 0 auto;
+  }
+}
+
+/* V28 — titres centrés dans les deux sous-cartes MISES, Solo Live sur trois lignes. */
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte h3 {
+  text-align:center;
+  width:100%;
+}
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte--solo .gbf-solo-live-intro {
+  font-weight:650;
+  margin:0 0 10px;
+}
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte--solo .gbf-solo-live-action {
+  font-weight:650;
+  margin:0 0 8px;
+  padding:0;
+  line-height:1.5;
+}
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte--solo .gbf-solo-live-action:last-child {
+  margin-bottom:0;
+}
+
+/* V29 — Titre des deux formules, flèche transférée et lisibilité mobile. */
+#gbf-methode .gbf-hypothese-branch { margin-left:0; }
+#gbf-methode .gbf-formules-heading {
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:45px;
+  margin:0 0 15px;
+  padding:0 46px;
+}
+#gbf-methode .gbf-formules-heading .gbf-hypothese-branch-arrow {
+  position:absolute;
+  top:50%;left:0;
+  transform:translateY(-50%);
+}
+#gbf-methode .gbf-formules-heading h3 {
+  margin:0;
+  color:#fff;
+  text-align:center;
+  font-size:clamp(21px,2.4vw,27px);
+  line-height:1.15;
+  font-weight:900;
+  letter-spacing:.01em;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-formules-heading {min-height:36px;padding:0 37px;margin-bottom:12px;}
+  #gbf-methode .gbf-formules-heading h3 {font-size:clamp(18px,5vw,22px);}
+}
+
+/* V30 — Flèche intégrée dans la sous-carte des trois indices. */
+#gbf-methode .gbf-consequence { margin-left:0; }
+#gbf-methode .gbf-consequence p.gbf-consequence-text {
+  display:flex; align-items:center; gap:12px; min-width:0;
+}
+#gbf-methode .gbf-consequence p.gbf-consequence-text .gbf-consequence-arrow {
+  flex:0 0 39px;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-consequence { margin-left:0; }
+  #gbf-methode .gbf-consequence p.gbf-consequence-text { gap:8px; }
+  #gbf-methode .gbf-consequence p.gbf-consequence-text .gbf-consequence-arrow {flex-basis:32px;}
+}
+
+/* V33 — Cartes CombiMax / Solo désormais en véritable texte HTML, sobres et accessibles. */
+#gbf-methode .gbf-text-cards {display:flex;flex-direction:column;gap:15px;min-width:0;flex:1;}
+#gbf-methode .gbf-txt-sprite {position:absolute;width:0;height:0;overflow:hidden;}
+#gbf-methode .gbf-text-card {
+  min-width:0;padding:15px;border:1px solid #cbd9d9;border-radius:13px;
+  background:#fff;color:#1c3430;box-shadow:0 3px 10px rgba(19,56,48,.08);text-align:left;
+}
+#gbf-methode .gbf-text-card--combi {border-top:3px solid #c5a05b;}
+#gbf-methode .gbf-text-card--solo {border-top:3px solid #33875e;}
+#gbf-methode .gbf-txt-icon {width:20px;height:20px;flex:none;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+#gbf-methode .gbf-text-card-header {display:flex;gap:10px;align-items:center;padding-bottom:12px;border-bottom:1px solid #e2e9e8;}
+#gbf-methode .gbf-text-card-emblem {width:42px;height:42px;display:grid;place-items:center;flex:none;border-radius:10px;background:#f4f0e6;color:#946b1b;}
+#gbf-methode .gbf-text-card--solo .gbf-text-card-emblem {background:#e8f3ed;color:#26744e;}
+#gbf-methode .gbf-text-card-emblem .gbf-txt-icon {width:26px;height:26px;}
+#gbf-methode .gbf-text-card-header-main {flex:1;min-width:0;}
+#gbf-methode .gbf-text-card-header h3 {margin:0;color:#18456b;font-size:clamp(18px,2.2vw,22px);font-weight:850;line-height:1.2;}
+#gbf-methode .gbf-text-card--solo .gbf-text-card-header h3 {color:#185f45;}
+#gbf-methode .gbf-text-card-header p {margin:3px 0 0;font-size:12.5px;color:#455f58;line-height:1.35;}
+#gbf-methode .gbf-text-card-tag {font-size:10.5px;font-weight:750;color:#79571f;background:#fbf2dc;padding:5px 8px;border-radius:999px;white-space:nowrap;}
+#gbf-methode .gbf-txt-stats {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:13px 0 14px;}
+#gbf-methode .gbf-txt-stat {display:flex;align-items:center;gap:7px;padding:8px;border:1px solid #e0e9e7;border-radius:8px;background:#f8faf9;color:#204c42;font-size:12px;font-weight:750;line-height:1.25;min-width:0;}
+#gbf-methode .gbf-txt-stat .gbf-txt-icon {width:19px;height:19px;color:#297350;}
+#gbf-methode .gbf-txt-section-title {font-size:16px;margin:0 0 7px;padding:0 0 6px;border-bottom:2px solid #e6ddc7;color:#225273;font-weight:850;}
+#gbf-methode .gbf-txt-bet-group {display:grid;grid-template-columns:minmax(112px,.45fr) minmax(0,1fr);gap:10px;padding:10px 0;border-bottom:1px solid #edf0ee;align-items:start;}
+#gbf-methode .gbf-txt-bet-group:last-child {border-bottom:0;padding-bottom:0;}
+#gbf-methode .gbf-txt-bet-label {display:flex;align-items:center;gap:7px;font-size:11.8px;color:#375146;line-height:1.25;}
+#gbf-methode .gbf-txt-bet-label .gbf-txt-icon {color:#a07728;width:20px;height:20px;}
+#gbf-methode .gbf-txt-bets {display:flex;flex-wrap:wrap;gap:5px;min-width:0;}
+#gbf-methode .gbf-txt-pari {display:inline-flex;align-items:center;gap:5px;padding:5px 6px;border:1px solid #e4e7e3;border-radius:5px;background:#f8faf8;color:#36504a;font-size:10.8px;line-height:1.2;white-space:nowrap;}
+#gbf-methode .gbf-txt-pari strong {color:#775723;background:#f5ebd5;border-radius:4px;padding:2px 5px;font-size:11.5px;font-variant-numeric:tabular-nums;}
+#gbf-methode .gbf-txt-solo-main {margin-top:13px;}
+#gbf-methode .gbf-txt-solo-main h4,#gbf-methode .gbf-txt-autonome h4 {font-size:16px;line-height:1.3;font-weight:850;color:#185e43;margin:0 0 5px;}
+#gbf-methode .gbf-txt-intro {font-size:12.9px;color:#3b554b;line-height:1.48;margin:0 0 12px;}
+#gbf-methode .gbf-txt-actions {list-style:none;display:flex;flex-direction:column;gap:8px;margin:0;padding:0;}
+#gbf-methode .gbf-txt-action {display:flex;align-items:flex-start;gap:11px;padding:10px;border:1px solid #d8e6dc;border-radius:9px;background:#f8fcf9;margin:0;}
+#gbf-methode .gbf-txt-symbol {display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:8px;background:#e5f3e8;color:#24764b;}
+#gbf-methode .gbf-txt-symbol .gbf-txt-icon {width:22px;height:22px;}
+#gbf-methode .gbf-txt-action strong {display:block;color:#185b3c;font-size:12.9px;line-height:1.3;margin:0 0 3px;}
+#gbf-methode .gbf-txt-action p {font-size:12px;color:#39504a;line-height:1.42;}
+#gbf-methode .gbf-txt-autonome {padding:12px;margin-top:12px;border:1px solid #d8e6dc;border-radius:9px;background:#f2f9f4;}
+#gbf-methode .gbf-txt-autonome p {font-size:12.8px;line-height:1.4;color:#395047;}
+@media(max-width:430px) {
+ #gbf-methode .gbf-text-card {padding:11px;}
+ #gbf-methode .gbf-text-card-header {flex-wrap:wrap;}
+ #gbf-methode .gbf-text-card-tag {margin-left:52px;}
+ #gbf-methode .gbf-txt-bet-group {grid-template-columns:minmax(0,1fr);gap:6px;}
+ #gbf-methode .gbf-txt-stat {font-size:11px;padding:7px 5px;}
+ #gbf-methode .gbf-txt-stat .gbf-txt-icon {width:17px;height:17px;}
+}
+
+
+/* V35 — Composition lisible en deux colonnes, MISES sur toute la largeur. */
+#gbf-methode .gbf-main-layout {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;
+  gap:16px;
+  margin:0 0 16px;
+}
+#gbf-methode .gbf-main-layout .method-column-stack--left,
+#gbf-methode .gbf-main-layout .gbf-right-stack {
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  min-width:0;
+  height:auto;
+  min-height:0;
+}
+#gbf-methode .gbf-main-layout .gbf-postulat-card,
+#gbf-methode .gbf-main-layout .gbf-formules-card {
+  margin:0;
+  min-width:0;
+}
+#gbf-methode .gbf-main-layout .method-column--indices,
+#gbf-methode .gbf-main-layout .method-column--bets {
+  min-width:0;
+  height:auto;
+}
+#gbf-methode .gbf-main-layout .method-column--bets {
+  flex:0 0 auto;
+}
+#gbf-methode .gbf-formules-card {
+  padding:17px 18px 19px;
+  border:1px solid #b5d1df;
+  border-top:5px solid #2b719d;
+  border-radius:16px;
+  background:linear-gradient(135deg,#f4f9fc,#eaf3fa);
+  box-shadow:0 6px 18px rgba(21,65,90,.10);
+}
+#gbf-methode .gbf-formules-card .gbf-hypothese-combimax {
+  margin:0;
+  padding:16px;
+  border-radius:11px;
+}
+#gbf-methode .gbf-formules-card .gbf-formules-heading {
+  margin-bottom:12px;
+}
+#gbf-methode .gbf-mises-full {
+  width:100%;
+  margin:0;
+  min-width:0;
+}
+#gbf-methode .gbf-mises-full .gbf-mise-souscartes {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;
+  gap:14px;
+}
+#gbf-methode .gbf-mises-full .gbf-budget-split {
+  grid-column:1 / -1;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-main-layout {
+    grid-template-columns:minmax(0,1fr);
+    gap:14px;
+    margin-bottom:14px;
+  }
+  #gbf-methode .gbf-main-layout .method-column-stack--left,
+  #gbf-methode .gbf-main-layout .gbf-right-stack {gap:14px;}
+  #gbf-methode .gbf-formules-card {padding:12px;}
+  #gbf-methode .gbf-formules-card .gbf-hypothese-combimax {padding:12px;}
+  #gbf-methode .gbf-mises-full .gbf-mise-souscartes {grid-template-columns:minmax(0,1fr);}
+  #gbf-methode .gbf-mises-full .gbf-budget-split {grid-column:auto;}
+}
+
+/* V36 — Sous-titre général et principe stratégique en tête de la colonne droite. */
+#gbf-methode .gbf-method-subtitle {
+  margin:2px 0 20px;
+  padding:0 8px;
+  text-align:center;
+  color:#1b654d;
+  font-size:clamp(18px,2.15vw,24px);
+  font-weight:850;
+  letter-spacing:.01em;
+  line-height:1.35;
+}
+#gbf-methode .gbf-main-layout .gbf-strategie-card {
+  display:block;
+  min-width:0;
+  margin:0;
+  padding:19px 20px;
+  border:1px solid #d4e1f5;
+  border-left:5px solid #4a83cf;
+  border-radius:12px;
+  background:linear-gradient(100deg,#e8f1ff,#f5f8ff);
+  box-shadow:0 3px 11px rgba(39,81,138,.09);
+}
+#gbf-methode .gbf-main-layout .gbf-strategie-card .gbf-hypothese-texte {
+  margin:0;
+  color:#183f75;
+  font-size:clamp(15.5px,1.7vw,19px);
+  line-height:1.46;
+  font-weight:650;
+}
+#gbf-methode .gbf-main-layout .gbf-strategie-card .gbf-hypothese-texte strong {
+  color:#225b9f;
+  font-weight:850;
+}
+#gbf-methode .gbf-main-layout .gbf-postulat-card .gbf-consequence {margin-bottom:0;}
+@media(max-width:740px) {
+  #gbf-methode .gbf-method-subtitle {font-size:18px;margin:0 0 14px;}
+  #gbf-methode .gbf-main-layout .gbf-strategie-card {padding:13px 14px;}
+  #gbf-methode .gbf-main-layout .gbf-strategie-card .gbf-hypothese-texte {font-size:15px;}
+}
+
+/* V37 — Sous-titre dans le bandeau principal ; trois indices au-dessus du titre LES INDICES. */
+#gbf-methode .gbf-method-title-text {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  min-width:0;
+}
+#gbf-methode .gbf-method-title-text .gbf-method-title-main {
+  display:block;
+}
+#gbf-methode h1.gbf-method-title .gbf-method-subtitle {
+  display:block;
+  margin:0;
+  padding:0;
+  text-align:center;
+  color:#e5f4e9;
+  font-size:clamp(12px,1.4vw,16px);
+  font-weight:650;
+  letter-spacing:.015em;
+  line-height:1.28;
+}
+#gbf-methode .method-column--indices > .gbf-consequence {
+  display:block;
+  margin:0 0 13px;
+  width:100%;
+}
+#gbf-methode .method-column--indices > .gbf-consequence p.gbf-consequence-text {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:0;
+  padding:11px 13px;
+  font-size:clamp(14px,1.55vw,17px);
+}
+#gbf-methode .method-column--indices > .gbf-consequence .gbf-consequence-arrow {
+  flex:0 0 35px;
+  width:35px;
+  height:35px;
+  font-size:23px;
+}
+@media(max-width:740px) {
+  #gbf-methode h1.gbf-method-title .gbf-method-subtitle {
+    font-size:clamp(10px,2.8vw,13px);
+  }
+  #gbf-methode .method-column--indices > .gbf-consequence {
+    margin-bottom:11px;
+  }
+  #gbf-methode .method-column--indices > .gbf-consequence p.gbf-consequence-text {
+    gap:8px;
+    padding:9px 10px;
+    font-size:14px;
+  }
+}
+
+/* V39 — Échelle typographique unifiée : 5 niveaux, sans changer la disposition.
+   Titres 28 | sections 21 | sous-titres 17 | texte 14 | détails 12 px. */
+#gbf-methode {
+  --gbf-fs-title:28px;
+  --gbf-fs-section:21px;
+  --gbf-fs-sub:17px;
+  --gbf-fs-body:14px;
+  --gbf-fs-small:12px;
+  font-size:var(--gbf-fs-body);
+  line-height:1.45;
+}
+/* 1 — Identité principale. */
+#gbf-methode h1.gbf-method-title {
+  font-size:var(--gbf-fs-title);
+  line-height:1.2;
+}
+#gbf-methode h1.gbf-method-title .gbf-method-subtitle {
+  font-size:var(--gbf-fs-body);
+  line-height:1.25;
+}
+/* 2 — Titres de grandes cartes et sigles distinctifs des indices. */
+#gbf-methode .method-column h2,
+#gbf-methode .method-column--calculateur.gbf-calculateur h2,
+#gbf-methode .gbf-formules-heading h3,
+#gbf-methode .gbf-text-card-header h3,
+#gbf-methode .method-column .index-acronym {
+  font-size:var(--gbf-fs-section);
+  line-height:1.25;
+}
+/* 3 — Accroches, rubriques internes et intitulés des sous-cartes. */
+#gbf-methode .gbf-hypothese p.gbf-hypothese-postulat,
+#gbf-methode .gbf-main-layout .gbf-strategie-card .gbf-hypothese-texte,
+#gbf-methode .method-column--indices > .gbf-consequence p.gbf-consequence-text,
+#gbf-methode .gbf-combimax-title,
+#gbf-methode .gbf-hypothese .gbf-solo-live-note .gbf-solo-live-heading,
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte h3,
+#gbf-methode .gbf-budget-split h3,
+#gbf-methode .gbf-txt-section-title,
+#gbf-methode .gbf-split-value b,
+#gbf-methode .gbf-more-details > summary,
+#gbf-methode .gbf-content .gbf-chapter,
+#gbf-methode .gbf-content .gbf-index-title,
+#gbf-methode .gbf-content h3 {
+  font-size:var(--gbf-fs-sub);
+  line-height:1.35;
+}
+/* 4 — Tous les textes de lecture et libellés opérationnels. */
+#gbf-methode .method-column .indices-lead,
+#gbf-methode .method-column .index-name,
+#gbf-methode .method-column .index-desc,
+#gbf-methode .formula,
+#gbf-methode .gbf-combimax-cas,
+#gbf-methode .gbf-hypothese .gbf-hypothese-combimax .gbf-solo-live-note,
+#gbf-methode .gbf-hypothese .gbf-solo-live-note .gbf-solo-live-desc,
+#gbf-methode .method-column--calculateur.gbf-calculateur p,
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte p,
+#gbf-methode .method-column--calculateur .gbf-calculateur-criteres,
+#gbf-methode .method-column--calculateur .gbf-mise-souscarte .gbf-calculateur-criteres,
+#gbf-methode .gbf-budget-split .gbf-split-intro,
+#gbf-methode .gbf-text-card-header p,
+#gbf-methode .gbf-txt-stat,
+#gbf-methode .gbf-txt-bet-label,
+#gbf-methode .gbf-txt-intro,
+#gbf-methode .gbf-txt-action strong,
+#gbf-methode .gbf-txt-action p,
+#gbf-methode .gbf-split-value small,
+#gbf-methode .gbf-content,
+#gbf-methode .gbf-content .gbf-subhead {
+  font-size:var(--gbf-fs-body);
+  line-height:1.45;
+}
+/* 5 — Notes et détails : une seule petite taille lisible. */
+#gbf-methode .disclaimer,
+#gbf-methode .gbf-text-card-tag,
+#gbf-methode .gbf-txt-pari,
+#gbf-methode .gbf-txt-pari strong,
+#gbf-methode .gbf-split-value em,
+#gbf-methode .gbf-split-foot {
+  font-size:var(--gbf-fs-small);
+  line-height:1.35;
+}
+/* Les éléments de navigation, références secondaires et icônes conservent
+   leur rôle visuel ; les chiffres et le contenu restent inchangés. */
+@media(max-width:740px) {
+  #gbf-methode {
+    --gbf-fs-title:23px;
+    --gbf-fs-section:19px;
+    --gbf-fs-sub:16px;
+  }
+  #gbf-methode .gbf-txt-bet-group {
+    grid-template-columns:minmax(0,1fr);
+    gap:6px;
+  }
+}
+
+
+/* V40 — Lecture verticale : cartes principales empilées dans l'ordre de la méthode.
+   Deux sous-cartes TEXTE indépendantes pour CombiMax et Solo Live. */
+#gbf-methode .method-columns.gbf-main-layout.gbf-one-column-layout {
+  display:flex;
+  flex-direction:column;
+  grid-template-columns:none;
+  align-items:stretch;
+  gap:17px;
+  width:100%;
+  margin:0 0 17px;
+}
+#gbf-methode .gbf-one-column-layout > .gbf-postulat-card,
+#gbf-methode .gbf-one-column-layout > .method-column--indices,
+#gbf-methode .gbf-one-column-layout > .gbf-strategie-card,
+#gbf-methode .gbf-one-column-layout > .gbf-formules-card,
+#gbf-methode .gbf-one-column-layout > .method-column--bets {
+  display:block;
+  width:100%;
+  max-width:none;
+  min-width:0;
+  height:auto;
+  min-height:0;
+  margin:0;
+  flex:none;
+}
+#gbf-methode .gbf-one-column-layout > .gbf-postulat-card {
+  padding:16px 18px;
+}
+#gbf-methode .gbf-one-column-layout .gbf-formules-card {
+  padding:17px 18px 20px;
+  background:#f5f9fc;
+  box-shadow:0 3px 12px rgba(21,65,90,.07);
+}
+#gbf-methode .gbf-one-column-layout .gbf-formules-heading {
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 50px;
+  margin:0 0 14px;
+  min-height:54px;
+  border-radius:10px;
+  background:linear-gradient(105deg,#184e75,#246e99);
+}
+#gbf-methode .gbf-one-column-layout .gbf-formules-heading h3 {
+  color:#fff;
+  margin:0;
+  font-size:var(--gbf-fs-section);
+  font-weight:850;
+}
+#gbf-methode .gbf-formules-subcards {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:13px;
+}
+#gbf-methode .gbf-formule-option {
+  min-width:0;
+  padding:16px 18px;
+  border:1px solid #d6e2eb;
+  border-left:4px solid #d3a347;
+  border-radius:11px;
+  background:#fff;
+}
+#gbf-methode .gbf-formule-option--solo {
+  border-color:#c9dfd1;
+  border-left-color:#30805a;
+  background:#f9fdfb;
+}
+#gbf-methode .gbf-formule-option h4 {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 12px;
+  padding:0 0 10px;
+  border-bottom:1px solid #e4eae9;
+  color:#24547a;
+  font-size:var(--gbf-fs-sub);
+  font-weight:850;
+  line-height:1.3;
+}
+#gbf-methode .gbf-formule-option--solo h4 {color:#236d49;}
+#gbf-methode .gbf-formule-icon {
+  flex:0 0 25px;
+  width:25px;
+  height:25px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+#gbf-methode .gbf-one-column-layout .gbf-formule-option .gbf-combimax-title,
+#gbf-methode .gbf-one-column-layout .gbf-formule-option .gbf-combimax-cas {
+  color:#224663;
+  font-size:var(--gbf-fs-body);
+  line-height:1.45;
+}
+#gbf-methode .gbf-one-column-layout .gbf-formule-option .gbf-combimax-title {
+  margin:0 0 9px;
+  font-weight:750;
+}
+#gbf-methode .gbf-one-column-layout .gbf-formule-option--solo .gbf-solo-live-note {
+  display:block;
+  margin:0;
+  padding:0;
+  border:0;
+  background:none;
+  color:#25543f;
+  font-size:var(--gbf-fs-body);
+  text-shadow:none;
+}
+#gbf-methode .gbf-one-column-layout .gbf-formule-option .gbf-solo-live-heading {
+  display:block;
+  margin:0 0 7px;
+  color:#246b4c;
+  font-size:var(--gbf-fs-sub);
+}
+#gbf-methode .gbf-one-column-layout .gbf-formule-option .gbf-solo-live-desc,
+#gbf-methode .gbf-one-column-layout .gbf-formule-option .gbf-solo-live-cas {
+  color:#25543f;
+  font-size:var(--gbf-fs-body);
+}
+#gbf-methode .gbf-one-column-layout .gbf-formule-option--solo .gbf-combimax-num {
+  background:#d2eede;
+  color:#185b3d;
+}
+#gbf-methode .gbf-mises-full {
+  display:block;
+  width:100%;
+  height:auto;
+  min-height:0;
+}
+#gbf-methode .gbf-mises-full .gbf-mise-souscartes {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:12px;
+}
+#gbf-methode .gbf-mises-full .gbf-budget-split {grid-column:1;}
+@media(max-width:740px) {
+  #gbf-methode .method-columns.gbf-main-layout.gbf-one-column-layout {
+    gap:13px;
+    margin-bottom:13px;
+  }
+  #gbf-methode .gbf-one-column-layout .gbf-formules-card {padding:11px;}
+  #gbf-methode .gbf-one-column-layout .gbf-formules-heading {
+    min-height:46px;
+    padding:9px 43px;
+  }
+  #gbf-methode .gbf-formule-option {padding:12px 13px;}
+}
+
+/* V41 — Descriptions des deux formules transférées dans LES PARIS ;
+   CombiMax côte à côte avec ses deux scénarios ; Solo Live sous son titre. */
+#gbf-methode .gbf-paris-formules-summary {
+  margin:0 0 14px;
+  padding:0 2px;
+  color:#365d68;
+  font-size:var(--gbf-fs-body);
+  line-height:1.45;
+}
+#gbf-methode .gbf-combimax-head-row {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);
+  align-items:start;
+  gap:17px;
+  margin-bottom:13px;
+}
+#gbf-methode .gbf-combimax-head-row > .gbf-text-card-header {
+  height:100%;
+  min-width:0;
+  padding:4px 0 10px;
+  align-content:start;
+  flex-wrap:wrap;
+}
+#gbf-methode .gbf-bets-combi-scenarios {
+  min-width:0;
+  border-radius:10px;
+  border:1px solid #e8ddc4;
+  background:#fffcf4;
+  padding:10px 13px;
+}
+#gbf-methode .gbf-bets-combi-scenarios p.gbf-combimax-title {
+  margin:0 0 6px;
+  color:#3f4b40;
+  font-size:var(--gbf-fs-body);
+  font-weight:750;
+  line-height:1.4;
+}
+#gbf-methode .gbf-bets-combi-scenarios .gbf-combimax-cas {
+  margin-top:5px;
+  color:#344f49;
+  font-size:var(--gbf-fs-body);
+  line-height:1.35;
+}
+#gbf-methode .gbf-bets-combi-scenarios .gbf-combimax-num {
+  background:#ffdf85;
+  color:#18465b;
+}
+#gbf-methode .gbf-bets-solo-summary {
+  min-width:0;
+  padding:12px 15px;
+  margin:12px 0 2px;
+  border:1px solid #d6e7dc;
+  border-radius:10px;
+  background:#f7fbf8;
+}
+#gbf-methode .gbf-bets-solo-summary .gbf-solo-live-note {
+  display:block;
+  margin:0;
+  padding:0;
+  border:0;
+  color:#1d6043;
+  background:none;
+  text-shadow:none;
+  font-size:var(--gbf-fs-body);
+  line-height:1.45;
+}
+#gbf-methode .gbf-bets-solo-summary .gbf-solo-live-heading {
+  display:block;
+  color:#186345;
+  margin:0 0 7px;
+  font-size:var(--gbf-fs-sub);
+  font-weight:800;
+}
+#gbf-methode .gbf-bets-solo-summary .gbf-combimax-cas,
+#gbf-methode .gbf-bets-solo-summary .gbf-solo-live-desc {
+  color:#1e5841;
+  font-size:var(--gbf-fs-body);
+}
+#gbf-methode .gbf-bets-solo-summary .gbf-combimax-cas {
+  display:flex;
+  margin-top:6px;
+}
+#gbf-methode .gbf-bets-solo-summary .gbf-combimax-num {
+  background:#d4eee0;
+  color:#18573b;
+}
+#gbf-methode .gbf-bets-solo-summary + .gbf-txt-solo-main {
+  margin-top:12px;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-combimax-head-row {
+    grid-template-columns:minmax(0,1fr);
+    gap:10px;
+  }
+  #gbf-methode .gbf-combimax-head-row > .gbf-text-card-header {
+    padding-bottom:10px;
+  }
+  #gbf-methode .gbf-bets-solo-summary {padding:10px 12px;}
+}
+
+/* V42 — Titres, scénarios et étiquettes harmonisés dans la carte Les paris. */
+#gbf-methode .method-column--bets .gbf-paris-formules-summary {
+  margin:9px 0 17px;
+  text-align:center;
+  color:#1c5c81;
+  font-size:var(--gbf-fs-sub);
+  line-height:1.35;
+  font-weight:800;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row {
+  display:block;
+  margin-bottom:14px;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row > .gbf-text-card-header {
+  display:flex;
+  align-items:flex-start;
+  flex-wrap:nowrap;
+  gap:12px;
+  height:auto;
+  padding:4px 0 14px;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row .gbf-text-card-header-main {
+  min-width:0;
+  flex:1 1 auto;
+}
+#gbf-methode .method-column--bets .gbf-bets-combi-scenarios {
+  display:block;
+  margin:12px 0 0;
+  padding:0;
+  border:0;
+  background:none;
+}
+#gbf-methode .method-column--bets .gbf-bets-combi-scenarios .gbf-combimax-result-label {
+  margin:0 0 6px;
+  color:#244d61;
+  font-size:var(--gbf-fs-body);
+  font-weight:800;
+  line-height:1.4;
+}
+#gbf-methode .method-column--bets .gbf-bets-combi-scenarios .gbf-combimax-cas {
+  margin:6px 0 0 15px;
+  color:#30574c;
+  font-weight:700;
+}
+#gbf-methode .gbf-text-card--solo .gbf-text-card-tag--solo {
+  color:#246848;
+  background:#e5f3e9;
+  border:1px solid #c6e4d1;
+}
+@media(max-width:740px) {
+  #gbf-methode .method-column--bets .gbf-combimax-head-row > .gbf-text-card-header {
+    flex-wrap:wrap;
+  }
+  #gbf-methode .method-column--bets .gbf-combimax-head-row .gbf-text-card-tag,
+  #gbf-methode .gbf-text-card--solo .gbf-text-card-tag--solo {
+    margin-left:52px;
+  }
+}
+
+/* V43 — Sous-titre Solo Live rapproché du titre, sans doublon dans le corps. */
+#gbf-methode .gbf-text-card--solo .gbf-solo-subtitle {
+  display:block;
+  margin:6px 0 0;
+  color:#425e52;
+  font-size:var(--gbf-fs-body);
+  line-height:1.45;
+  font-weight:500;
+  white-space:normal;
+}
+#gbf-methode .gbf-text-card--solo .gbf-text-card-header {
+  align-items:flex-start;
+}
+
+/* V45 — Le sous-titre CombiMax & Solo Live fait partie du bandeau LES PARIS. */
+#gbf-methode .method-column--bets h2#gbf-bets-title {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  margin-bottom:14px;
+  padding:12px 14px;
+  text-align:center;
+}
+#gbf-methode .method-column--bets #gbf-bets-title .gbf-paris-title-main {
+  display:block;
+  font-size:var(--gbf-fs-section);
+  font-weight:850;
+  line-height:1.2;
+}
+#gbf-methode .method-column--bets #gbf-bets-title .gbf-paris-title-subtitle {
+  display:block;
+  color:#edf6ff;
+  font-size:var(--gbf-fs-body);
+  font-weight:650;
+  letter-spacing:0;
+  line-height:1.3;
+  text-transform:none;
+}
+
+/* V46 : meilleure lisibilité mobile et mise en page verticale resserrée. */
+#gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo {
+ display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;
+ column-gap:10px;row-gap:5px;padding:0 0 9px;
+}
+#gbf-methode .gbf-text-card-header--solo > .gbf-text-card-emblem{grid-column:1;grid-row:1;}
+#gbf-methode .gbf-text-card-header--solo > .gbf-text-card-header-main{grid-column:2;grid-row:1;min-width:0;}
+#gbf-methode .gbf-text-card-header--solo > .gbf-text-card-tag--solo{
+ grid-column:3;grid-row:1;justify-self:end;margin:0;white-space:nowrap;
+}
+#gbf-methode .gbf-text-card-header--solo > .gbf-solo-subtitle{
+ grid-column:2/-1;grid-row:2;min-width:0;max-width:100%;
+ margin:0;padding:0;color:#3c5b50;font-size:var(--gbf-fs-body);font-weight:600;
+ line-height:1.4;letter-spacing:normal;white-space:normal;overflow-wrap:break-word;text-wrap:pretty;
+}
+/* Densité : espaces réduits, taille de texte préservée. */
+#gbf-methode{padding:8px 9px 15px;}
+#gbf-methode h1.gbf-method-title{min-height:80px;padding:7px 12px;margin-bottom:10px;}
+#gbf-methode .method-columns.gbf-main-layout.gbf-one-column-layout{gap:10px;margin-bottom:10px;}
+#gbf-methode .gbf-one-column-layout > .gbf-postulat-card{padding:12px 14px;}
+#gbf-methode .gbf-one-column-layout > .gbf-strategie-card{padding:12px 14px;}
+#gbf-methode .method-column--indices,#gbf-methode .method-column--bets{padding:11px;}
+#gbf-methode .method-column h2{padding:9px 12px;margin-bottom:9px;}
+#gbf-methode .method-column--indices > .gbf-consequence{margin-bottom:8px;}
+#gbf-methode .method-column--indices > .gbf-consequence p.gbf-consequence-text{padding:9px 11px;}
+#gbf-methode .method-column .indices-lead{margin-bottom:7px;padding:7px 9px;}
+#gbf-methode .method-column--indices .cards{gap:8px;}
+#gbf-methode .method-column .index-card{min-height:0;padding:10px 12px;}
+#gbf-methode .method-column .index-name{margin-bottom:3px;}
+#gbf-methode .formula{margin-top:7px;}
+#gbf-methode .disclaimer{margin-top:5px;}
+#gbf-methode .gbf-text-cards{gap:10px;}
+#gbf-methode .gbf-text-card{padding:11px 12px;}
+#gbf-methode .method-column--bets h2#gbf-bets-title{padding:9px 12px;margin-bottom:10px;}
+#gbf-methode .gbf-text-card-header{padding-bottom:9px;}
+#gbf-methode .method-column--bets .gbf-combimax-head-row{margin-bottom:8px;}
+#gbf-methode .method-column--bets .gbf-bets-combi-scenarios{margin-top:8px;}
+#gbf-methode .gbf-txt-stats{gap:6px;margin:8px 0 10px;}
+#gbf-methode .gbf-txt-stat{padding:6px 8px;}
+#gbf-methode .gbf-txt-section-title{margin-bottom:5px;padding-bottom:5px;}
+#gbf-methode .gbf-txt-bet-group{padding:7px 0;}
+#gbf-methode .gbf-bets-solo-summary{margin:8px 0 0;padding:9px 11px;}
+#gbf-methode .gbf-bets-solo-summary .gbf-solo-live-heading{margin-bottom:5px;}
+#gbf-methode .gbf-bets-solo-summary .gbf-combimax-cas{margin-top:4px;}
+#gbf-methode .gbf-bets-solo-summary + .gbf-txt-solo-main{margin-top:8px;}
+#gbf-methode .gbf-txt-actions{gap:6px;}
+#gbf-methode .gbf-txt-action{gap:9px;padding:8px 10px;}
+#gbf-methode .method-column--calculateur.gbf-calculateur{padding:11px 12px;}
+#gbf-methode .method-column--calculateur.gbf-calculateur h2{margin-bottom:9px;padding:9px;}
+#gbf-methode .gbf-mises-full .gbf-mise-souscartes{gap:9px;}
+#gbf-methode .gbf-mise-souscarte{padding:10px 12px;}
+#gbf-methode .gbf-budget-split{padding:10px 12px;}
+@media(max-width:740px){
+ #gbf-methode{padding:6px 6px 12px;}
+ #gbf-methode h1.gbf-method-title{min-height:72px;padding:6px 7px;margin-bottom:8px;}
+ #gbf-methode .method-columns.gbf-main-layout.gbf-one-column-layout{gap:8px;margin-bottom:8px;}
+ #gbf-methode .gbf-one-column-layout > .gbf-postulat-card,
+ #gbf-methode .gbf-one-column-layout > .gbf-strategie-card{padding:10px 11px;}
+ #gbf-methode .method-column--indices,#gbf-methode .method-column--bets{padding:8px;}
+ #gbf-methode .method-column .index-card{padding:9px 8px;}
+ #gbf-methode .gbf-text-card{padding:9px;}
+ #gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo{
+  grid-template-columns:36px minmax(0,1fr);column-gap:9px;row-gap:4px;padding-bottom:8px;
+ }
+ #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-emblem{
+  width:36px;height:36px;grid-column:1;grid-row:1/3;
+ }
+ #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-emblem .gbf-txt-icon{width:23px;height:23px;}
+ #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-header-main{grid-column:2;grid-row:1;}
+ #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-tag--solo{
+  grid-column:2;grid-row:2;justify-self:start;margin:0;white-space:normal;
+ }
+ #gbf-methode .gbf-text-card-header--solo > .gbf-solo-subtitle{
+  grid-column:1/-1;grid-row:3;margin:4px 0 0;font-size:14px;line-height:1.4;text-align:left;
+ }
+ #gbf-methode .gbf-txt-action{padding:7px 8px;}
+ #gbf-methode .method-column--calculateur.gbf-calculateur{padding:9px;}
+ #gbf-methode .gbf-mise-souscarte{padding:9px;}
+ #gbf-methode .gbf-budget-split{padding:9px;}
+}
+
+/* V47 — Badge Stratégie principale à proximité immédiate du titre CombiMax. */
+#gbf-methode .method-column--bets .gbf-combimax-title-row {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  column-gap:10px;
+  row-gap:4px;
+  margin:0 0 3px;
+}
+#gbf-methode .method-column--bets .gbf-combimax-title-row h3 {
+  margin:0;
+  flex:0 0 auto;
+}
+#gbf-methode .method-column--bets .gbf-combimax-title-row .gbf-text-card-tag--principal {
+  display:inline-flex;
+  flex:0 1 auto;
+  align-items:center;
+  margin:0;
+  padding:4px 7px;
+  font-size:var(--gbf-fs-small);
+  white-space:normal;
+  overflow-wrap:normal;
+  line-height:1.25;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row > .gbf-text-card-header {
+  align-items:flex-start;
+}
+#gbf-methode .method-column--bets .gbf-combimax-head-row .gbf-text-card-header-main {
+  min-width:0;
+  flex:1 1 0;
+}
+/* Cinq niveaux de texte moins imposants, sur tout le document. */
+#gbf-methode {
+  --gbf-fs-title:25px;
+  --gbf-fs-section:19px;
+  --gbf-fs-sub:15px;
+  --gbf-fs-body:13px;
+  --gbf-fs-small:11px;
+}
+/* Quelques tailles antérieures restaient codées en dur. */
+#gbf-methode .method-column--bets .gbf-paris-title-main {
+  font-size:var(--gbf-fs-section);
+}
+#gbf-methode .method-column--bets .gbf-paris-title-subtitle,
+#gbf-methode .gbf-combimax-title-row + p,
+#gbf-methode .gbf-text-card--solo .gbf-solo-subtitle,
+#gbf-methode .gbf-text-card-tag,
+#gbf-methode .gbf-txt-action,
+#gbf-methode .gbf-txt-bet-group {
+  line-height:1.35;
+}
+#gbf-methode .gbf-bets-solo-summary .gbf-solo-live-heading {
+  font-size:var(--gbf-fs-sub);
+}
+#gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo > .gbf-solo-subtitle {
+  font-size:var(--gbf-fs-body);
+}
+@media(max-width:740px) {
+  #gbf-methode {
+    --gbf-fs-title:22px;
+    --gbf-fs-section:18px;
+    --gbf-fs-sub:14px;
+    --gbf-fs-body:13px;
+    --gbf-fs-small:11px;
+  }
+  #gbf-methode .method-column--bets .gbf-combimax-title-row {
+    column-gap:7px;
+    row-gap:4px;
+  }
+  #gbf-methode .method-column--bets .gbf-combimax-title-row .gbf-text-card-tag--principal {
+    margin:0;
+    padding:4px 6px;
+  }
+  #gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo > .gbf-solo-subtitle {
+    font-size:var(--gbf-fs-body);
+    line-height:1.4;
+  }
+}
+
+/* V48 — Badges au plus près des deux titres, cadres légèrement renforcés. */
+#gbf-methode .gbf-text-card--combi {
+  border:1px solid #d1a04e;
+  border-top:4px solid #c19037;
+  background:linear-gradient(150deg,#fffdf8 0%,#fff9eb 100%);
+  box-shadow:0 3px 12px rgba(151,103,35,.13);
+}
+#gbf-methode .gbf-text-card--solo {
+  border:1px solid #76b08d;
+  border-top:4px solid #2f9566;
+  background:linear-gradient(150deg,#fbfffc 0%,#eff9f2 100%);
+  box-shadow:0 3px 12px rgba(35,115,75,.13);
+}
+#gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo {
+  grid-template-columns:42px minmax(0,1fr);
+}
+#gbf-methode .gbf-text-card-header--solo > .gbf-text-card-header-main {
+  grid-column:2;
+  min-width:0;
+}
+#gbf-methode .gbf-solo-title-row {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  column-gap:10px;
+  row-gap:4px;
+  margin:0;
+  min-width:0;
+}
+#gbf-methode .gbf-solo-title-row h3 {
+  margin:0;
+  flex:0 0 auto;
+}
+#gbf-methode .gbf-solo-title-row .gbf-text-card-tag--solo {
+  display:inline-flex;
+  align-items:center;
+  margin:0;
+  padding:4px 7px;
+  font-size:var(--gbf-fs-small);
+  line-height:1.25;
+  white-space:normal;
+}
+#gbf-methode .gbf-text-card-header--solo > .gbf-solo-subtitle {
+  grid-column:2/-1;
+  grid-row:2;
+  margin:0;
+  color:#355747;
+}
+@media(max-width:740px) {
+  #gbf-methode .gbf-text-card--solo .gbf-text-card-header--solo {
+    grid-template-columns:36px minmax(0,1fr);
+    row-gap:5px;
+  }
+  #gbf-methode .gbf-text-card-header--solo > .gbf-text-card-emblem {
+    grid-row:1;
+  }
+  #gbf-methode .gbf-text-card-header--solo > .gbf-solo-subtitle {
+    grid-column:1/-1;
+    grid-row:2;
+    margin:3px 0 0;
+    font-size:var(--gbf-fs-body);
+    line-height:1.4;
+  }
+  #gbf-methode .gbf-solo-title-row {
+    column-gap:7px;
+    row-gap:4px;
+  }
+  #gbf-methode .gbf-solo-title-row .gbf-text-card-tag--solo {
+    padding:4px 6px;
+    margin:0;
+  }
+}
+</style>
+<!-- GreenBallFoot Methode : aperçu GitHub Pages, publication depuis main/root, 2026-11-09 -->
+</head>
+<body style="margin:0;background:transparent;">
+<main id="gbf-methode" class="">
+<h1 class="gbf-method-title"><img class="gbf-method-title-logo" src="data:image/webp;base64,UklGRqBzAABXRUJQVlA4WAoAAAAQAAAAGwEAKwEAQUxQSEwYAAABt6egbRvpHP607ycQETn8jpxkU/aZssuPPGcwbtvIkdR/2ZMv/CNiAmir/KfxymZiP3GRqSozBYzgKbk1K462P4MFeMLmk+ARHqke0HEvpYgXtYcNDwGMQGDLXkmDqEra6lOqe4wrevaBos1EYMYTiAOBlTpzQukUJu4CBeA6QCCuCSBf7n/bPkOS/P97RGaOW2PPrHfHtnf3ubZt27Zt27Zt745tu7srkHn/AZlZWRGRWZX1/C2i/7BoW6kbXXEwSLDNtIrmZfpJOZIkOZIkzcXyT+EOPIKBbiDDjwDeEf2HBEly22aEE0AwgQeGQ6LsL5V/YEQOVSvBobuuqVrIZePQvBNzqhTQywHuIbdK4bs0qmBlR8ZyHILKPboXnOPUXGc/QtyAzUqKYFaDk+dM4ElwpQQuIq8KKWJwo1K+kv6KboxVJdz3fcVxDblVBx/RJGQE6a/szpxqAy+hoPyICriS3CojjhZSxeDLYFFddZHt0gux/DjhlKrCiEej47lF7J+2Dqsm+GshTwgCJ5JXRcSJYb6fyOZ0rh6Yw14HT4TioVPuVg18RJOSfmIQ/qKO1YERFuKxWH4JdgF5jOVoFouC40R6RcF1Xc/zWrn9mpQqBREsae+1bOGFwQ1D9CJZUsgbXcdwQ95Tgqu4kcsN34eTOzV9q3Y1tfUdOnTuuc12O+wyaPio8ZMmTtx1j333O2Wjr0pD+RuvOfnoA/bca49pUyaPHdJ/5+16d+vUUNO2TauWHsuZmqzDwx9+/s0Pv/87Y9a8RUuWr16/YePmxmYufaUCRKFUbtxSgIQgm7ZsWrdq+ZL5M//958/ff/n+yw/fvd7NESxF6dB35QPXdWGQB0qI8BVJFYUgQMnwaX6IXLo8aJSxgOPnoP9BftF5MUVBxoNoFntQbjCHttuolK8VSDF8BH5pEfrr+cHuBreG8nBInrjrrtN7iS/9NR+Oj103HzhzXC/6bD1iyOBFqgmhAxu+HYdVdl3Xib+CLofP9VVmuAqaz9yppqgGdUPVivwpjevW9N//8ud+XgkUxx2rY+uc9287Y99d2sRVo09uJf2Yxl5AuwFH3vL+vOa42wj5qShvcS7mIQpNs965/fgRtfGq1Kt8WczxYnnetntd897sppivLcS/KaTYTUZPScG5jK0q5r179T47tKh4WcyN5bUactKjv62P6fICL8rTGQLmVRXCsOmPx08a2jaW5bJKZDdWr7UecdrTM6JvbyB4qBvfyCkgMCv23S7MfPq00fXRNgjNVh67PQ5+dKaK8op07W5ZJCPinRgRr/sWPnN470piNl7jtxh+wUerAKjESi3LCLQ/ucIHsPbTi0e2qQgCFnOcav93+68cgODp+dwwu0APCaMGAOR/D0xtHfu8/Lz8Et72lOfnR3a5iJzKFBGIMhLE2oXpjx/z33tXd7yoajvpvY0AZNzuBmoKBE/c6xax6oWDGmK9yHKU1O337GoAImY3IzifuEb4iH//A5j/2IGdYi1m+XyHY1+PEbfNBMC5Mq6ju53u79Q1ox6U5ALAsoeHxau8stEfeMl3PKrzlcG26oQ3ZdCW8nBMUPjs4n5RJ4GVQ3tYc/xnhcirlMX/gYSgkMqh7hV3CRl5XI2v7NEqahAynQr1dr5hZkyi/ISoSdlaxZsfdd3zEzMU/H15TyKWVXUnTNUe/somIO4maMBqjWbVboomDAoJrHhoajabS+aFqa7nhvp+QZSq1BKjk/UfTgdSAPj21J4Z87WK2t6R9ywFuLYH5fbTZ2OyNCMUsPrO/lFDlqnqzdn9dQ6YuJaanFvBsILsCS85sPnFqbHWMivVW+sTvwdUwcTpliYw2toLJuIpl9wHvjrUyUCCRR/6nhf/G3VHDLeD4oP61MsgngdcAj8e2SbtxtJpQdT7vjVRi5jKaFck34v1mcJdStEowd/Hs9AbSrV+63rtKo3qLWhbSf42j2OD2KHaZDnw7SFeaonwxdZduVS34rddtxm63aaHnMlqDdNPB0T1VWJkIrU7fRYQVfyVB2y1SuITJT7e274X6rjETp75twQMinooBE6O+ufQ0jHHsM74sJISeG9M1FTaLWTCh8l2JKtJVb4+30NLDC7z4QKFuyMf3WIh/Z8ugCf3SVJCYihmOC5uTFmEaEAprrDsonaWynAc6nDL5siPSr9iqxhOYx0gmqozERz457CoarchPWI2giiVLgpllFC93ONG8TTfZtzWvxLA2yOITIWM+r8DFFTqTeEzFIYJUIfzXGIicKgyLOOuTmSWdNiZm+wMygMWsBEIAArMY5Vbyce8fYxMMHL/Q5OF7WY7M/1MqpulNftExVW5ohrxCZnB+zUQSl/ei5QGUE3HWbrpYmElHKsA4Zui5T8QRr16+gyBRGnSM1ouxasGStkcC74hZoR2syCNBsOhhatY5BLKA6AsPM+m+NllzAQNC4vB3Bw4S2AQwWnaYU1Ta4QHJkTyR2syQscl+hAsqINeFDRV85npdCPclUMkmuW/dmbousI+cF6XRpMA+gNZPwThiCRm1pqh9zqocgQXtbgaBhCYV28Ch7bf7Ks0NoFRRX4dR1B38pimWdLRDDtv1caGzyX2PYTbEdeJLd3Ufe/Iyi5m6Neo+43bgaxkbwA+CFuKMk5PrOpmhkGFoncaIB8l3ylSWig3a3uZYZSU2jgrowTlMfau+9ZeFc5o8Qw45xQHgk3bk2OCsb5KEfxDyE0BgVU5vVM7fCSnBLb2M8No3+C787cr61Uqs2431DkpHKSA3zTIFEXvZBU1ytKIEW9nkBOFoWYYo/tvnhkVrWthEHOEGeIKtn8pMcoM4wJpBdxJmMVeZqPSctKvm/E+MMYELk2CVL6dCtFta/4hrg+mImrM6+CXPy4V1KwXyx2lKRftW+ju8OCNPjLebGFCoAu6VGvsbrNDffUC1BhDsbILMSe6Pxg52hC+LUgXYpMN6GupDZ8zY02hUkYPdDvoLLUQ19TntLU9JMiZf5Bdfs1uNGDXwUea/RmVBdz0vJmij7tX0DwsAYylCX4okgh5X4xNjtdI94ZuD37TELM/Q0RGoFp3aQuRxCQyMmgcaIadtvgy1qK647qnk8IB4miLibcZjS27mKHPOtiBeEXyx+2k7SVCr0hg444mYNR9FaJ+oovBTFg1dEa6aZmFu9xF1m5DzARdlkHGuI8pBUtWfTPLuqayr5lc7HSU2mZTZ3Ia+jlsYE6NGWrm2UR1hUlReS0C/7Q2Q4v/LCDwZF5HDVgP1sHvHpEJ2K8QWvDKO2ZtST7Bt4yZ0afmYO/06dC78lIodSuOj8yO3nWii8kb4n7rygKrvbnw8TFSE6+awaVnQjBbnukk+aJ72o7X7gccj5Bnhjs1YKyp+TqGMxQgucUMHl1oinoVvWub3PlFcKkpTjLEBksJ38YJpgsH6axGlVGWSq/fgn5bEtjHFBMDjddKxX0IN3X467ZpVDCOXDND/Zp1yAlcg9T5kq3bSnTUy6qdIglp6mdmiFGPNTBARWiuWTUngEkhnQKrwu6/GdrOgSQqBxNzVdaU/WHkcLoM+5iL//+2Mjxxi9iPsYGjLBsrC+1djrTmuD/jk0Xgc9MT/hx6A4K6anyYxqdsmRc7ELaTWQzPmZ5l7NIjMVMj2EXtw/10VbjVFB5dC8E+of0l7K7VCLaeJX8EzifPFKdoOZ0hyjxt26Iy19r0yHOo+cL/IFnjhW2EoG+HG8vJNGnLFzhqCxNM4dBQa45is9Q+Wq2MyHK+CHyFrbEjvg2dznUAOeGqYNxIN38EG16b+kh6HMvbEzNFm7m6izbr2RPth73vripNRi9B4ncnhGn4TlPRtuzKJVkWVl4JvEeO+b2GXjZGD/hWyEK0oOyE42HzC8x4dCO4FmwCYCNN9TFYySXkmeM4Tafz2PmoVZ07CnGRwIFe2taR7FYZjqpBKg3UmdhtLM9zS3tq9GfVjrYh7rMx0AHEueDpqaE1xrC9JVBpwYZe5msyaqm1Kx4wVnoQjM70MCRtuAfJRm7t6CVmRgcomLM3IYwQmDtgs6JYI27bi8/nOS/amJ6LR9eBpwZ3vyevgjfwmzqV88izcXW4o7SglbBzdvai1jCXU5E4IOn6eeo4WgtfqEU1teHWQ7dJIaECPsTGAqOuqyCtIhITuVr1rzxY2iHUNDj2A4RN4F1sssaJ6e/t3PPbpSfALaO+FICF4yE701bw6JwiwDWn9rOtAHc/jQiOswOXxko9j6GtN+t9/QBXCW0J8aF2LvPKqH4xVELDZ5be2Hl507alg5GYWxNqetyXiYpueodsRTONBd6LomfyHvA0K6RepLu1AlDcZGsGIV7kkac67rVGccvWlZHFg0YOi3wg91UqCIcmpYWkm1rWgwoadyKHTNE1CyDLz/8Zu+bUaoiVJaa3Iodc3vsQKXW33rlW6nV2RMWIx8g14xITxbU7paW3hQ52MtNrt4W9i9hP8KVKK53bBx2OiUwIpstAYj/y7E2kon5JOhkrXC3hmlGL4hKru0c5thnvpLyYqMg56WwVwIMq0eP4IBZtM84FLz+lVG0bD/lGazbLFcdJ5FmdAZhUqsxQlYL0zyhWlfY+QbEL7yxbGQvyLX/9KhgtTonfWiTcHMxWr1Zet09cjcHQ53iAPLs4GML/nE/7tqzARgd7JMNTkR+or+aSIFOKBXXEyC59BlEuo+vbHhlP34nAC3Ftm0avtJTxSbj86F9/5tJ439KCk00/Ti1Hu30VbNnW9h9GNQszYLSVOsndADBP/xjNRss2eyng2fEQunf50LIefsfjw7C2M46GKCv48gn7UMFEcu1Paqrb6owaTYX7UEdgnabyiHsxSIsUZnjm0KuwspgodOxmzACLi6bT6aVxO9hjIbKAjW1bem+nucCvuuiat24aMwXrmsYi9jrRf0KW21Qk/mjJGKXBnrDOgOXYOgebF+a4jDxKA2xfyDQ+Tq+WCEFT/8jhTGOx/RKodLZZxkI3HtYyBL5Pa/4+Lj0OUXFQaZitXkReWthDdxF+2WFQ3I8pDGVvbo314dJZrF2sRwD0+anF0yCBCD6JYlrsUYMrorHhtJ3+RnAaeelhkq9M3jy9xb1RG+erYI3+VUE8v9P9NYQd3M275ZWRpixzw3EvuWnOHfdkLRDHSFvJLwMipDmsFB+WJhh1WaPRX2HK1wrvaTiyrM9t+Yt051jq0oPglt4+dbtaK+qAQ3MF9fHkpTvDyJ02BcqCazjIXh+IoLCoPtROl97SyqaPuWmNLWsK4SQExy1pz3bSY6dYBat2YH0zUeiFRcovDIg7nGkqd14dqPSRfyTIFpUP9v0F6SrfqzelhOm57LmXddDlq0RYJDIw71SXRnAVwqyogc7g0HgyzKZa4K8WLAvTNf7cyPD04Or+hd1gx4YtPjHLmFwSk4dgcHdzkZZwHEBuqNChDr0hpN8OmV3DGGWAeb8E0sAnd1dwuJfICaj6CLZ+OgvsRJgAZsrOdetxIAmN7qlgdUYeZICx+gWlWfTNVE459sFVti9HG/CbySXKBrsUIi2kx5xcGtlfAlf+hj4Rzwbrui5Q9iltZ+JPTigJC72+k+N+comywu4DTw8d6bONo9BHdjiZIyjV1M8yN5xVzHabfQNWEppr2qmSGqB9iSrZf55Kxm3VRyaJeHHJiJa4AEoVhrEQ2WF91vgaPV3DFgT+UqN0aJIz4k3wCkwLPBPxLLHbNQ90WUdcosFBSRS/MIiFyBLbfpOvUkMbn5uzkDpGHB6/dnS22F0QGQMrDmAF7PzBLES22DZbfJVSijRFJXOBHsc4lUHgCQO072Rv3u4Pg6cQeaPTIiA/Ztgna/NAFiJzbIOS6fAUyIIDiimetewrISzvhvD7OMYYEYS2Vf0VPbLHiZjTblYQZ3BFcpCGwAHclnf+NTKSwQm+CvZccomyyI6BXdACVh4VREb4s5o8woO2ZDA9o4+Dwxzve4hYzAGOWyac1zVBxklHqJSK8SPJJcomm6Jk1Iib5lUxwmhqAHH03A/X+dZLmcu/3qg/iDNc5fe6/F/4QvHx7nbKik3w1SmFxMmMZK+EYQWpdYGM80OJRhvdEIRcAwoJlxvPqughcH0AxxvvCSYLMlApvUCiFOSkv7onK+LZXKXz3MD4kIXzDGWAQwBPyuTqLIGTIp5ldkARhMWP9riZKt/fliOlW0Pg0yhmm94DFx1lcWIPmhvTQ03LsdnHSCmlTUapkNZrcfUtlT3K4eFm9knDz7e7G8JVbBDjkzdHLU3SLUtBaHj3l/f5WQ9zWv4UmIrwlKnYQCOlKtPhh6+eEjgiku33pvq6JfBnJq1YgdsNwEKZe4e9EcU3uGdhXAIBr9UoqHJOKH91Sdleq7zbAl9nFQXtehQoGf45wfvHR/wd3v4QduEfOuKlqgwojk+S43rjylz0hpcns7BblFsGxGXviNphgy/LhZzrKKc+x1n6z/C3teqRG2+nFR2WvWuK5beXqKye+sKj+3UH9AMA24Zqcdbm/E6snCIxp25mIDKADVe95Utg//g65STaG9K4F7GfKaz01ng6iuVG16Cg/JSNIQ88Mr1D+T3eDnPpdRTMv1ye6eVI2Twmmb9nV72WahZlDeTnOIg9EGN5PiTpHr5UFtrz1wBaXiePUXnSHbonkZqNz91f0l9ZYq/7u3bV9h8IC+zVCByVpFR+BkdvlTJDrHvdIhx3F8UyFZ0IoTWgkwp0ZjSBGP6ypcuonOk6CBtu8lsXChb2ohJKL7SuPrJAl3epDMX6/m7klvsDwG+/zpcWkru/+M7LuNfsPhgvqnzU69C9AN3Y/KHGLeJlrXMxuA2d14nEnB4msrfVIWWRzo0W8KPk1tHkVYYnp2v5PXj24GtR5Re6kFqwCvE4pTtozvg8C9FvxexzfNLCdSrG45SO1T0eXMReA22F4/1aVhQrgs6BofFswPiXuxMpeaQjCKI539dRGCsIXQlhgSEZ4iaLRQZr+1eYxyZ36VEr5Sltp3IMUDr1QPnif+RVnOeffFv3QDKLS/2bGPwO/SNs+OGs3Ii1+0WXeJ4pIMYKhEXgdBsFMsbKTrTjKqPyjobQpOhDKDFgmP0lA0uRlZ+BiVsMBvXZC5Yd5hcVgfvIYzZSrByNHwAp02j7jhnhnkf+5X+OrXQ50pngyrhjxsYqe9N+tZiQVxyHURkqGX8sVSgT/O5mDc3+zGIrO4/8zcrX97wWPD1cVxiOb2vJrXBPqn1bciY50IR/KrA/3uqD468uFS4Si45eLdiBXjRxoZIKmtmHnAr4RMkvamcySpdHVPCvD6PCAn9vU1bp4Du63eftUAmOqTDrg2t+r9N7kkdUCcl5LoEAtS2LH5fGXrwt7GjR9vF0RUy+VLwCIDdm7UBgwcAoVkx6BkJ36EtfQf47DLiAwPTt0oxv7C/FHgVPxFGNMolXa3DM6FMqft9+6EEUire5Vgdp2Gu3LrNj6QpLj4ArvXFBdeWiaRqOP/pGseLSrRBKe+RVWdn+rjmOLzrqxs+zzC+F1L//EU/x8PJBuyhWZDoZSph0eBMwY47eaBN1UCoyeXRMIdCmw3QSCDzsZiK+t6pkzw0QJv0WK4xcwNXkhLGC04j52p06aqvHK5zb72xp4uzYKUcVnbb5DQV7h2nMppbUTsix/iBL8eMq2dp/CJ7S3mXSIkuIi0fGfg+Xik8tn4SQKSWK9zjmDCAvH37tDLoWgUiFpEbTz3vpu1MfbJofuRkmZI/xpcD9LfTiZxtYYxeCp4Nu7h/cvIhYSZ/h8/dotDtRoIsR8BNKFZkH5htehC+tkiCzJpdSywnzZzdDWD8/bSSy8WZn8/jRRd7JK8BtQOueEeAmSo65YqLfH5AGJhzCsemEEvZzxkTdgzAvVusK9u3gZPs5ZOLA1UaPxC0u5uOBlsk/m1Eumdj5S5MDp8TFtpyRaCO3tLxrBbh1SIU/wz4ty8EfCommTLcuFPDvrEn6GZpyTqvhEUDo3zuDszNnT6OkQdfc06JDF0IoWxABXuma2C7mn5ZHPd6OhDZSSqLxPKPScsr/pFOWQkgbNvHBUHJY/v48bt0eBbgytrn++ARp3gqPXwpfGNr8eqDe7p2cbCh73FkwOBBaSmy52C3+AbnyWTjuR+2eHQde65/Qo81roXfuai0PVArMPdCizTzr9m7zVOkyVSh9oHOCzXwX0iGzSyQEMPegBGneCx1quGo1RDyhhMCKSxvsOOD52Xnp+zxQkMpXBeDJniWkVcFK//s1TBR8/LUfJY+CVAcrudT6wjVA4xVtS6xVRazU5/bnB5dYq8pYiUpIq42VQlfq/7BAVlA4IC5bAAAw5gCdASocASwBPi0Sh0KhoQsdot4MAWJaG7hbw4AGXTdX93/Lvu4LRd+/rP7Q/3f3Sqp/YP7l+n/8H+1nxs/Wvvi6S8wPzj9j/5P+B/LT5c/3z/x/4X3F/or/sfn/9AH6o/8r+7/6z4Nf7T9qvdN+5X67/8D4B/1D/Nf+//Oe7x/tP2V9zP9q/2X7Tf7H5Af6l/mv/f7Yn/K/+fuKf6P/g///3BP51/f/+R7O//G/cT/i/JR/Uv9j+4X/F///0Gf0f/B/+f9t///8gH/M///sAf8P/8+51/AP3y7p7+nfjN+x3zA8WPvH44/tx6z/jHzP9v/tX+P/yf9j/+f+z+Rj/B8tfpv9f/yPQ7+P/bn8d/av29/xn7l/NH+//x/kL+VfvH++/xv7j/AL+KfzH+8/279qv8D+4f0afN/7Pwhd7/zn+5/yHsNez307/L/4L/P/8D/A/vT7Yn+d6TfYj/Yfm//ZPsB/mn9M/0X+I/cz/If///pfER/pPFo/Df6L/re4F/Kf6z/qP8B/p/+r/gf//9rH8x/yv8p/pf/X/of//71vzX++/8D/Ef5z/zf6b////r9Bf5D/QP83/df8Z/3f8X////D9zn/d90n7Wexz+rv+w/Phul5fk/1iNcZ3Hp0Gihsikv+u576ip9TcFoJng3t8RIDQ2nxLVT7Qu0HufYo+LyWpUzyuTXWhvM+G5deB5IilJTPz1xXfYWDAQVPqbKAMpXRkp+EvxRKL+8d+YxpmKOV0VfOmq97vgf9x/cR29A1+/8mRy+K7Vg8tG9duLI9cXOA79OuL4b/4zZ83zR1Rq73KkGy89zyozcUqFJS6iA8+P2x3utrY418nH9/y+jvn/x4//3v0Xpv//T/IxBnTBgEb4Witi3hVPkL69Kn/2HPcPEk/oKHwFKqkLaKJGo+BwnfSuQDviBghiVV3S2VXeFZUv/v7KWh/p6v6Aq4ow+Votk98T7o4pJomeNnXTgW/npo0OergDnyx9xe35ZRaBqGrdTLHoMtEdiYrBW5v2RqgGsMYf371ZWvp+3r7DCQzuGQsfLGtFBBHyMNDcmfsdhzJyrQ9X214GXnnAu1bHb9pzGf21ZWemcaoAXXZ+42y785UMJP/xnf2xWeBSkQIF2pOoZSAiS0gDxXsUPAgRzH2LLfgAP0Jk3RZZf47AZT3K2IWj8yIMWmyeg1GT3QZ2IglHuxjRWqM/VhG7lLQ3pyBup2S48PmA8JxinzUnD6qUbLMHMG6DPGIWgRn1HVY3U0rHrMhe4pc9GN8DgjGu5L1RXxEH8HUZCzCXojSrK22olMrcHB47jY7zIEMU/lP7bN8lvur07klpZiiYGvtUZjTMWhVg8IqFQNbhmtbgqCcOUlOPaVDf90ON0aMeNEycs0dgJO80mP8tQqCBHooJinIZDoNmt3lvTIoysWu8mVy875PtFm77e8FZ6576YbeXLX575xxW5XkivEvhC3SUHlCREBkbVgW47xlteIK1+HjDcl3S2F8DoIVnD1NmZ1A8ipEhYZqLillgwS1vDlFINnuXgPkOYkMQh6M+70LMpuMGc1hft7mmwQ9g7M3chgWTfN8gvphrT21TIejxdRiRTWKTaHmLB8LrMV4sQqiUlX68YTXON2Cwx2M1DYIMxoRngUL/bXH0y3QRoGvxH/Xw8UGPq2r2cSjn+AHpTEOmM/el95YEZUtHrfd8EQsVrvbWngRttObPipl3WRW/NU2INwJiqKRWd3/BCCF2vg67Lladqlzb5PiEaI3+CvL+Tx7MgCv3Gz/wDm3zDLbK2S/7wXGVGISdBI0J+Ki6dBnXyFzBKI++fBsFwe+c+0PHcO4ik67+p/vKV59+UEsm+p1MlHyyO4IuwyfQaP5s+ojiUvHu766jCDDFVQwtf4Rl/CRaBFMUmnfzSbAKVodpQI71vzEDdQ7mZ4qV7kMOXEuNgLX2AlIu59XeCBLmnygiVh8z4/cSDoUvbqeeBXeXrNaC/7i4epZbJB/3MWzhstv03148HFsbGJtg87+GmfyBFg0MJJnaV2aS1GRgDxPUl+qpptdudBUj3zBfvoJo01Bd8vJfISdSWlkjkfijj21j10wr596WSPs9Y+hdFG9OdUej3yETgBLv5Gb9leFMF4+DfiJHSRlXJtleOKQfEQtxPqRYuItwkQsxQk1tdjg/WK3YcSMX73NBJD6FrcTZLMoRDSdb0JXGNewcC+ecEP52cWvoNFZ5sH11/eb9B9LjWd34SoBmWXXy+uFXlpF+9YfPXKzrC4DrqisfxevxqKh3yw578tMNIe/q9KvY9Er/Romhu5zofp1NwWgmY9hKNjRlFGMDTPAbAdAfEsgdzJWrUrQy/0Aq8mW/8wY6UDLaddKWgSQGZZdfl4slUO6N4AaJFrThmh8pf7Jif4aM4ZqpCvqC7s8kRFdv1/7cgGZZdfl4wNIXyRqeVx/V7/i7Jm3y7JW62Xl+XicAAD+/l4lG6febYHfqctJg7A8ssq8eM1hVP0b1OpfOR7+0UOEwt2QjiwpjHc8tq7LgEcwSwU7WBzznpHIyQWEXhl3RbrV+zcdfOjmUar+oZL2A1PWSXxlx3v75alO+b/55U7QY9LcgVYLbgGztPDzUZfUBGx/a908A1vdQkcJrcHlkNZRdEgsM3nGLD9aoKxvkZXzwHtsbXKiddh/gbzUHUxXUGBcxAwfO4tO2B6yHT0XTlCzsGGr/JuThRdriXCQCOzuE1NGRoYdirEIyeT7V+f6EJb3pmhq8maWrhgrYU+/RyTImaPqbMBkVfOUitQjrWIz+Q43nVKF0C3+VJHwIZhId6PEcrhfVpsN7DCWovHM/4Cm27+CGvAAAav44jeDZKHQN+z/Lz+wSpEZb4jpcaDfG4WYP4xbslV9sEX+jy/wnXJQCVsg1aybfCk2j6lQi8xTxREs+3jDt9XsjYlQRI9c46MqnffVthcFd7Ttsni95vVb++V2keEEWSFkY2JOSkaJ8VS5WHjRyy173psjV1qTid+g0F/i3zerPHzSG/XnUe9kmZvR6EOaVemeG/qR9YPIPMYM7DGOKhf/d9tt/7Ahr/q6NLM1wn7d2eCZ1NiVAwqnKiWL4ZJaCgTGWnng++91wjmKN8IQydgV30LSt7MAeU6IbjEfYH1n9FhVUhzPgZiYOM41dA1xFaBrISyyyeHH1Bm8BocrjMANX2KnirPOf1g4PYEdfo9fQXNtub2lNgoGrb12GOp6W8hf4uP20ZB5FgHAw4cx1uzb06qJZLZ94PP6CnaFRQb2cC5ai2rnrKBTLgbMjea6su0cy1bqzHiRCYutuRj6sP+IqBsRHQg9yeyWRdC26gBCwR5WzfQoePmH9hz3Jaxo4yTaPOlMtFUtSGbAfmSGfCznJnLJxYoPAXBYLIAI7bJEh/vSzwvTf+6fF2TjUItu1b9Wv1wT43Q8W59qCP79MExo3hNBEZBTaH3kAum3DJxQjiL2EXOO2mT5Pa9rI/kbhlX3UXPV3VoCLFl8kb+8w5u5pOz9LdlAzCA51SDHlqAb92hKu/ZsyEwwNRrKtCQr3gqzSbjDHYEX3IZGPC9MZQa5hXg4YLAMwAt3L5l+kB5FS1fQ03Fg9ygRhGFVHZjLCJY1GALHPURmowCRcJ5d+60OLBND6+JfIUl2MgghEUGZGGMqhIvlCizZrQGqLa34PRkpHWw9mG48AJbCOddqC8sY25JNfO5t4NH0lDw7Ml5NpnIiqa8T33f2UTfCtoFMrimQ36ZR/91bbuPPrWR2hhRxeBeobfw7USosIEkWxaQXWipW+MxQ065AMQDQJBDXbgh/770HY8/V6cBHSnieL4HcmKOw86cA7BH39led7pD/oWIFRjjRca3ddmyWnQlWZfK2EIjt94JklLKwkMNduNxLTWjjdz1WwsjaVYlggAzN1/da7FcOZ89J+MqGxj0c7pEQdYl/16xg9WTIM2+97NwRMfpkgVqOivLwsgmkl1A5yHr5KTm3YxilXFvMfEkjv9EaV0FPyQMM9z4uEpNz/B12x5AcUH2iURxya6+3a7SadX7q2y4h4+RTqd8lditMIMvqzeP/TsADT/j4IfSgF0386kqUzXMSeWB39Bpc20I28twmu/Nf9BYnvcSh0BaJy8DBztKYEI/c11nGNXiOez/yiyAFxAAl20oFuGadVoAuA4mUWd5iVCXY00wZO4R7zjf+60mb7FYhUlHvrDCaTvg7Kbb01I1YCtqYJIeiDTSujKTsnlP1U14JapiGxeSnyOtdD3UXAo0/r4U6P2jQzQFD4OdDrU1bzE45s0DUaRkqIN2L9roIkM3h7yehcKexrTnieSaDSnQuLZu3L99/3L9x03QJDdQrcY0y9nAV56GdIO/ux9vwC+5RkW68+l68MuTlC1uzz2fyppkz3Y3ys92IDv6V/YYgaFvqAIoP32X6GTeolUTNGnNS4feqYPB9qKVnLdJ+QNCmBdErIlIK99FPDu3S8/tHSmnC3J/BYBgPGS3Yr7M4p3Cz1TnPZ2XhBJgCuryB4b+UoLnSdVl6Cb2wEtc0iIBdVUVVu8Lo7YXwTroZsLgeuVvqfhR40RHWSy0GODN6Rq0f6oDhWufh/78ZcwChlLa0OguQ/4y1/Otu5bAG5dHHPHfRXPdMGA6ixz82qHjmSDxl8HP/b3s57gUIxaO/4Plequ7GBNfS/67dMNmSmo/Y4COjHUhTtlj+3o6/+KWklpJgH6IPyXkYHq48k2CMMpB4UmGRm7GSjf9U0eqYa4sGA8CGGjQIdqx7GU/BUHXKN5Tu4LNzrWg/3Y/cUOl76CS1AFy4S8Ri1uY3i8HDVEYMJQ4ZNjvtzfnc2pYu0r0PAXkP+juT8rvbG677xdfDyR0Eo1hyLwJ8URAcOZLEg7jgY8KLOvUG5q/vJt2Jx+TuW9UgbLl0V+VfY5vOnyOc5jlFaEWsriOqPDgVgWCYY8xgrmSoyi2A3tJFzrlYXF1KaPxwBSz+s3B9eLIFuvUMEanrPX9Qh5zCgiQdMy44K/zFRJzFHmdXKxQIBClNfWu0OUlmo9QTFY9wks2V7D7uZMTW4CsY2WhZHaW7d+fC80h3oSsmzxIcLPf9DY+ySfNAc3plo5+MIEnHVRlVSzOVEXMuSMjS7CTZi9SFlvCovKym0pgnuItwu8yJn6pmhGLCDiuFN61kZxAFgkd1R4XNNCFoyopUU3MDPgvtmNGMRaM1Dc2NOQsOsiSg0si76yC1EZty6OpmakC8YnYqXwgJI+Eh7ImV8yB8SLXt1NpjIFVoQyeP7L7V95mHqRFvUl3lkIYKmIgIJr37JC2sf41oj/s6m5gzt2VvFgZLZiQwFC6sQB9CF+zknz8i/1ZuTK5ymbfFoDccAgBBJ1B5kEGMJeVdYCtt+asnDsqIv7f9GA1qUQb4kWUxW9zkfBGiMUx0rfNC10VTmIYQ0PhH8gjzqBlZkBsI/kvhnqI5gW5cV0i+Qy45kkkomh/o9iSc7d6rO9TkdtQl3klOxImaPA2DvXsvdLaL3fTGnOAuMpEzEP+HekcUAoWyEodqJpbd5wnFb4lTCDzH4Vt/yb8QyMphbzwoB2mXa66KZ+Aj5mOeqD1D3cE0nNGpJoA8DnvpkhIDcavlhatabh74KywQEUonkyf8ty0j75NuZg/J7W7oEOJtsKXqYZoRl/luKR1AdbsbBE/LZ+sNBA9DXOiYxREiWUrntLzuapztTPTtmHTPe2Ojcpr5Gmm/bIS+lbeBdVM78mWKwTkUBJfxbFAtDo+mWi4soo0lDTJqq+xK5iyK3hAYhOkmSIqwz0DXr0t1vB9yPaK8Na7IyMGcTgb0zgEURA5K7yCwp30quHsoxfqBUg6xHXljZTaf8qsxm8mt2XJ0ghtVPLrVFrUtKX96vnqrvreRSIiSYFddhU9KQsOLU2RnUy662JUkZQOuGAFSPl+IyzZr+bXjhhDHuIpQSIKrxkaEuIFdtHmTCKhLvCEfjU3cwHBb3kkfLxY/E8AtQwQtqoPLGkJ0PDARDvhzF5+brWGDW9CHiySYx9dPQ7B3hKTRz7xh046QG3raoq+EDyjMKT7MAku6Fsif5QUCvL5YMRS08Z/AJLQwURveGplD9/OTWmg/FMOfWeETQBXu4aEaDLTl8Wn01K7+egPMEM/rj8et9feTmGSz8lg7kIu7Zh5jEoizAhguBPYxIq14JwmJl/m51yZohp7Te11cEOsb/9Cd21sC818nqQ+d2fNTs+X+QIWsuAN37/v4ybAMzZzlFdnrWusVxZBenRhgOiWKgTYcN5YwBBi+374dyq9jpsJMMivx8IK+cV0A4r/cqsFSNliHo2qPSxDOI0QHadjbpGoBtNkCnoKV+74l4ft36H3iEDhS/hJxH4Qb/Qq3Bc+rH4VRnavNoy+7fcQdy0aamez6Yf4IJ3YUGUjD5YfIX9f+knFb4AW9xASCkA4UH/A2lu2c53TAyL+vdRfcKR7aKKVqzTMugKoU1IMbd9SB1IORfq3RqWR9pl79YH1GCZfRke7ggx00dzwML/FeGof9Gskettx82kLLVHkTgv446cdjljplCU/P7RWgGDlSag7UkefsXyhAM85uSp5mhYNNqR4IFb+JmlywB7FLsaitIt7sFbedHxWPv0T9flDOv45XZzDg7xvXY2i2SNYy4c+txEL/v8tbrLKMfhYxyCEQDuDF0uPmb3osoGva6W4BcDbVG9XtdqVV0/E5BY6of76o+jWeigvxw8axDKgWU/UVp7r9jO1fdfBMa4gbkeDM/CT2KncbOxH5u54beDAlASk4xIVY/pQRe6N6NRNQcjpgHlE9DsW3w1tIvweR84oF/O2MJLzCphP0h2Z+vR5n3gQr9V7gOR7gzVXmPa76mc4UM3cdQZAQhr6yjLXECJOYotdRHzM8fXyMt9Bo1p3M/FZxDjhz9EavE27JznEtYtvnDtpW41O9ukDNMgkgcbXzOAI96s965xc6Vw1c4+r6QBzx/e8MWa62gc3gBN00iRlsC2SAmE3reW6XjIk9HpasXxSothmTSkX+TlcTK4ffxQ5MuNBJeeZFFqrsXhkz8f8+B76iVJHMDc1xX49gWxHTJNXury4Zy4+FiL1lOkdvgY+G4Fxw4kBaTnkezH/IPdZMDDyp+RI1rOpuuKXyj2FDaMovMhEqSgrGXDmzd15SyfgPiIZ1xmmaGQ+mP17A/eD+USe1/OUadh86gDS8wJK9pC9u9V+4BKTi91juF6EhkRW2ab3ReF50Fe/R+/8IKtNLQjUn/x1zSPLl9TtF7cuD+HYxi3XGxOKO6/0b+KrdSXxCaT9jrjj+5cDb3fHkfNtqtIKdOnoFv11d0X6B8px6yQIBOqm87xmoxLlj5J8ZTstNK8y6hq4fLPfvW/6HaCHjI6n19oFlwo3R+WlKuOePtlH1fgewjz+dvpH9cOX+jJZFOdVtDQcbUhytWNldaFKN9FmifLKs3VATeyYFGMAXYnvC9gTE1/+iTMOW0u3+BSbazmvRm29EGBY1IJIRghjGm8RFBBArh1KAWNTQoXhdHNlHv8OL+DyYwu+b2P2ppPy0XyCfbnRnF59/n9/SJczm9YkUudvx3c7T6ne81QR6MyT1b+Dt/63Z80mRmHjVQlruzlzvwxPsr8OLWh+DR73FwuoVFwC5EuA1gSImsWT554eDJbwMpLYn95q5WcvAme9Z93kjs9DMI1bSg+QGfPNi2dWj5RKayeRSgudj7Az0LoTE6jFeCo34qIUtcHP+/+RSURaAiMLIJZ5IjxOQZ5RpxWSMmiGGeUv88boB9CL1u2cPOJTSLcBJcCv0NuUKauxeyZUpbQV2xlAKCriJGBqV9xPqhcblc6XIXAfW+sL1lhFdtUTzRzWjD1xbI3P8QcqU7z3Lnh8M0+bb1BJH5YnEPLawbexriRUylLDm1kYjuYSA6eVhr53TdUJhRgAvAh2CP68OhMkSMmpqgXf/xadh9BtYthFH1aSeCCGo41LPPFysODBjPtbHc4wg0wFR9cqVRvvw0TybNUNWnVonNxSLEZOYZwVWtS/GZdFlN11tqvcjBL+Db0ia030RnSnuMx9E25NIjM+pEgZAeFNWlAI3ihzR3JFgcb/9ap4UxElU/kB1ZBHM+SkpcZPotFE7usmqckT+3TivWlSjqnCriiAraW1aWs2TTU6odfVOgHkUFlmwkhZxZQkmYalM6Mld9hsa46buDVz7JEOdlBYZ8eMxy6HZqydht74LxawlSjuDPSa3iukwd1iaS7FKxZ4PdJ+RNDT2r1vih5l3pp5GTqHUaLCu2DxZR5q/ho1GSGq11QsAkHsYo+di5IAfcBg9IH1ZvZpaDaqQz4Y6u8zdpULqCRg78BTsKT5XfAy+xZ+JkYMmUnO1W8zQqSu5xXjUKmlpkeO91YU+sICMQ62VZJlnoJpHFJd6z2DEUG+b9oIYOq4Ai0rffwy0ig4XsvyPQYLUrdLCgD5bQ+GSlDnbuQuhUMp2MqjVt6NChfZRio0fyWDHbgI+5Quh4mn62cNQzsS68P2u0WZH1o8/dae2N+8QgCG1gvq34uXYkU7s/vf1NDlfAGfwtmhG8NP0B5mhbq7pwdoBDYrnuLzQ8p9sfQ03CNUoI4NCqbD3vBrzAkj/Bz515WbV11N0tziabN7awBtCkEjvJGQBGdT3Z7757cCX3x7t+Lwx+Jn5tk5xpB+EUuh2myT5NTaJiFZf+JvKCJcC0qqTzE835PpvRa7E9k22k/EovaCTkzJyEVB2ynxRobcnv+sjrdvjGhOwq5cSP+feUA6vl03Ywz/34U3XPVAy8dJBOm+5FahzMAnsAUM6ZKGEVYAmh12hNsqRVOSdNXOc5e4/N72O2ouBwI6bNj8enG0KnyVFZBUEFpJuFZMFU9+VewGrPH7IrLzuuMkOn59X1Yt9FZqRFxGYWnFrJt5JVG/t+sgB+ko2X7NRq1fyFAuvfxGmxpACwgMXw+NC35fMA4vU4R7fALEV7zoNVyz477h81zJ0GpFdVC8yjME2AiX6S14ieWlEcV/BIMaGg+PgeDGvRJujJBf2JGFU0nacbFvkpVHQ48orUddx133Mftvn6QUj2beIkAWX3B57amAO7IKpppe/+7cXbER9gR9ZHsp3EubswhUp+tKX2nN4B6HV7uPzgEWINfrVY8XL4Od4HjFICaS00MG9At6pBgpdn1u1RHDX1HFQ9v0FVhm/1Gy7E6KesCcTOPNflhu4CXf7zTkX1xykiMTn+av+SeBE51Pbl9Bk1SgIrvBGibwjS+Htpvx34jHht1Twj0A3r3fDEi1FrLKR5/bI3N4r7XFX4FZcgwwylTYU3VmXGGuQjGic0lENtK51un+GK7FWtimmZQUBlCmcN4WAEli2nKtdA3MOlSAJGL+pUMf4WAmZH4/e1k4lj6hPBRVTqd25R1sBKZaRCI0z2PIsh00xDF5zAajJf7Zt1bzM5IBWU2p/10nSQtrC6gaqJxcoAw91ndVm/0i4INBq5wx2gm6uHFDJIZ6F2tcs3yCzWaD+SJC0wvo5ENqXDcN944xxUBuTYFiCm6McF3O8PojuGgRsyNcIOXZqdL9LTbDscufjp21JAD+SjIblVAtKNPTfBBOLOxehfRfIA6AhmcZtur5SxYTzXDw9ZV7c15L2VAnMA1x9BKYQ/s6IGEzjfqRVMs7SrU9UR0SA6ATqvQNYhKJfpGS7YrzgOkK4V2oPEy9g+1+J0vfRifrpl/tX6ahKYHY7pO05BiEexa2v6QPvaQCAQKZwTksZlLqLu7QP38dEzIQKf6er1/4TzGmF2OV4XvWw9OM1+1w2MZ4kIgodO7StV001WTNpyNZk9KtSbLp3DS/B/cyLkGUUKTQY7IFleWFIxo1U1Fjpj61EPdc6QY/0RiAZ+BR9EpclIKPX+3sO86u4dxYgs3d4JjKi9/0oZw4LwpPPCj8npu03LcRyUU3ZL2gpdGgG5oynYOSGr0Ti3TBEOhMQpKOFTOu7IOiMAK/pNj+Ba30fKB3qMTtL0cc9vZ6w+2BcphUYFeDtaATvoyqIHiggBRijuf32UXWCZtWYwpXZ04unRXozf3uuFt+wyt0vUe6YCTUtAg3smAcL3uj2sZdoPqrryPHc2oKUESj9Po36VkmPYdrcNBmjiT1ncq3kpesf9rMM61P63vixCyQYhBVAm3X8KbkSlMx9gRGKuooN6o/t9qTn01TxM79YR8F1P+LrQBqbmlQhVu4anC6cqZXkJxw9MMrNYmgtxGjyMNOYe5CEqRNpc13HAgQiL5VkAT34TkJ/nUp93CfF8Hb7wuCXOQvJSu/NbY8/G/rWh255qnnjJyjLShwpaGYtLoSJKznVwl2ObaUtpNZhwGYtMmvnc5vGZctdzSwDVE3dbPSIfjgQZkMIH4dTDNaybsBxgJV0MzohZWbcAKJjretaubDmYmddKb3JThmu4U3e7nQSreE74mspuffjzdaYKjJM0DZSHf31qrvOZDzQCbbxT2M2JAlUdp5BSkJQrHGhUmF/MbsUH/pcxSW/wE+on3yZw1aebJXcdJipv1kzcKL1ZeK0Qc0kelIpC1QVpsS2yy8soVe1dZcy/iFaRi0MZ7zfWgoPRasaqha8hTU1p2GaRamtnSNKXBdFa6rVjqbVL+L67DHbr+1+sMjrNKnFWjgE/uLDCVQOESUpSQCqHifOmVf1xoiTw4rTrenTVqTf8Xbk00z7SJOpIYYboqNfr3ZkH+XhN13riQKq2sQSc8ajKF89W5NL2bDkme+hLQxwZb7sf6lZIO2hnyLRbYKdRNgyE/HvPeb59XgUY3fifu5B8ElH9u6CCw9Z61qm2YiVVmNBMLv1A8O3RFri1Bcl92lqb0Ug+wBIzFtqPNB+aeg8VJMGDYONjLeRZHCVvkNxmdl1hGbJovw2Lot29Bzwwj+/orxx+pT5LiEMI/ElVZXuduSl1KqzZLB+BpkbSl1qN5XLXajk3XNIm1/hNC+QpZUSrvPr0VZItOGnuSJ7Yusuic1XN34BSeFddnfmL15GUrCkFHUP7Aoj88YFAQSIRwoeJWgQMZrWtHxXKGSNfPLTD2VYqNtIpszF1eRu/R/BCkf0BQyaN/v7PP1rxcpKF/IXjd4S8FR96Yavv6Y0TRXnjzJ2E7d5l5slRX98JEMgULJ4dU8QeH5FRlxaA+qpX0wf0A5lVyQwVCDbXTFtT652XVMC4/DtK/ujBNU13gv+wdSMbqjLXpYj1ALfRAeeSRTylq20QZtUUdGTDMgC7rGfoAj6YeGGkywl+XZn92Kcm8xw+O/WaYUhl0yRikGf4V3GePNxP6ls47k9nha9TCpacZAWiA8M4laBiOyhLOrYsfMoBcPXVVcw0uRlBXPg/guyc3iSGen/bcLmENdSuqbnznBxLwPqa49j0CORv8/1Iq1RoVPv60+xnQmMmAaZS9nUYO06N0DdxD12DtBPb22glZwYY8p+AusAFAO03pIRwBKh2EKFPe2b7011ODQOAK1yyOaN8cLOEeWcoZvZ67qaotBlZq538CuOjMpc8RTWwXzFH0eFy8F50xV1/SzYi9Een7Tg0PGRIReHdkwC8xzSpVGOts6yhNsxrl8wh1s4dvXhmwHwp5msdccFN5U1yqgb0wpr500Mv9Db0HB9ZVaPjTsgKwiWgGdKMsZ8lRMDAcGiaPuLeKchS+jajFd0fNPu6ci8Hl25QFrHa7w+gqEPpq7qN9j+r2SD61dU9DKcWKgq/mEv85YBClJ01NIjNwujiRLrTQkJQwrTLXZn+JqDYasvWamqZELlVqS56Km9D7BgFwRyDsxM96jIXweFzpkqOZMb93IjWY1RL7hHGMU4CHyZzgABoZW+2ZMop99XjJWjtwZRAiRK6CTi8712KEBA8FzEvJRe0erawngfgBjQf+Dhkqb65rEN+0rCdPvVwFShl8lMlSj+TND5f7FrqUaa8lt2o25sYspPkHPZjPjmhkNQRaEx0bta+wnTckBGOjXCKp0K9zQF8KXVrX/yJZ4cTkq/mGXsS7OPbLS4JE0kWJWlUKN0lHweA4Nj1jOBeA1LrrZGgBbQd14R0H2NHGAekWjZRhkseCcd+bfPpFLHDhSmjtOvf/MmOrHq41ZWY5zDVSQdU0ngbgpMnIFfxkizimczNwBaS0/N6fpWvLqaANdx/hdsEd01DYkego3hi1YnJN5rBBH2k8EYScDH/LP7xypkN5zJpR3TU0idiFoJ03R1G0Ey4iJ8829AZzTeFQrh5su5BAxLnZYNR8k7LIsn93og4yzSvjvngeCquEpvKLpwtFU49tsd8szBpfe6OVEBjYxKUN8ob/GEkAEC8hR3MeWcfJvOnNF0uhdXuuqagLsHmoKE1FJkqU288ezxyr28SPV68Y1k6Pdn2jGywdlPRxZe/wn+GZO7J/kXC/MqBUSSFdZ+ASLoYUbkM+kW2y3uYTXV+l3UJD2iRgF39/7sfafb1/PqPv2PQv0QvBgiwI/iLfCGEEJxTmSzDzwWrWrXDMYwS+P8e6lJu50DvaAfXPK5L3IBewVjLHhRS/ujJjdqKe3PBPF3hFStLQC4+iiMw8R5eznve8ZCCwnP0ZKZicGHZEBb075CRIQinS2t5xwMl84zNYy5/C9BH2qX0YmlI9A6U9GfOR3hpqWYXLa7BT2USPAcvb+jm7yJ2KWcWgfBIF9u/f2BIYYbfPZH9XHQQn7C7Y+494zS2HTowG6+h6mUMgIUCiO2U7zBbUQty1Mvzor929ZAGyYrEbPFdWpGM6F85whHLLzaKeEbaH2VxRJ5eGJnEZcHaHUUmW1lUm5+AFJPB5mf8/5tX+1TmDX/onTD+5cM2UGQBeO5YF9hGQ9oiBfHQ3Lt2GWcygnYdSiT5BESeAgvHd1loxVLmvlXBXiS+1qmJUNY2yiAsV47+9axY1XjvX2NslhPKg3rV297WF3jtkW7VNaCKX96Cv0bnDLjD6T54CLJJGp3+n2+eRhHx8PHUmBxXbEu8vkmloLnPvaWioZrchhOrhSIiKlLeWSF0sjEHzV7urNJu2iM1B6ohxYlXIbzdaDGVvRJrUTD2Dn+eNa79mTOPwcG8ftqVDm/9iQFODlXHkg3QxoB+SPo2MmsL7I1FsDXGowRLtSMJZY5dFnX0m23T3zfJCEI+6rwmUIRLty3wL9j5TopDGRTmpmuOo5fXmRNpQJtCh1lwOFXhdvOf+36wWW751Yf0mGWVk5lGEIgFyFnu6IiXHq8IcvpZrFLY6X8V2oVT2noRJ0pSzZsCbfumvAE+FSVlB47R1rxp4IhALG+3EvbzQnurf/wkj2xpBS42pOdT96hUyqgby2gkkNm3X8pz6W10qxVcmWM40XHEl3R/fwBWqRxV957RrIEI9a+ALR4hkpLJOBkmWKUavWicwu5eAtC+eWBjQtcrpiOHd3GFTwOqDivNUqnPR+AC+tDB4GwYVWo5Eiys0W8GWlwTZVdP0e6Us6udfpLaRzGD6pJecA+HrzS5+23fNqLmMI8n3VzyoQqrRXd6ftNbG0yzvYPNJv4zx0eawdzIbYfwX83dFJULPTXlW9WdfT9CCP+2XvHSqlmnYMNf+riZmOVnmktA6AVWIOxukVTE1lhjeuio4pATxjoH4t1zAW/lIsPWR9jseWdvJM7XChveAmfB3PW6r7b5KidOsM+UAbveuo1G4J/rn0GodE5xDtAIQmILvQ04uCxlrtzAKTWbkkwHk6dvKhGO/9nZV+6FnuK6VfclhoJaCQ1NOHXYlGcRSPqvfEfUef8NT/4QwmSicFaQ+n37zvlYY9JWAKsHRQwPBckqeN8owlAGyq45qdR8SxNOfse/+TgWaq/ktlRgUPxLKpYJ+QSmCRMu6T7i7PWeGsoQoeOkphAg3WCbMYkVdeY4/bD3hRIpOcHOa2tMNZ4Nl4suAh88SSFKToX0F/eTCzAMiBhPgtQYdVZcIGf/ZN2OrauIZNp+lG/gU55IeOB95gpZq5MWM3UN2QetlbE7jsP6YVaMQsoB44xR9QIntS8m6VD/j5CCGsUw6UuHzAIkhDXEnajjYe7yXc+dLwWK76aG7g4AysAc5QhHsf2Es/giqymjhSp39z8Cr3kaUIReVB8+pAKMtI5v2y7Iz6BEWUuezW+a6hkAMKOax/FDOwJoMyqtonpZ/GhKolirpEmBCpEu5O4kxcwc3bojHfvNIMvPa7VzRHZ4TBQoe2X6qplOX3xHTARR671sdN2wiyAOh6RTXsFrTtwR5ffa/wvC9qVqLqC6q78jEelWl0CQRwKcL858ofmJLvRv+PvfO/Im2yDPiccifvCUxjFjIHHgJtXqUcb3Xr/ij1sdxIgY0mZnXCiS3Gh94QZm5k3O1+RwpTLg63uRw21N/DSBabkcRZhvJcb0yEYhk4CUhnVTxSMWEFAsPQLQLImzv3HG1F8I2zSxBv1VaFn9QoXHHFqb2/p+qRHe8be7D+qzhoqrfwT8iGA/eoeIB3SEEoy2XMQYSlCaW7Bt7h0xd+eLC5s4egzHwCfin2IvPaX5Gfb0RXiptr4tQfmYZBdUTYasyPFV17vC/m4VmNRpQO+/EFekfUPtwCf+3AYqchQzYsYOfXxDoxVVA4trLnGZue8c6njj9Wjm4m0X4+Be+gipbd9+5WEe8o78/y4r0y3kXv2SiRs9c/0qKLcLAsJ+VELdGvI5l/GpK1SJAephniiuwtWcT1SriQDC9v16yUDVq8twybA6GD9OS85Q6X5fNM8L+l/ZDFtk5ZSNPamJMb4F+KplHQwpXcxJAibfJvek0tUzzmjZde3hrJDTheieAAFhsio9EuaFrTqIgi3FLTdy9Y5L5kaPwjd+RX3NZCxzGl+5O1G0MYFWNdXS5uI3aQ8Go5/LLi3RFb+3oHywZn6ZH9VEYRjXKYrHqTmj1UNyyQZAC8DaKtPNbb59iDGRRsqprcHStKwMgDYu+Hn3Pah1hLMwHdho4yhzTALiM5oF0q4taweEIi/Ep/FLljLXuZzoMJ0guWdemzfKBAGUuoraInpabPoMt62GVvuXsKG1/sIOYGdv8Rb3etkCWuT2sShRa2XRoOb/9EPU9DpOXo0SsHNapwfjrVdTp9z/e6dDNafbjSpNOiXflS8U2hWr6YwX9nWXemo/BXLx1fzgHEK4Sn/e467A6vFpHx/oTLmxnMtxWX2a4Irh1N0hLPevExlves8LXw+xvBn4UmzShfvhVwYPyZxBuX08fJICmDdGsUEgolaAwGH3+Nle15eHIsxoMK/xAVWQsxNnNZnWEb8DCopIL2APl3hFRKi2Wlvv8+M6YJD0RS4epsFcMxQRQKdnslAQDIz3cByxPpFGvHXAvBQzFPbw4QOMqlNmwyFMK9tBQ0V0zVKiq2f8aXueq6Ud1AGta3atYa7QNK8qn5GZdjp8J2gMxsgGCzYHuhamOo5pZnjRpgW+MaAQ+d8q60MMn+p/KwQ25OuL7nLnv/RrsPdoSdmAYXF2MLjEcSGXOCXSMQYkkM1IsPQ9UOGa+3vy4VIxBndwWEROJJ9PtpcG7J3kmcpzV9gs8tNRNpJ9tukUy7Ek+/WP6crtONpvGZOdI85KgWM5OMtU8GhHJQtBf84iG8LceSniUEY3vv2qt/fU8aLB328DpQNZRJBfy4B9Upri7aedK+hdeTjr9yWuCDvxXBmhhfOJGCa4Iccc7qH0/JDgLd4YO2cxePzVc8LUsfS1Z1RrYqyGhvmVU+Y2Qk1Gnc0BEA0PnKeYS/TFVcLOhKryO7pvJ/Bhh4Kca5h4g3rLQL/3db5VLPPkpJLGvfg6RaVLMhFkx4yYrV6hll/hocWdZA1xksuFE22NPy3Hkd4BOXPpkEZ1lW/rOuzBZ8MbFXsKb3jhs1nucJsx5Wr+PqydriWeZu3QZWyuBCivlUpDge3snQMLpoQYYCsv7SbDucalcYbG8FfJSZxASRX8ZfT63CPeA3cV+PZOaQlsncd94Fl9HmZ8ocnK9XiDys88Dy8nZH48+u3EvvRiuonQLhOFWVV9j7U3CTj/kl6ybAdEyNWXv0DMwONXMtBxJO6O5AjY/70qh+FTG7uj3bjeA1MCuLa4/JBqs6CgneL5DNqGCpKP6a58b22ufuacWOnT1mfTUrgLr7s2QN0xxiUqm7ux9OKKT9BmmbDlXFwIRiDq1sZJd8Q5CXnLwyfcpXb3mYuYhEpomoPS7Eh14SN4tLMzNq6PBtZGQ3hvz0SiADF34zmPVSkO9EIPMJloggGSyQ5Tb50HBwUTofvdXu0rneJpXvJzrSI3wgbUrsU73r6Bbz9f84ila+E8U/FrtgYop2vZFdx91c+HYmN95VwMmoc4YhUeS9cxPejeyGUFAj9Y1+/ytMCviJ49B7FUTNsIZU2YZuob2BqRq3gGwTkGYG842KG5B1LV120aTNLRT4ZuzTT/vqv5SRJP+Pk9Qttqo7AhiS8HSF52YE4EleEOnqsd7DWFPR5/yWiNi27E42wuk6LNqg7R6b3NTGvxA0lsImYueSCHhso2+fvz4pq/noUbjQOR/S+VJDDyEsn9swBdNzFbgvV4SlkniYbCB7N99dYchTsvAM6kwYdt24fqiOGxFUs8j9NhZHIp/Ywia14ZTl85cEfQUwSVdWPzQ2wMPtXjdnTx5JCV9c6XFFTMjrwgR9NvkVDGGVK1ex7UM+Vi4HQwfuT4+qH1k7cWL3F3iCvdblYv1C8kt1w6NjiEjkjraT1UZOGf92lyw9VeBpvztJ8FymfMEPk6iOTuV2yPThCh/h/KF96fsgqQbxHhjiTQW8/5etj26kKI0VlPZniQaxOe3D5+mSKw/TfpZwARfeFa9X7hxGXOdYWQwwP8daD2RqfkJ65a5GRYrQDs3UQe6m2cYZ9rz51TbRjW7FupQN6nPiZ+3vTtPLaX1qekMC0CmNUTuw6B+XBVpYy55q5WUkeXe5SmslYfCvKvVA74FbHhhOJaCFus652ZAK7sfDs+P+h74dXB41ocRCnE9Tds6WHyr0CQgoCYO+DKOosfeywbKSN7lK57j1P3UDbksItukdq1UWCPQegFoXvkFo87NOWeroEqaVZV2RgclGlEB3+y8v6kqgLpZ9+iwpjbQar27EI03SK/mpMmZ0wE1K1rWkgmui97EVjsF+gWYjP2JPpgvrNRAvR06hPyOjU0Gga24z9NgjKzo4t4MYDb1SjaxODSzMgph/PEj4u+OwRm3BqToSGAPred+ZE1wvFEiY5hGdR7IkCF2Jdfe4OxK4Mc/7QkZisladcOGVLwQMneVPOZygpbK/Xr28G/dw9diL/2c8j2XLVhIkEZDT5ieHuN16kV4lhZMLNqS/T9Ef2qW32Rs/jA0/HPaWJvzIRjW/T2aCWYtt27GrtKRHRcqgZEdPeh4hQR7lu2kmai9A+3DXknQe8TfHPMHaqKPm4+RDRedovTkQkVgawiMvnupGKT9SD7cAPh4MJnqhPJwOmK+Om6GrM/BmuQ1UcWB4FEnW+PwMI7soUWLz5RMHqmcdA9Ht/hJuCvgIwt9BZEQ7a9q2o3GqF4+1vCAN3qXPTkJqMUHlyTQkvkr9cJsnsVIHj7Y/DUJ/FV44Gjmg+oZMD0z54imrvxWdIXHe1+Thz4Ng91Hjxl014u6LMFy7pce4rAI/3KI/D7uDZko/9a2/9MsVeb1K3yZL/FGHCMNDj/kyJce4DBT4FUShsr6VwWFXFx/Ab8N6lW1jdg/ypAOONtH24grrWMCxOCt9nFlNRVriSIPcKIEzb3ytzy8lDr/S0obQytwDJdRESh8wDxps4Ht8CwaajV5HmK6+KmDPk47yv4d9RLAPo2W4kmOVPBHmfSqWjfsxdzSuuyMIPjK+F95w4OnontygJ+qId7vXZAJxiXMBxkYl7q83xtlQVtnsDY22ft5yqkmftoCPUo8PkF+zYsWA/3IVyKU3nw1TC+nZpH6+/zfZeeg1arzNJ5Xy2YMLeWMoVXq30GWd3IaGSad1X4G5cwT6S79JEIvPjSZB2lE8VfUbPLfp7J7U907btRLRpZYO/9UXnCtEqk9AitqnF5xo1jxZEtee4zU2CLdAOY3eTaZeXf/LufvJ5qR0EB+IaDV/u+iafIdRI6Tb9JsGEkTO76mrGARVuXleUH+7puPVsJi0h2voxJFB5dmNBsyRGzQ5vMhMc8XEXBo4OFOOQcMuMYFZqsTxrvM6lhe9P0rKxhEiYzIwYeBN/4TN89r8rMjyL4wcvw4WdtymoGI6UIl15qaIUfxR2L7I7Q4HnpjTC4OM4uVe69HkFmGHmjGkad9lp3kLGYvJOF7qZ5Vr5bMwgDI195SybwAJQnVerfwHpeMyn9rX0u6D2D1m9dZV+9LAkWZ++2uXKAeQSNaJhSRUUbvCHT5Scsm+herm0fn9W4EsiVIvqHFgdmDJykduW9vxoUFiWfgnE8wCRbgXduU0fQU1cU+LSWjmegVVSrUqWC2FJZbB3Exg9aKio+nvK/r15EA0qMo5Wss0J6gCenf1U0Ur8VMF7fOATIBYfBDn/dII/Jm6jWLqT6ibbkrojDHr+bhP1nsQbdy/lfhGtecqfnuYfn2+3Y5aTpHWtkV3fgWkVbFEocDH/PgxcvktETwWZXQse6fUI/5BHCZxiyuvS6+HOxZmlNotbdET4fvdc8FKUinSXgjfC39AkXXEvcaYpZTZcpMcWmAm1aQpwy2eVMfWvAdKfNcrvUTorIw8FQq/s/gF+QzEESfBxVpH7G2OiEYILqEY6lOwpnKyJV5Svynzrps8JXWbEXkd8Il5UNwdSh4IlKZpVmy0Y56XiUhkjes5zV8cDJAz2O97n0n3OLlFz7ZFs5Bk3yr7ijbzmKmhtmWDQ0rCQnVDJKywO+CdXDxbyZE2rlzqg+d6PcfHPJy7VSBVj5g2u99HBkmBq4AOkILf5NRiRhqKbaOUcaa5RrFsdag/5EKNQcf356hT8Js1jvCdpYDB/rvAKup6aFbc7P+7HRj7RnGeNLlZBkDUC8eJhOuA+OveigpckZG5Co+5Bro5OiB7CNn8CNUD6lOvI/pBLDmc0vZQcu1vOLU2PqYNuGBqjXFNEcYbB4jPjv7LjYLfdvTiQW+v9a8Op1Ql0kL/qZKK0ewIFrzvMzgVWx+DF6M1qEhArsibl6bOkUFNBt6WMHJDEGsMRpHxflbF8mzF2Eql6kp35UDUlptfnkcKKU/7upiN9O45PyjU4Xl/pCMC8LCUtlRbOg9JyCEP3LifuRELQM5xKogm08rHf+FGSfufBFDegsxSNY4yOAsK8XdRmAG5UcPMEWLTK1KyHLztXKOpt7DxUT6u1OBn3G04+/mrbqg33FQQpbnr7lJB47Y7SZeAD6xJtLzjcvsOzS+6Sa7LudT2pHOfu5K1jsURGmEb2fKWxt+ZU7m9++cSF2ZhUWVNZhZsxC0YDXK3QY3zAnD6fYAqiVHeniUHxiwhVPdjpR6xZnCUTCLFae8OXusOO7tDmTV3265FdIW5xrDEvKk08jYI1xIr0SWmB9QnOwoNv1x+YhLSV44eL20gQ5UcLyCYst0lbf/bHl5lJ4wJlhYr1YYs3vJXnZIvJnbMl3l2GlUw+sRFwylcBSgQ0lpV8jos8m/0q7UL3ajlJ3tfDjFo8UMdweXA0ZAxDxala1mAFI28DoZA0R1bZxXJnN6ZbLrtah6f1gqybCOfpZr8BcmqxP6b6BANIU9cWzoH2oqVomCi/wtI5kdO5+w6ZXvvA8PjVrK8yNH8RiD7yj/dkDBYYba1vSfKAulF5LSjohIreBeL9WumArF1NOqY0as9odUanad0OAltS6uqvKoia/t7QpwleSHEGa73Si+b7KUa4pT1e+/XGcJOPqjto4OyBvIeR+V9ZUZ92EA4prj3lOWA3KR4hc4n9tVMCqFVd57u0HkIlL+o/nfaWbYKV2cJ/rnj+nt1V9mshbQM9V4dRgiKjM2iRSJ4T2ZCWc6tVFUdfJ2pMsv7Z8eBBnLDfFnJFBRsHrKrBrGwBLgT8iijnaFSofRxYgUQF0w6x/nfo6chr8mMRwhgYUMIdX3OunduA477vF5+LiHnG56jhIZ0pwSpZ7MFijmiUWsETzvPSzi9d8jKfLlq//7hvsH6keDTHlxBjzuTzqmcUoImZhDNmSzWlqp25zxftVEOEgzO3osYWxB1YEpToAQVRDbQXv0ja1rvSBrWLlE+W1s2LgRdVY7a2oQG6ShCBqP1AVcry1ZxZ1/ibNkCKZE83rKISZAE8bKZqxE/VxYkWCofuHkq6jC4S04pPXEvaRdBm7vr1gFhuQB2FXpRllwYyFZ/+PPSZZ37fFRBtLk2+PYoxIIg+elX8Q/B1gCxuvZEANWTFMRFX/mab3iptA3sR74Cd0NU5WsJNVoN2FZk3j4bGX+W0hZ/oAYeRCmNwuCMn1DFADTG+uNbcr7UItqtO6oXpG7mWjp4hWoQPlg1tLe9QEVTFAfU6ykay/zkQICZZXl4R4I4Lgh4l/EH24njAZP8sM4XhjeG7MqBcGSfcEMNOLrHzGq7JELhzNd++O0Gt4gRC4zX/nDTAsvC/sDXBlmGGqh3Y2BxBKVynNrABi3UiWeZag4ay6R+LPl8XWf5O43S4yopsP9wldcttn83PLbOjqnqePLKX+pzduzmlj05E97fTlp++sAAALBrtD1SPQmwu3BeHQmptsJVK8ZIVcil+eTP7yNtbYSRrWsqrSVWbFoRHr3KsvoSFoGWAQfp5F8he4UdzxLkyVXVXUso0VoR0zQ26fc1Hwx/lusnNlzaGXWT1Ffd5VmXC9rt9dm5fKFYlJS70cxRzAKiu2P3ufWtCa+ypsuvngx5r+OlbsTNprUs+freTcXN47glDHklPgxC0aZWaG8rI9Xwm9IjU2jYddLIGw2w1TmHLpvrnez5I/oecWac8E+8+E+DzYFux0Ifkv1K3RBcQ4gv2GEB/wKXoWrkIJfRg0eERLhYfsA16py/8WL4lX7sCpjwK6B+WEPQRLYKIuOYGMghPMsgzHp+djqvaPSufB8iSsrzFcI0CiHywRIZwZuKtScIypadjpKl+JOYmtEn1Eql74jqoq0rHTS2zjbciSCHIpqjcCG40L9bb/WV66hvRT4EjiglYJBgHpoWvzUT1IWqSckdadJ+2ycKJGXCP6K5nBZPkbxoIWb7BiNLcJnuCJV4aGozj9AkOVjM9iKOFYkGVSy4NEyC5XVvAmra+FjBYAGzj2LK5MTUFzpjgBKfhI0oG+SNjbE0suLdHLO2OC42VnBF69tFGyU97RI3frNcQJbq3u0lzgOhkwC0e987VRdUuqM9t7IUekGWySR733lZwi5l3/I+smEyWP3gwlVJVaiPXp8/XvSej86j4kjp59tZQejl927hOmqGeUQ1akOe1QFaeHV58/iTr5Gz6FcVmSyaj5ZBox6uYk4jNLgkkghblKU2ekxjhSxTC2XFGr8Ohg/ED1Xa3p6l6bjHsPIS5L1ObvBDo7epAwmTEk3GAPfzvJs5jOxMY4mutAzpQEQzf8KtJhAzMn5ZOqgqIezwLq6r2wnq1MGKzvaVZl59WlgbOIQuOKMevJbvwOG2GcBXKekbTLuaW6FRdVSz6NMRPm62ALXUM1jitPuQHuyNP4llIbT5sj6/lLYkQl1k4afRwsGCNDRhbBV9QdJkPO/TzWjO8CJcSHAR/UR4HowAVsIKD+qx3J7ytDpE/P4r9oDcknXw805wQdJMxMjkZHk1Sa9+jqPqanixRyR105ccCDVb4Q6TcAgkFMdfy6Apr5AAQPTc+af1YKGOmqRhTpPn56L81syhKBBLPYHN5OzUrilSWV1JBF9teiTueG5m+G4Qo36ZCdXEHrJMFfsUph4t3r5L4OEg5vSKW8trtJT9BMFmMdlW+96w+Xm6e/zH+qn6UUMOknkbgBuUny3LWaB24kail1QTVzNQniEWBFpgTvyqTA8Jl8PQFBRKc86gcSlKa4wwoItXb59Ur5NmpoI8gCVyAQnYi2adiTYTSBdbFlbvu2eHvtD8UawOzSXHQbKy1Sh1j2abU06W6SPZ3JZdlm+yvkWg0AwqvUIS2f+cZk9kjH4+k8TX4CnwKPqmPOyNqx8bgSbHEOLKDRYRyqvIw643lDAZAQun6JgvdaU40VY67lFcsdVe5EG3ZBXWlKfgM9YSy03E+uELI0bRfRc+2qb476mCcpHYmjRkBOowDfO1LgL86FA7skKmUQlcOIJeWz2HkbkOm9ipVmSGf0toTDkMR6jnNgaqdUNtvULaBg9jL/k/J6f6asBqGRKcI3XA9fR54bbI/j9BjvFTmuyau5z9x7pHKUwAV0OCCYOojifuo8HAT+Zj9rUez2I3lSEw+yg99ziGw2I0F4894m5+kSR8Aad4cR99CEnnzVqad/WUsd1kxK8LLQAXO51NWixhCrvz0Q7ZgKTYwCLtS8rbwb56bBx7Rv4ST3iVlLW1M3OqUjr9Ss+lK4AciOgsOVLUCXQwDtiJmdhCxTcec7Y6Q3al/XGjqFO3Tv/EIEn6IP858l9OkTiHuYG27Fa6nRG5WWs7tGRurJv1XIFV/hEU/wHOS65EnqiakLXogGZH45bW05n38POTx5Menv8X8hLELjLiVz6NzNWBlaxWgjV2jtZXc0w1SBygDMrDsYBJqYKRoRruzbJyVb4hOmSvIpIk3MuIqs1Tk9ZhYa1AKsB9BVphthn5CtuuVKUlbGyzt9SPlWaPBu/R2g60dYLvwZvFDR1QuXfCAfO55VWGKgSwriySyiRJ85/B59EyRE1Q71rT63fnSjiMvCkrgSMTid66ziA2pzJIMRBl4SSfu5kFvby9WT2mxBcsT4yTm6C8r02IqHQK7MPjqyUbrKP6nptH2cQ4rFWMSOKp4jKGzginn7v8cDiEYsr9OPejubNQzySfONLuz09WhxXUtl505YEUy4wJl0lKdVXvlZQGZEEtyqYrtyugNw0mtylMljMo5/HThsW/TUGb/O4+8U2jH2RNC/iCpPRdRWGQQPkBk2LoxWmXLwWvglSN+DQZ+vRGneZ3d0c41i0E9J1Akn2BMXm49b+UH5LT0ElsQKkZt3utS1cs+SF5kQMJ57yJxycSVvTYT+vBQCe7qwA/8ShMvpwdlfwnxM2VPYCmREMn9eqlAkiUKhoUTQWnNgmdjxcOU1OQpvOvPNgfpxWuQCiaPuiPP6mZ+YI0HIV2GtKbr0IUSnqKeFt44G5vofqzXgC5cHSWLNxlrdWCDKujfk85asw/MTVSCDUWRdocPhuDtptV/OQu5lxJ7Vvt8Jv+gJJsOgSp+AePEYy6xETDU8A/EZMXgDUA9AIR2d6ZuyjbiKtoHX47V24ZfktUNc6fdwNLuJ5NBOZNDvslPcWF2BKTT/iy5KCBpnE5hkVKooZayTBSQRYaAIB0Yf2IOWiCNCnY9v3Nirerg5FEQ+2JNQ/xfrLe1HGVr5MyMHkJooZ1rmzPKfMPYAr33LlSgChGZewgFaqYU3wzhoZj6FSl68gIzhqnblDvkFNs+o/JPJIpV1QxZvx5uW6+HoiNmr+0Pz+p32rgx/j5HEnc7APwz94LzM1N3KmLA3U3477T8DEQFrdlWXfkuYsoLQlGUv/OfN26hUxPLC62IPlemWSjxQ2xPnJtP+D6GY7ooBuhqEF0Iz0YicIDm1O8gk8LIVnDMtr5j/EMCi4FW8etYK/4sE5ro18p0gHhFjLRgoKsVC1m80Rrl/G/0wmDhMubLAUeM2P11kwGBB4d0DG2nMZZKdTCHbRRKiUtTi6dSsH4nkZ1I2Z3hKoEW0jUZzJPKX+nrOlxaBKH/8AK2YUBeXkYG4RxKEGvb5t4ny+3x/hZqBHcPWHTQcnKmi2esRVPbYY5HBgt1KRbiXdCUoCTp1RidLVTBSqpIZtIOcncVTP26qlO6DAtee29WqylYh0GETli5sCNI864OqDsww4oWTmsPc07DHRjhsGrpFkdoUU43Z9JBzqjVvyVzZoNwklodcTc/KJpldVxCKO2hsgOGFKD90KuwUCjgBTs99Y97h+PrO4E3OrOBk29StjduhXL4xFgYaDsNtQdWD+5GlT2UTtDYJVY+lgSmp2RjzfKy8cdB4IS8u4GZ5eMc25ZjDoY92MD/q/vpaJVOG+yM3WsHPhoqKsP6XExjVDWqtpwZJovQ8/1XTeNMbIp3sj5SCR5LDNV6JuYqilAq8ZITm3Z4pJXDrEizoN0YwWTcZIEqtynz7ld5+loYDD1GGZdsF85ePsd+K4lTYTTfsqD1KMKLk0gNDCAaPez0JNBKIUWpaeOk5Nv/MJy6zWQB7xdYkgjaIU1hyjo9n1nNt9UgAo221zQbU72IAnjrHQ5LOvYBa56rq+13Q9o98E5/nVWVU4KqlewuqRv5iFC9B7D38gdpFCZ3Zx6IzpoVarNd4T4gbzfzdY+pIU51fnHUSlI/Eos7SIS0RoT/tawxrFtjz4d3hkWeKjg6RpW9PEkVdMVfsyQjMGEOOn1FY/dZeDV4KB/HLeTTMMuCTM14B5LjD/F/sAjNJYI4UKKTL1pKHupS5o2A7y54UnSRSxf7AQ2ZAs4M6EXtPorXBfnqrwh9CWnxQxNzDPExsJEg/brcoxf5v/cMG9+Z6ACtExWSEuQwvfT7Y8rIqT5ndEyZqFejj0sdw0QQlc8/dSdeyLkLGX1FQc4/ggjsc6x+Y8/Oe8UUkwtJYhNduzPbpNLzN7YXtZRh944H3E5SAbLeyR7UOhVwJN8XwCyDZGY5R1HtKbPsj888LUJ/Ma+bGHuX33YCceTBAKKoX75sQSloPnEgaU+HU7nBp0wNevZt8+B15c3NtDHXECm2YaAqVqJEKkUDuNHQHhU0d/TMhDRHOKNfhznxTVRO+mCPrDdDW7k84VCZ31CXzusXQJQ2WJ8DOaGxZDg3pZkTRWKzsDTATXoX2CgaAV7DyUkuUMGYEgTBYykvbMZeaMW3TSG1rNVbRk07U1MEYNeF3k4jRgDajhPDhyUI4eMiGAphc3z8P7ZqlSZmjE5RdoUxfI4iuwaLqV8eVDFLYC4VG+UUT514dZOyu7Gnpp1+zIPzKYLAqIcfHa5Dj3k0V2a9AooadSLga0eiM5D7GGoEXj+xYA2Bl4cacaX1oyS5lNmH426waeMRF9Fzgg9Uu47n2HdaVnrFBEAAJQ00bcDboPysgAKql+7jsH2EIpfk/OyDvoTVaTeXVswEW9r7LCwL94RFgCjRHKkIxpceTS0zz67/LY7lbIerzDuxH80iG/oemkJB4sY2QXTPBHb4RxWlyEkM8UamvICPXREa/QAUtlHAwm/Iz8iQeOCif3ThgWdkWdYhzPiDH/VzUXqC/gHQlQ6ynBjJ7TnyKPqqkndBbwOCy8fmjg8pYga7nzaYdgPbV8jM8fiFpSYl9T1QESiMAHGCGe3Nmz8vOU+GvHjS6959IIgpLKQ3HGYcLwEvNwIka4niccg3FRDszRwvxXvQ+wE2GGlUIQMdMR52plCcqdDKlcBQmGgf5l2FwGyuGDdYIOg4o50GaKJ3uMVuqoW3EKXY70+pYFVJdgK6AEVIaXLXlEJCD8THeeWkZeEJMBhdXk33nKAzfDhrrtYGmLDykORN5vRufQQd427UzPngxWykn5uTeK9I20bYoaBnd3LCZzF7mq31B2I2wb0OIGPYrcPJUt50aE2yzlUmHvxodHMAIJYc8qn1oU0wDPQkWTqmzO2HvdrWaEBc14ukOBQOAUHVQr6KGYfDICFiqpmOPG5Z3xnliJzmBiopMaZdFrDftKGCTodiLC337XSoXgBGL6SNPj20du+dpZxOpBsfdlES2Z7bm+TN/Glu0j9U4fJdq45AGt1rWGwKsByna4Hw8JB7dnGain2yD944jTCq/es4mXdBrjpjRNsIzxFM6XVfLrk032ypD6PPnIV0plnRTQcrbZN+rpCZ9elWO8tl6aySmAeay1oUmdARWEOfqJsirnucMHjvSbVg2nwZgpwwEf3zYFkIWs9OwZtheC3t02ZVRei8gz0xKENf9MhxZG4DjU3TG2r+n+mtnTHf09Xw7LqQheb8Z4vH8RTh42vcGkALLG40M8Qz8hcafg0AgafSxzE5OF3pDTr4dCj1pzNQW9N+PnUqU2snnWROFS6LhuDzW0lnyn4IXYI8BXkD27/Iqn3Ju6oBc+lkZsdapBlWKCoEtN+VHkAnVw4ijnT8NjckMwiaG7bGwizKHopba7OroTfoHLEFgrZx3c8M57RfkikGgr28affZuW83Mi3TTn+59EG7gpPqp5/yFoDCQPqRfRNGCPP/P2awtLDMpulW6P/+JSB19gHaNaFLUCcrIts2O7NaCHSETkq806lU2wnnKtKDTNUKu8STaXGvtgi9qsBoIbp6uAyYPYm2ZSYW5LJQutqOeRnVWLX/c6h3TEAjLkSEbuPuWLSwyLmbuiJSjk/q/mPuvBpPqTIc9FA7zILHhSfy1eHcZPhm0OTzUWCQPc4N+UsVsFHRIRFKLAlRJkR9MdZz8sPALejwUdM2m7dusN6wAHqlgdemqwNIErLucPooTI6bwM9w+uc2OOTP61CMUlxSrkeRT5LeXN57ufle+/0ltna2POmiQjkCVzRd56Dedr8+neYTEklfjRchr171vMctvoNAmj3vsf7RSejeYc+O5PGH6sxYPimjZRhsVXg/rK/a0nyGkXRaI6UPNnn6OGkDoszXbPexIfCD3rSxr6O9hdQGKqeMJSS9oWVxKy1e5FUi7twhIRWQKvNK8EbXUxsS/Hp73r9ZyeIQDzFbSLg3v7tpH3L2EKGfBOTM0Ye1S/uqQ/anN+gv02NwJfxSgp+ZIK9rRoB/Br0LUCQJyMq5UZ5L/Vs+I5s9B6N9iZyFBMoJkzBDWbFSRH1GS3nD42vn8lQziHG5Gf4syKzAUkTBnR+Y2TV1sao49NO8EOzOaxbtnCSI1HzwOy8DlklmJJtr4SzE0MITHHt6YfP0gLQgQYIMKrhI69GSSupb6xwsxQ5aLBA9ywkhw49yssbb30aqzTf/M7ZMBTts9u7HSBPEUgxxinSA+ojuhin+7Q6Zy58fH7p+3qLPlQPC7IM9IwikOAH9T8s9UtJ7mXjtWXVtqKJqIXAhXchrSGZz7tQ8QYZObE72ebuuwd+KmwX8JWrPE8iwLTeq7/IFhis56GHQOHUb43bS3+/zTRRlaJNGac9OXRnRv1RDASwX9RE8R38NEEpeVgN4HU+wY47rpXcfXKDG+x/e1iro6D2j/ScE//0OqqT4njbnaQ2MyC5PFMFj2wpvomNzzf5zkW6d0GNGAUy71JQWHBFAWM14IQhmKLnlsh/IP4NPxgSolEe33/2gRTSr7LeUGFusfVVYUw0fEOCqCy+OQI+2/HK2QhZK+zs/YLg4J/06KzPP81G//pOMm5YccZdkwTSJop7VB9dKhPEm7FcByFCLdyTdSDMZWynbPw7kFmR93ijWpvSbbZD/7gM8ADVigwoG5CL89XjAHdqZsBtYTs1h0l33CAhtbNeUcK2a4ZVoAxzd7VyXBeBoqCXDQwNA1S63wYANSvDFIs0T5AnYFK+yT2V8P63OaHcsl1WCSOCRs1P8JMGvH0yawnnOpGNcvYzQhZ4g2GiHwuLpFZgS33Rq2z2z9qo0vO+2v+CXMnrSaiTN8TlCQJr+mKWsKxRMAhLuHR0xLPuT//jJUD1GyPkLm9nOf3tSGEo0T+SomZkBkDd9M/WV1Ycvr8TYRA4H/qECJ0rTNiNa506na+vqYvICgIhx3JjCg8DwyFzBuxdkcbtN32vaMiXNWtMrulh+93dMDPbnmxzl2+Vwxta4fZcl5wv9ZC7V1kCOaupgVT8uqbvu60HBWmqOGMSB4Y5MzeNYlethV+NIkE9+LS8nHgsZ5n6tkSiuQE6e5UNutEr5FYUyZBTHi0w0IYfHZ6BeGa0jcISHIiBM+kj+ZBvbcJMx1AwnUmHHyddCREDVqNl8z4MfSd+6VtfMDe14H89NjKciW/Nx06e7X4R4pqxNIrsqVnkh5tI8Ajh39vMS3pXlV9Nnw6ZZWAsNPmvZHF5fbPCZ7qCVT3nXJMrAQ/gerBx7a3jOTUYKXjQxL3v2n5Q0fu9gP76QwqtYawYjVBJeOABJQXFEtuL3nHVpyfqR7FM0lNw1BDBtmyAdR/yR0FcAJlZdEdESFhN1dP5TDrwySNbuGZMkt7uRPXJfNV1CfN5a4nbXJLXhBx5h9ODdGOyES8BdOTO59wfIQ6ENSULYmulzQef1u/cSOTYALYpIFvi1bCMM+uHa564RF1smb77l8iB1oRxJ0LNUHY0i+7i3u4uIxFp8akHxkhPbthFIKkWfJhuMoCGp4E06LBBf39e8MRrh9VsTTP0xy9se4WtKEOje7+SdGIFwQedV4DBknyf2Ldc0wo3Be+xoWzUjCu3FuC6X6o7BwqE7l3uY1Ts21/V/rVds4Z/f7lWBbRzjVDN3pXO6zkMB+YhxM0w7zPp9DvDRoUJ/R6GJOkxxfO5lbaVyL2gK3CjJbAcDPYiSzCW1yh3C8uN3l8q7HmXbrxGVUEVPN6uxJlgu4zUK3NcDEFwOKFUWwwZGjD7GSxWc2BmJYZ41RfJIBwBO/dFynhFBIoXvdO2BZvd+3KKblUdP45OGeJt0mtlU9t87TF1vVw9iY9ZhyaSvQbok57pCQLDA+2lg8bp0PLK7IXnHJ04TH5wx8XkLqhXgsHl/JISumisPtfg9bPqMyIVxsIr6inGKt/tb5M+hZPuxN2y8jfIjX/0mVZriLxXkSNfgBXtitkL4Yt6j2ZmtE2v4/89V7GJzxhgdK5lcoHoUI76CSoOLYoeGEIYY+NgAVBWEzQFjHM3vytbs7kFxk2jP5DSBnBbTfgk+QFACQ69+51+FcBy2Y5YSmLMpxcuJNOB8bxD3tepodaPzdxk/Ug/ocPu7/w7BKMkExfssy1CPAPK/Bz2RPOCfOShi/oPHSRYkVCMVVi5obiIZZbxoXd0YIOuK4iCcAu/anEv9pAABCpCcRbY0QMR+Fk7HOkIsHd832au4xX0NPpUk02E/Uf6zdW4/1L+7C6HTByWnB8KFmEjFCzvl9Wbb/ENisBwhlSc0NLRXC+Z65JzQf2LATcbHx4qbSjoHTW7PJ2os8/LjmFMSaT+i7JzJ7qmGnnV8rKgl2Dfj8Ss6gjk46RoAzty7Mk2qj+GbDSHE8u0f/lhOvznj1+5939zMDtO1iRBMHmdk77aO6fn1woHm1sIb28lS7QSd6VMzS2F/yy50ahrLaaVfwwijbGPbRLqYErnYiz32sV7N3iU+WqmDKMvuoQM96Q+1UZKNuyzWshs9YWrqg0nmdy3MLT5/QPYzq83IgrGdozyu/e80ep7HE2dPGgjy2945Vob60E3mcuddMW8KYfp4O8ByK7JC5dENu9yq90AZvkxiXRE9f4TGqtK1DjB23wlvps52QkTIvknLziln9OZOrmSIr5LAUZmdir/7JBbfdyF/C1SypcP3pZ7Ouz182OlhOc20J7Dlu7w51VJvutQYZNmQeWHuTw8dLOL7Tv20lCP+7TwOUziUwEYT+XKUjw0Hc9NDVhK3V/0nM8oXQGtJtwXyGICNUXoUsYGin2GAchL/Vxsbe6l3iK2m9HBNFuqEKGxRPR2nJqSml2G2AMugIdCRPNL47Ms+I8rT13Bqg+oH0txndFuFsjuG3q4SH37kKcDzHsq0e0ApOUC2ekXsYzNHIw/COJ++zeT9V7So2C2jQIZORRAnb5UE2BSLLsDETOKjb/6d5UEoaqZgXA+ASRaWwH4a84aC+Z0CtrKoTDtqamrE3kkFqBJzFYgECJ6HCATD7VDFeol+RS/zzAor45WAC0PBCecNnrY5pQ0nCDiINZ5IKVPalUUCJg8K8WlLQjrbWhmfLe/sqD5zGLHalPdn2+tLR9E8wiN4/GoASQe/fdG1DA7DTNqdfAvMTq9rBwsyxzzI6r5dtjDEMw+XxRnftAAAAiSQJBg3d/lkExvjuwQIsHDhyvQ0Gzq0XSSCCBU9CukjztT7cQ4JEkOl6fcsTmF32aje0rBJVhRj9TIF1TKa2kaggAROHdl4LYlXk+uDh0O1fRx+Owtue+sutqNwMbgK8zwHXU30QPOujrtvpbmAFqEV5dMVPwuChXor8H7vqZXoQiBaZuAI2NQ2YIrNTlyDZQZWsILxnhnFydBBG1VnFleRw8KfkUzPF0nJkfd35sPk3E/1ldFOkMzPkb/k2ZgzeSpk0aw0bNfpcGihjPsO9N7raerCou42s50PR9Wp6+lGPOfgmay4r0fuw9UGbLhnOjKCUHfViUGXawyU/e7gp+y+Ao3Aomwz8hVwCOBOk8txUlq92zky1b8NgWwZi6Mi5EUaV3s3wBENQksgz9AXzBVcaDPpBMrZwQ1ljAvy9XYsYWCOkKwdM4SCZfmUzYNx1DKzqlQQymMy7NrFnJfBJViWNnfpNnIphjHe27xhhgOrWEaUmiHUC6HM0t2VcfjWoBfGU901qhSCJ2CDzAE3F3rKwU3X6IrcxdTbD+NVbPJPnHcghWZ23P8w7CvN9rV8EDIzIsal3J8Q81femMlT13rjiI3Q7EMggnT+tTSRbYiJGraB5sE0I5wwoS83Id/804kK2Bxks0PH6gG3dwUgiT0umMorDl5n7UZMBITSkEKdvrIHIUgEM6C1ecHlYcVOwN0ci0loZZOfd3CjJa1XhmqSrhqH7oEG99bG2ZDZ4wSY94K3x3NL2PfRx0/7d3nmQvxWWfFsiSxBl3MWKuwsEthuMPAR6oMeVJBJd1DEKvScbEWK5bEBvu2kaX+eyEp3tsaOpimOjCL3MK7V7eVaH88y0fGxkgm0ByJiMsUZlTNsSYiMBxmgaW+Xr+vBCd9hAncjOebc7G/bWN/3mddwvsoZCUuBmOKP4jg3PycpAJC9Uk+0YGSiABXojfRf4sGWL7q7gMwkX2G3Kpi4tnBbMLjXGo1XlG1ymOh3EgWX0kPpdRZqpfurWRv/eRTnk+hX/uYMZUbFpukibbZJg1rAI2O2Ei+HMifSsPHH20r1XHJmzrVbnDDrlUFejnoM1gqQhT9rEKV+zHOMoVGNF1phWn5F/KJfH9WUzXQBYdQkSWsBvgjzDzmXl9o44BDLdcbzq6VPaIYOEzBk0GM6Vk6Iuj6Sd2inIUYu8VMaVNjX368qtqGUtYTFKjJVAB68LV4opge/h+C8IjmAJIAAukAAAA==" alt="Emblème GreenBallFoot"><span class="gbf-method-title-text"><span class="gbf-method-title-main">La méthode GreenBallFoot</span><span class="gbf-method-subtitle">Postulat &amp; Principe stratégique</span></span><span class="gbf-method-title-balance" aria-hidden="true"></span></h1>
+<section class="method-columns gbf-main-layout gbf-one-column-layout" aria-label="La méthode GreenBallFoot : postulat, indices, principe stratégique, formules et paris">
+<aside class="gbf-hypothese gbf-postulat-card" aria-label="Postulat GreenBallFoot">
+  <div class="gbf-postulat-block">
+    <p class="gbf-hypothese-postulat"><strong>Postulat :</strong> Les Bookmakers intègrent mal le facteur humain dans leurs cotes.</p>
+  </div>
+
+</aside>
+<div class="method-column method-column--indices" aria-labelledby="gbf-indices-title">
+  <div class="gbf-consequence" aria-label="Conséquence">
+    <p class="gbf-consequence-text"><span class="gbf-consequence-arrow" aria-hidden="true">→</span><span>4 indices complémentaires pour mieux témoigner du facteur humain</span></p>
+  </div>
+    <h2 id="gbf-indices-title">LES INDICES</h2>
+    <p class="indices-lead">L’Indice Global permet de classer les matchs à partir de trois indices complémentaires.</p>
+    <div class="cards">
+      <article class="index-card">
+<div class="index-acronym">IGBF</div>
+<div class="index-name">Force statistique</div>
+<p class="index-desc">Compare les xG des équipes en tenant compte de leur classement attendu.</p>
+</article>
+      <article class="index-card">
+<div class="index-acronym">IFx</div>
+<div class="index-name">Forme récente</div>
+<p class="index-desc">Évalue la dynamique des équipes à partir des six derniers matchs officiels.</p>
+</article>
+      <article class="index-card">
+<div class="index-acronym">ICN</div>
+<div class="index-name">Facteur humain</div>
+<p class="index-desc">Intègre les enjeux, la fatigue, la dynamique psychologique, la disponibilité des joueurs et le contexte extra sportif.</p>
+</article>
+      <article class="index-card index-card--global">
+<div class="index-acronym">IG</div>
+<div class="index-name">Indice global</div>
+<p class="index-desc">Combine les trois indices pour comparer et classer les matchs.</p>
+</article>
+    </div>
+    <p class="formula">IG = 20 % IGBF + 40 % IFx + 40 % ICN</p>
+    <p class="disclaimer">L'indice sert à classer les matchs ; il ne représente pas une probabilité de victoire.</p>
+  </div>
+<aside class="gbf-strategie-card" aria-label="Principe stratégique">
+  <p class="gbf-hypothese-texte"><strong>Principe stratégique :</strong> Parmi quatre matchs sélectionnés, au moins une équipe favorite concédera le match nul.</p>
+</aside>
+<div class="method-column method-column--bets" aria-labelledby="gbf-bets-title">
+    <h2 id="gbf-bets-title"><span class="gbf-paris-title-main">LES PARIS</span><span class="gbf-paris-title-subtitle">CombiMax &amp; Solo Live</span></h2>
+    <div class="gbf-text-cards" aria-label="Présentations textuelles CombiMax et Solo Live">
+      <svg class="gbf-txt-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="gbf-icon-trophy" viewBox="0 0 24 24"><path d="M7 4h10v6a5 5 0 0 1-10 0V4Zm0 2H4v2a4 4 0 0 0 3 4m10-6h3v2a4 4 0 0 1-3 4M12 15v5m-5 1h10"/></symbol>
+  <symbol id="gbf-icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-11 5 2 2 4-4"/></symbol>
+  <symbol id="gbf-icon-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5Zm-9 10 9 5 9-5m-18 5 9 5 9-5"/></symbol>
+  <symbol id="gbf-icon-shield" viewBox="0 0 24 24"><path d="M12 2 20 5v6c0 5-3 8-8 11-5-3-8-6-8-11V5l8-3Zm-4 9 3 3 5-5"/></symbol>
+  <symbol id="gbf-icon-chart" viewBox="0 0 24 24"><path d="M3 20h18M6 17v-5m6 5V7m6 10V4"/></symbol>
+  <symbol id="gbf-icon-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 1v4m0 14v4M1 12h4m14 0h4"/></symbol>
+  <symbol id="gbf-icon-refresh" viewBox="0 0 24 24"><path d="M20 7a9 9 0 0 0-15-1L3 9m0-6v6h6M4 17a9 9 0 0 0 15 1l2-3m0 6v-6h-6"/></symbol>
+  <symbol id="gbf-icon-scale" viewBox="0 0 24 24"><path d="M12 3v18m-8 0h16M4 7h16M7 7l-4 7h8l-4-7Zm10 0-4 7h8l-4-7Z"/></symbol>
+  <symbol id="gbf-icon-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="15" rx="2"/><path d="M3 9V5c0-1 1-2 2-2h14m2 8h-6a3 3 0 0 0 0 6h6m-6-3h.1"/></symbol>
+</svg>
+      <article class="gbf-text-card gbf-text-card--combi" aria-labelledby="gbf-text-combimax-title">
+        <div class="gbf-combimax-head-row">
+          <header class="gbf-text-card-header">
+            <span class="gbf-text-card-emblem"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-trophy"></use></svg></span>
+            <div class="gbf-text-card-header-main">
+              <div class="gbf-combimax-title-row">
+                <h3 id="gbf-text-combimax-title">CombiMax</h3>
+                <span class="gbf-text-card-tag gbf-text-card-tag--principal">Stratégie principale</span>
+              </div>
+              <p>Une stratégie combinée sur 4 matchs</p>
+              <section class="gbf-bets-combi-scenarios" aria-label="Les deux scénarios CombiMax">
+                <p class="gbf-combimax-result-label">Permet de l'emporter :</p>
+                <div class="gbf-combimax-cas"><span class="gbf-combimax-num">1</span><span>En cas de match nul</span></div>
+                <div class="gbf-combimax-cas"><span class="gbf-combimax-num">2</span><span>Si tous les favoris gagnent</span></div>
+              </section>
+            </div>
+          </header>
+        </div>
+        <div class="gbf-txt-stats" aria-label="Composition du CombiMax">
+          <div class="gbf-txt-stat"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-calendar"></use></svg><span>4 matchs sélectionnés</span></div>
+          <div class="gbf-txt-stat"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-layers"></use></svg><span>1 combiné principal</span></div>
+          <div class="gbf-txt-stat"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-shield"></use></svg><span>8 couvertures</span></div>
+          <div class="gbf-txt-stat"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-chart"></use></svg><span>3 simples</span></div>
+        </div>
+        <h4 class="gbf-txt-section-title">Les 12 paris</h4>
+        <section class="gbf-txt-bet-group" aria-label="Un combiné principal">
+          <div class="gbf-txt-bet-label"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-layers"></use></svg><strong>1 combiné principal</strong></div>
+          <div class="gbf-txt-bets"><span class="gbf-txt-pari"><span>Pari 1 :</span><strong>1111</strong></span></div>
+        </section>
+        <section class="gbf-txt-bet-group" aria-label="Huit paris de couverture">
+          <div class="gbf-txt-bet-label"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-shield"></use></svg><strong>8 paris de couverture</strong></div>
+          <div class="gbf-txt-bets"><span class="gbf-txt-pari"><span>Pari 2 :</span><strong>N</strong></span><span class="gbf-txt-pari"><span>Pari 3 :</span><strong>1N</strong></span><span class="gbf-txt-pari"><span>Pari 4 :</span><strong>11N</strong></span><span class="gbf-txt-pari"><span>Pari 5 :</span><strong>111N</strong></span><span class="gbf-txt-pari"><span>Pari 6 :</span><strong>2</strong></span><span class="gbf-txt-pari"><span>Pari 7 :</span><strong>12</strong></span><span class="gbf-txt-pari"><span>Pari 8 :</span><strong>112</strong></span><span class="gbf-txt-pari"><span>Pari 9 :</span><strong>1112</strong></span></div>
+        </section>
+        <section class="gbf-txt-bet-group" aria-label="Trois paris simples">
+          <div class="gbf-txt-bet-label"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-target"></use></svg><strong>3 paris simples</strong></div>
+          <div class="gbf-txt-bets"><span class="gbf-txt-pari"><span>Pari 10 :</span><strong>-1</strong></span><span class="gbf-txt-pari"><span>Pari 11 :</span><strong>--1</strong></span><span class="gbf-txt-pari"><span>Pari 12 :</span><strong>---1</strong></span></div>
+        </section>
+      </article>
+      <article class="gbf-text-card gbf-text-card--solo" aria-labelledby="gbf-text-solo-title">
+        <header class="gbf-text-card-header gbf-text-card-header--solo">
+          <span class="gbf-text-card-emblem"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-shield"></use></svg></span>
+          <div class="gbf-text-card-header-main">
+            <div class="gbf-solo-title-row">
+              <h3 id="gbf-text-solo-title">Solo Live</h3>
+              <span class="gbf-text-card-tag gbf-text-card-tag--solo">Stratégie complémentaire</span>
+            </div>
+          </div>
+          <p class="gbf-solo-subtitle">Des paris ajustés à l’évolution de la série pour protéger les mises et optimiser le résultat final.</p>
+        </header>
+        <section class="gbf-bets-solo-summary" aria-label="Les quatre objectifs du Solo Live">
+          <p class="gbf-solo-live-note">
+      <strong class="gbf-solo-live-heading">Le <u>Solo Live</u> permet de :</strong>
+      <span class="gbf-combimax-cas gbf-solo-live-cas"><span class="gbf-combimax-num">1</span><span class="gbf-solo-live-desc">Couvrir une issue</span></span>
+      <span class="gbf-combimax-cas gbf-solo-live-cas"><span class="gbf-combimax-num">2</span><span class="gbf-solo-live-desc">Compenser un résultat</span></span>
+      <span class="gbf-combimax-cas gbf-solo-live-cas"><span class="gbf-combimax-num">3</span><span class="gbf-solo-live-desc">Sécuriser un gain</span></span>
+      <span class="gbf-combimax-cas gbf-solo-live-cas"><span class="gbf-combimax-num">4</span><span class="gbf-solo-live-desc">Encaisser un gain</span></span>
+    </p>
+        </section>
+        <section class="gbf-txt-solo-main">
+          <ul class="gbf-txt-actions">
+            <li class="gbf-txt-action"><span class="gbf-txt-symbol"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-shield"></use></svg></span><div><strong>Couvrir = anticiper un risque</strong><p>Anticiper une issue défavorable pour en limiter les conséquences.</p></div></li>
+            <li class="gbf-txt-action"><span class="gbf-txt-symbol"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-refresh"></use></svg></span><div><strong>Compenser = réagir à une perte</strong><p>Exploiter les matchs restant à jouer pour réduire les pertes.</p></div></li>
+            <li class="gbf-txt-action"><span class="gbf-txt-symbol"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-scale"></use></svg></span><div><strong>Sécuriser = harmoniser les issues</strong><p>Répartir les mises entre les issues possibles pour sécuriser les gains et stabiliser le résultat final.</p></div></li>
+            <li class="gbf-txt-action"><span class="gbf-txt-symbol"><svg class="gbf-txt-icon" aria-hidden="true" focusable="false"><use href="#gbf-icon-wallet"></use></svg></span><div><strong>Encaisser = étudier un cashout</strong><p>Récupérer une valeur encore disponible avant le règlement des paris.</p></div></li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </div>
+</section>
+<aside class="method-column method-column--calculateur gbf-calculateur gbf-mises-full" aria-labelledby="gbf-calculateur-title">
+    <h2 id="gbf-calculateur-title">MISES</h2>
+    <div class="gbf-mise-souscartes">
+      <section class="gbf-mise-souscarte gbf-mise-souscarte--combi" aria-labelledby="gbf-mise-combi-title">
+        <h3 id="gbf-mise-combi-title">CombiMax</h3>
+        <p><strong>Un calculateur répartit la mise dédiée aux 12 paris CombiMax selon :</strong></p>
+        <ol class="gbf-calculateur-criteres">
+          <li><strong>Les cotes actualisées des bookmakers</strong></li>
+          <li><strong>Les scénarios de couverture privilégiés</strong></li>
+          <li><strong>Les objectifs de rendement ou de limitation des pertes</strong></li>
+        </ol>
+      </section>
+      <section class="gbf-mise-souscarte gbf-mise-souscarte--solo" aria-labelledby="gbf-mise-solo-title">
+        <h3 id="gbf-mise-solo-title">Solo Live</h3>
+        <p class="gbf-solo-live-intro"><strong>Une part de la mise totale est prévue pour des interventions Solo Live en cours de série.</strong></p>
+        <p class="gbf-solo-live-action">- L'évolution du CombiMax est analysée match après match avant toute mise complémentaire.</p>
+        <p class="gbf-solo-live-action">- Elle n'est pas systématiquement engagée.</p>
+      </section>
+
+      <section class="gbf-budget-split" aria-labelledby="gbf-split-title">
+        <h3 id="gbf-split-title">Répartition des mises</h3>
+        <p class="gbf-split-intro">Trois enveloppes complémentaires. Déplacez les curseurs pour explorer la répartition.</p>
+        <div class="gbf-split-slider" role="group" aria-label="Répartition des mises avec deux curseurs">
+          <div class="gbf-split-track" aria-hidden="true">
+            <span id="gbf-split-a" class="gbf-split-segment gbf-split-segment--combi" style="width:52.7%"></span>
+            <span id="gbf-split-b" class="gbf-split-segment gbf-split-segment--simples" style="width:32.3%"></span>
+            <span id="gbf-split-c" class="gbf-split-segment gbf-split-segment--solo" style="width:15%"></span>
+          </div>
+          <input id="gbf-budget-handle-1" class="gbf-split-handle-one" type="range" min="5" max="95" step="0.1" value="52.7" aria-label="Fin de la part des neuf paris CombiMax, en pourcentage du budget total">
+          <input id="gbf-budget-handle-2" class="gbf-split-handle-two" type="range" min="5" max="95" step="0.1" value="85" aria-label="Fin des douze paris CombiMax, en pourcentage du budget total">
+        </div>
+        <div class="gbf-split-labels" aria-live="polite">
+          <div class="gbf-split-value gbf-split-value--combi"><b id="gbf-pct-combi">52,7 %</b><small>CombiMax</small><em>Paris de 1 à 9 · 62 % des 85 %</em></div>
+          <div class="gbf-split-value gbf-split-value--simples"><b id="gbf-pct-simples">32,3 %</b><small>CombiMax Simples</small><em>Paris de 10 à 12 · 38 % des 85 %</em></div>
+          <div class="gbf-split-value gbf-split-value--solo"><b id="gbf-pct-solo">15 %</b><small>Solo Live</small><em>Interventions éventuelles</em></div>
+        </div>
+        <p class="gbf-split-foot">Exemple : 85 % pour les 12 paris CombiMax (62 % combinés/couvertures, 38 % CombiMax Simples) et 15 % pour le Solo Live. Les curseurs ne placent aucun pari.</p>
+      </section>
+    </div>
+  </aside>
+<section aria-label="Pour aller plus loin" class="gbf-more"><details class="gbf-more-details"><summary>Pour aller plus loin...</summary><div class="gbf-content">
+<p class="original-rule"><strong>_______________________________</strong></p>
+<p class="gbf-chapter gbf-chapter--green"><strong>4 INDICES + 1 INDICE</strong></p>
+<p class="original-rule"><strong>_______________________________</strong></p>
+<p>5 indices qui permettent d'optimiser le <strong>choix des matchs</strong> en  révélant ceux offrant une probabilité réelle supérieure à la probabilité implicite de la cote du bookmaker</p>
+<p class="gbf-value"><strong>= Value Bet.</strong></p>
+<p class="original-rule">_______________________________</p>
+<p class="gbf-index-title">Indice GBF <strong>(IGBF)&nbsp;</strong></p>
+<p class="gbf-subhead"><strong>=Indice de puissance propre</strong></p>
+<p class="original-rule">________________________________</p>
+<p>Il s'agit d'un indice "long terme" qui représente la puissance intrinsèque d'une équipe, ses ambitions, les performances globales, la régularité...Il est calculé à partir de plusieurs valeurs : xG moyen, Budget, Classement final pronostiqué, ...</p>
+<p class="original-rule">________________________________</p>
+<p class="gbf-index-title">Indice de forme <strong>(IFx)</strong></p>
+<p class="gbf-subhead"><strong>=Indice dynamique</strong></p>
+<p class="original-rule">________________________________</p>
+<p>&nbsp;<strong>&nbsp;  xG X Indice de forme (équipe à domicile)  &nbsp;</strong></p>
+<p><strong>xG  X Indice de forme (équipe à l'extérieur)</strong></p>
+<p>Cet indice mesure la dynamique à court terme en se basant sur les 5 derniers scores xG+ et les 6 derniers résultats de chacune des deux équipes.</p>
+<p class="original-rule">________________________________</p>
+<p class="gbf-index-title">Indice Circonstanciel (<strong>ICN</strong>)</p>
+<p class="gbf-subhead"><strong>=Contexte et facteur humain</strong></p>
+<p class="original-rule">________________________________</p>
+<p>Cet indice évalue les circonstances particulières du match : Enjeu spécifique, Compétition, Place dans le calendrier. Forme et Présence des joueurs  décisifs (blessure, carton)...</p>
+<p>Le facteur humain : L'ambiance du vestiaire, les interactions positives ou les tensions internes, la fatigue, la frustration, la confiance, ...</p>
+<p><strong>5 facteurs sont étudiés et pondérés.&nbsp;</strong></p>
+<p class="gbf-factor">F1 : L'enjeu du match (place dans le calendrier, proximité d'un match européen, éventuels choix de rotation ...</p>
+<p class="gbf-factor">F2 : Mesure les aspects physiques : répétition des matchs, intensité, (mesure le nombre de sprints par exemple)...</p>
+<p class="gbf-factor">F3 : Dynamique des résultats et aspect psychologique généré par une série positive ou négative.</p>
+<p class="gbf-factor">F4 : Disponibilité des joueurs de l'effectifs : blessés et suspendus. Mesure de leur importance au sein de l'effectif ( titularisations, qualité théorique) avec le calcul de L'indice d'importance individuelle.</p>
+<p class="gbf-factor">F5 : Stabilité du club : rumeur de transfert, changement d'entraineur, problèmes internes, stabilité institutionnelle...</p>
+<p class="original-rule">________________________________</p>
+<p class="gbf-index-title">Indice Fiabilité facteur Humain <strong>(IFH)</strong></p>
+<p class="gbf-subhead"><strong>=Mesure niveau documentaire de l'ICN</strong></p>
+<p class="original-rule">________________________________</p>
+<p>Cet indice <strong>ne mesure pas la qualité sportive des équipes</strong> mais le niveau de documentation de l'<strong>ICN</strong>. Il permet de savoir si nous avons trouvé l'ensemble des informations recherchées. Il mesure donc la fiabilité de l'<strong>ICN</strong>.</p>
+<p class="original-rule">________________________________</p>
+<p class="gbf-index-title">Indice Global <strong>(IG)</strong></p>
+<p class="gbf-subhead"><strong>= Synthèse&nbsp;</strong></p>
+<p><strong>&nbsp;IGBF, IFx et ICN</strong></p>
+<p class="original-rule">________________________________</p>
+<p>L'Indice Global (IG) proposé par <strong>GreenBallFoot</strong> repose donc sur trois approches complémentaires :</p>
+<ul>
+<li>L'analyse des performances réelles. (<strong> IGBF</strong>)</li>
+<li>L'étude de la forme récente des équipes. <strong>(IFx)</strong></li>
+<li>L'évaluation du contexte sportif et  humains. (<strong>ICN</strong>)</li>
+</ul>
+<p class="gbf-formula-detail">IG= k1 X IGBF + k2 X IFx + k3 X ICN</p>
+<p>Les coefficients K1, K2 et K3 permettent de calibrer l'indice global et évoluent pendant la saison.</p>
+<p class="original-rule"><strong>_______________________________</strong></p>
+<p class="gbf-chapter gbf-chapter--blue"><strong>EQUIPES</strong></p>
+<p class="original-rule"><strong>_______________________________</strong></p>
+<p><strong>Equipes jouées saison 2026-2027</strong></p>
+<p><strong>21 équipes "historiques"</strong></p>
+<p><strong>France</strong> : PSG, Lille, Lens, Marseille</p>
+<p><strong>Angleterre</strong> : Manchester City, Liverpool, Arsenal, Chelsea, Manchester United</p>
+<p><strong>Espagne</strong> : Real Madrid, FC Barcelona, Atlético Madrid</p>
+<p><strong>Italie</strong> : Lazio, Roma, Juventus, Inter Milan, AC Milan, Napoli</p>
+<p><strong>Allemagne</strong> : Borussia Dortmund, Bayern Munich, Bayer Leverkusen</p>
+<p><strong>Le Top 6</strong></p>
+<p><strong>Les 6 premiers du classement dynamique</strong> de chacun des 5 championnats</p>
+<p><strong>Au total, entre 30 et 35 équipes sont suivies  au quotidien de manière la plus exhaustive possible.&nbsp;</strong></p>
+<p class="original-rule"><strong>_______________________________</strong></p>
+<p class="gbf-chapter gbf-chapter--gold"><strong>COTES</strong></p>
+<p class="original-rule"><strong>_______________________________</strong></p>
+<p>L'évolution des cotes des matchs  présélectionnés est suivie pendant la semaine précédent les matchs. Le TRJ (taux de retour joueur)  est également considéré  avec beaucoup d'attention et participe au choix final des matchs joués.</p>
+<p>La marge du bookmaker permet d'estimer au mieux les probabilités des issues grâce au calcul des fair odds. Les mises sont ainsi ajustées avec précision.</p>
+<p>Pour ce début de saison :</p>
+<p>Sources des Cotes : Betclic, Winamax ou Unibet</p>
+<p class="original-rule"><strong>____________________________</strong></p>
+<p class="gbf-chapter gbf-chapter--green"><strong>Pari 1 : Le Combimax</strong></p>
+<p class="original-rule"><strong>_______________________________</strong></p>
+<p><strong>CombiMax =</strong></p>
+<p><strong>&nbsp;1 pari combiné principal de 4 matchs&nbsp;</strong></p>
+<p><strong>+ 8 paris simples ou combinés couvrant l'ensemble des issues du combiné principal&nbsp;</strong></p>
+<p><strong>+ 3 paris simples</strong></p>
+<h3>1 Combiné principal :</h3>
+<p class="gbf-bet-line"><strong>Pari 1 :</strong> 1111</p>
+<h3>8 paris Couvertures :</h3>
+<p class="gbf-bet-line"><strong>Pari 2 :</strong> N</p>
+<p class="gbf-bet-line"><strong>Pari 3 :</strong> 1N</p>
+<p class="gbf-bet-line"><strong>Pari 4 :</strong> 11N</p>
+<p class="gbf-bet-line"><strong>Pari 5 :</strong> 111N</p>
+<p class="gbf-bet-line"><strong>Pari 6 :</strong> 2</p>
+<p class="gbf-bet-line"><strong>Pari 7 :</strong> 12</p>
+<p class="gbf-bet-line"><strong>Pari 8 :</strong> 112</p>
+<p class="gbf-bet-line"><strong>Pari 9 :</strong> 1112</p>
+<h3>3 Paris Simples :</h3>
+<p class="gbf-bet-line"><strong>Pari 10 :</strong> -1</p>
+<p class="gbf-bet-line"><strong>Pari 11 :</strong> --1</p>
+<p class="gbf-bet-line"><strong>Pari 12 :</strong> ---1</p>
+<p><strong>Le combiné principal (1111) a plus ou moins 8% de chance de se réaliser selon les cotes.&nbsp;</strong></p>
+<p><strong>Une autre issue est donc très probable.</strong></p>
+<p class="gbf-statement"><strong>Le PARI DU COMBIMAX =&nbsp;</strong></p>
+<p><strong>UN NUL  VA SE PRODUIRE&nbsp;</strong></p>
+<p class="gbf-statement"><strong>SUR l'UN DE CES 4 MATCHS</strong></p>
+<ol>
+<li>Les couvertures simples ou combinées des <strong>paris 2, 3, 4 et 5</strong> permettent de l'emporter en cas de match nul sur les matchs 1, 2, 3 et 4.</li>
+<li>Les couvertures simples ou combinées des <strong>paris 6, 7, 8 et 9</strong> permettent de minimiser la perte sur une éventuelle victoire à l'extérieur (2).</li>
+<li>Les paris simples <strong>10, 11, 12</strong> permettent de maximiser les gains ou de limiter les pertes...</li>
+</ol>
+<h3>FORMULE :</h3>
+<p>La Formule de calcul des mises harmonise les gains selon les issues.</p>
+<p>Pour être rentable, le Combi-Max nécessite des cotes spécifiques selon la position des matchs dans le combiné principal.</p>
+<p class="gbf-warning"><strong>ATTENTION :</strong></p>
+<p>Les paris combinés multiplient l'effet de la marge du bookmaker.</p>
+<p>Pour un combiné de 4 matchs avec une marge moyenne de 7%, la marge combinée passe à près à 35%.</p>
+<p><strong>Ces paris sont risqués et&nbsp;</strong></p>
+<p><strong>une bonne gestion de la Bankroll&nbsp;</strong></p>
+<p><strong>est indispensable pour gagner</strong></p>
+<p><strong>&nbsp;sur le long terme.</strong></p>
+<p class="original-rule"><strong>____________________________</strong></p>
+<p class="gbf-chapter gbf-chapter--blue"><strong>Pari 2 : Le Solo</strong></p>
+<p class="original-rule"><strong>_______________________________</strong></p>
+<p>Les paris Solo reposent sur un timing différents du CombiMax. Ils peuvent être simples ou combinés.</p>
+<ol>
+<li>Ils permettent <strong>d'ajuster la stratégie</strong> du CombiMax en live en fonction des résultats en cours.</li>
+<li>Les paris Solo peuvent également être<strong> </strong>joués de manière indépendantes. <strong>Les solo autonomes</strong> sont proposés moins d'une heure avant le début des rencontres, une fois la composition des équipes annoncée.</li>
+</ol>
+</div></details></section></main>
+
+
+<script>
+/* GreenBallFoot · Deux curseurs illustratifs, sans écriture sur les mises. */
+(function(){
+  var first=document.getElementById('gbf-budget-handle-1');
+  var second=document.getElementById('gbf-budget-handle-2');
+  if(!first||!second)return;
+  var segA=document.getElementById('gbf-split-a'),segB=document.getElementById('gbf-split-b'),segC=document.getElementById('gbf-split-c');
+  var pctA=document.getElementById('gbf-pct-combi'),pctB=document.getElementById('gbf-pct-simples'),pctC=document.getElementById('gbf-pct-solo');
+  var format=function(n){return Number(n.toFixed(1)).toLocaleString('fr-FR',{maximumFractionDigits:1})+' %';};
+  function draw(changed){
+    var a=Number(first.value),b=Number(second.value);
+    if(changed===first&&a>b-5){a=Number((b-5).toFixed(1));first.value=String(a);}
+    if(changed===second&&b<a+5){b=Number((a+5).toFixed(1));second.value=String(b);}
+    var simple=Number((b-a).toFixed(1)),solo=Number((100-b).toFixed(1));
+    segA.style.width=a+'%';segB.style.width=simple+'%';segC.style.width=solo+'%';
+    pctA.textContent=format(a);pctB.textContent=format(simple);pctC.textContent=format(solo);
+    var den=b||1;
+    document.querySelector('.gbf-split-value--combi em').textContent='Paris de 1 à 9 · '+format(a/den*100)+' des '+format(b);
+    document.querySelector('.gbf-split-value--simples em').textContent='Paris de 10 à 12 · '+format(simple/den*100)+' des '+format(b);
+  }
+  first.addEventListener('input',function(){draw(first);});
+  second.addEventListener('input',function(){draw(second);});
+  first.addEventListener('change',function(){draw(first);});
+  second.addEventListener('change',function(){draw(second);});
+  draw();
+})();
+</script>
+</body></html>

@@ -2259,6 +2259,32 @@
     margin:0;
   }
 }
+
+/* GreenBallFoot — Mise à jour des titres des sections et sous-titre MISES (13/11/2026). */
+#gbf-methode .method-column--calculateur.gbf-calculateur h2#gbf-calculateur-title {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  text-align:center;
+  padding:12px 14px;
+}
+#gbf-methode #gbf-calculateur-title .gbf-mises-title-main {
+  display:block;
+  font-size:var(--gbf-fs-section,19px);
+  font-weight:850;
+  line-height:1.2;
+}
+#gbf-methode #gbf-calculateur-title .gbf-mises-title-subtitle {
+  display:block;
+  font-size:var(--gbf-fs-body,13px);
+  line-height:1.35;
+  font-weight:650;
+  letter-spacing:0;
+  text-transform:none;
+  overflow-wrap:break-word;
+}
 </style>
 <!-- GreenBallFoot Methode : aperçu GitHub Pages, publication depuis main/root, 2026-11-09 -->
 </head>
@@ -2276,8 +2302,8 @@
   <div class="gbf-consequence" aria-label="Conséquence">
     <p class="gbf-consequence-text"><span class="gbf-consequence-arrow" aria-hidden="true">→</span><span>4 indices complémentaires pour mieux témoigner du facteur humain</span></p>
   </div>
-    <h2 id="gbf-indices-title">LES INDICES</h2>
-    <p class="indices-lead">L’Indice Global permet de classer les matchs à partir de trois indices complémentaires.</p>
+    <h2 id="gbf-indices-title">1) Présélectionner les matchs : LES INDICES</h2>
+    <p class="indices-lead" style="font-weight:500;line-height:1.5;text-align:left"><strong>L’Indice Global (IG) résulte de la combinaison pondérée de trois indices complémentaires : la force statistique (IGBF), la dynamique récente (IFx) et le contexte humain (ICN).</strong> L’IG est calculé pour les 6 premiers du classement dynamique de chacun des 5 championnats et pour les équipes historiques. L’IG permet de classer les équipes. Il ne représente pas une probabilité de victoire.</p>
     <div class="cards">
       <article class="index-card">
 <div class="index-acronym">IGBF</div>
@@ -2301,13 +2327,13 @@
 </article>
     </div>
     <p class="formula">IG = 20 % IGBF + 40 % IFx + 40 % ICN</p>
-    <p class="disclaimer">L'indice sert à classer les matchs ; il ne représente pas une probabilité de victoire.</p>
+    
   </div>
 <aside class="gbf-strategie-card" aria-label="Principe stratégique">
   <p class="gbf-hypothese-texte"><strong>Principe stratégique :</strong> Parmi quatre matchs sélectionnés, au moins une équipe favorite concédera le match nul.</p>
 </aside>
 <div class="method-column method-column--bets" aria-labelledby="gbf-bets-title">
-    <h2 id="gbf-bets-title"><span class="gbf-paris-title-main">LES PARIS</span><span class="gbf-paris-title-subtitle">CombiMax &amp; Solo Live</span></h2>
+    <h2 id="gbf-bets-title"><span class="gbf-paris-title-main">2) LES PARIS</span><span class="gbf-paris-title-subtitle">CombiMax &amp; Solo Live</span></h2>
     <div class="gbf-text-cards" aria-label="Présentations textuelles CombiMax et Solo Live">
       <svg class="gbf-txt-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
   <symbol id="gbf-icon-trophy" viewBox="0 0 24 24"><path d="M7 4h10v6a5 5 0 0 1-10 0V4Zm0 2H4v2a4 4 0 0 0 3 4m10-6h3v2a4 4 0 0 1-3 4M12 15v5m-5 1h10"/></symbol>
@@ -2329,9 +2355,9 @@
                 <h3 id="gbf-text-combimax-title">CombiMax</h3>
                 <span class="gbf-text-card-tag gbf-text-card-tag--principal">Stratégie principale</span>
               </div>
-              <p>Une stratégie combinée sur 4 matchs</p>
+              <p>4 matchs sont sélectionnés grâce aux indices. CombiMax est une stratégie de 12 paris sur ces 4 matchs qui <strong>permet de l’emporter :</strong></p>
               <section class="gbf-bets-combi-scenarios" aria-label="Les deux scénarios CombiMax">
-                <p class="gbf-combimax-result-label">Permet de l'emporter :</p>
+                
                 <div class="gbf-combimax-cas"><span class="gbf-combimax-num">1</span><span>En cas de match nul</span></div>
                 <div class="gbf-combimax-cas"><span class="gbf-combimax-num">2</span><span>Si tous les favoris gagnent</span></div>
               </section>
@@ -2367,7 +2393,7 @@
               <span class="gbf-text-card-tag gbf-text-card-tag--solo">Stratégie complémentaire</span>
             </div>
           </div>
-          <p class="gbf-solo-subtitle">Des paris ajustés à l’évolution de la série pour protéger les mises et optimiser le résultat final.</p>
+          <p class="gbf-solo-subtitle">Pendant le CombiMax, à l’issue de chacun des matchs, <strong>des paris ajustés à l’évolution de la série peuvent être placés pour protéger les mises et/ou optimiser le résultat final.</strong></p>
         </header>
         <section class="gbf-bets-solo-summary" aria-label="Les quatre objectifs du Solo Live">
           <p class="gbf-solo-live-note">
@@ -2391,7 +2417,7 @@
   </div>
 </section>
 <aside class="method-column method-column--calculateur gbf-calculateur gbf-mises-full" aria-labelledby="gbf-calculateur-title">
-    <h2 id="gbf-calculateur-title">MISES</h2>
+    <h2 id="gbf-calculateur-title"><span class="gbf-mises-title-main">3) MISES</span><span class="gbf-mises-title-subtitle">CombiMax + Solo Live (éventuel(s)) = Pourcentage évolutif de la Bankroll</span></h2>
     <div class="gbf-mise-souscartes">
       <section class="gbf-mise-souscarte gbf-mise-souscarte--combi" aria-labelledby="gbf-mise-combi-title">
         <h3 id="gbf-mise-combi-title">CombiMax</h3>

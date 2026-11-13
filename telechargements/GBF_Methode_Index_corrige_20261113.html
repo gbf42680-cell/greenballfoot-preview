@@ -2285,6 +2285,52 @@
   text-transform:none;
   overflow-wrap:break-word;
 }
+
+/* Méthode — IFH présenté comme un complément documentaire de l'ICN, non comme un indice autonome. */
+#gbf-methode .gbf-content .gbf-ifh-complement {
+  margin:14px 0 16px 27px;
+  padding:12px 14px 11px;
+  border:1px solid #d6e6de;
+  border-left:3px solid #8fb7a6;
+  border-radius:0 10px 10px 0;
+  background:linear-gradient(115deg,#f4f8f6,#f8faf9);
+  color:#405b4e;
+  box-shadow:none;
+}
+#gbf-methode .gbf-content .gbf-ifh-kicker {
+  margin:0 0 4px;
+  font-size:10.5px;
+  font-weight:750;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  color:#628879;
+}
+#gbf-methode .gbf-content .gbf-ifh-title {
+  margin:0 0 3px;
+  font-size:13.4px;
+  font-weight:740;
+  line-height:1.35;
+  color:#2e5f4c;
+}
+#gbf-methode .gbf-content .gbf-ifh-subhead {
+  margin:0 0 8px;
+  font-size:12px;
+  font-weight:650;
+  color:#527466;
+}
+#gbf-methode .gbf-content .gbf-ifh-description {
+  margin:0;
+  font-size:12.5px;
+  line-height:1.55;
+  font-weight:400;
+  color:#415c4f;
+}
+@media(max-width:680px) {
+  #gbf-methode .gbf-content .gbf-ifh-complement {margin-left:12px;padding:10px 11px;}
+  #gbf-methode .gbf-content .gbf-ifh-title {font-size:12.8px;}
+  #gbf-methode .gbf-content .gbf-ifh-description {font-size:12px;}
+}
+
 </style>
 <!-- GreenBallFoot Methode : aperçu GitHub Pages, publication depuis main/root, 2026-11-09 -->
 </head>
@@ -2460,7 +2506,7 @@
 <p class="original-rule"><strong>_______________________________</strong></p>
 <p class="gbf-chapter gbf-chapter--green"><strong>4 INDICES + 1 INDICATEUR</strong></p>
 <p class="original-rule"><strong>_______________________________</strong></p>
-<p>5 indices qui permettent d'optimiser le <strong>choix des matchs</strong> en  révélant ceux offrant une probabilité réelle supérieure à la probabilité implicite de la cote du bookmaker</p>
+<p>Quatre indices contribuent à l'analyse et au <strong>choix des matchs</strong>. L’indicateur de fiabilité, rattaché à l’ICN, renseigne le niveau de documentation du facteur humain.</p>
 <p class="gbf-value"><strong>= Value Bet.</strong></p>
 <p class="original-rule">_______________________________</p>
 <p class="gbf-index-title">Indice GBF <strong>(IGBF)&nbsp;</strong></p>
@@ -2486,11 +2532,12 @@
 <p class="gbf-factor">F3 : Dynamique des résultats et aspect psychologique généré par une série positive ou négative.</p>
 <p class="gbf-factor">F4 : Disponibilité des joueurs de l'effectifs : blessés et suspendus. Mesure de leur importance au sein de l'effectif ( titularisations, qualité théorique) avec le calcul de L'indice d'importance individuelle.</p>
 <p class="gbf-factor">F5 : Stabilité du club : rumeur de transfert, changement d'entraineur, problèmes internes, stabilité institutionnelle...</p>
-<p class="original-rule">________________________________</p>
-<p class="gbf-index-title">Indicateur de fiabilité du facteur humain <strong>(IFH)</strong></p>
-<p class="gbf-subhead"><strong>=Mesure niveau documentaire de l'ICN</strong></p>
-<p class="original-rule">________________________________</p>
-<p>Cet indicateur <strong>ne mesure pas la qualité sportive des équipes</strong> mais le niveau de documentation de l'<strong>ICN</strong>. Il permet de savoir si nous avons trouvé l'ensemble des informations recherchées. Il mesure donc la fiabilité de l'<strong>ICN</strong>.</p>
+<aside class="gbf-ifh-complement" aria-label="Indicateur complémentaire rattaché à l'ICN">
+  <p class="gbf-ifh-kicker">Complément de l’ICN · Fiabilité des informations</p>
+  <p class="gbf-ifh-title">Indicateur de fiabilité du facteur humain <strong>(IFH)</strong></p>
+  <p class="gbf-ifh-subhead">Mesure le niveau de documentation de l’ICN</p>
+  <p class="gbf-ifh-description">Cet indicateur <strong>ne mesure pas la qualité sportive des équipes</strong> mais le niveau de documentation de l’<strong>ICN</strong>. Il permet de savoir si nous avons trouvé l’ensemble des informations recherchées. Il mesure donc la fiabilité de l’<strong>ICN</strong>.</p>
+</aside>
 <p class="original-rule">________________________________</p>
 <p class="gbf-index-title">Indice Global <strong>(IG)</strong></p>
 <p class="gbf-subhead"><strong>= Synthèse&nbsp;</strong></p>

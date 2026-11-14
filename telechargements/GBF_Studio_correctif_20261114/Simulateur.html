@@ -155,6 +155,9 @@
 .personal-save.error{background:#fff4e8;border-color:#eacb9b;color:#795423}
 .personal-save.error .save-detail{color:#795423}
 @media(max-width:630px){.personal-save .save-controls{width:100%}.personal-save .save-controls button{flex:1}}
+.archive-controls{flex-basis:100%;align-items:center}
+.archive-controls select{width:min(100%,410px);max-width:100%}
+@media(max-width:630px){.archive-controls select{flex:1;min-width:0}}
 
 /* V9.3 : nouvelle identité du Studio et emblème centré au-dessus des titres. */
 .gbf-hero{text-align:center;padding:19px 25px 25px}
@@ -276,11 +279,6 @@ button:focus-visible,.input:focus-visible,select:focus-visible{outline:3px solid
  .studio-nine-scenarios td[colspan]::before{display:none}
 }
 @media(max-width:550px){.studio-nine-scenarios tbody{grid-template-columns:1fr}}
-/* Les montants et mises de simulation attendent de vraies cotes 1/N/2. */
-#prepPage.gbf-awaiting-odds .studio-budget-split,
-#prepPage.gbf-awaiting-odds .studio-simple-box,
-#prepPage.gbf-awaiting-odds #prepBetsNotes {display:none}
-#prepPage.gbf-awaiting-odds #prepOddsWarning {display:block}
 </style>
 </head>
 <body><main class="app">
@@ -298,17 +296,16 @@ button:focus-visible,.input:focus-visible,select:focus-visible{outline:3px solid
 <section class="personal-save" id="personalSavePanel" aria-label="Sauvegarde personnelle">
  <div class="save-msg"><span class="save-title">🔒 Ma simulation sur cet appareil</span><span class="save-detail" id="personalSaveStatus" role="status" aria-live="polite">Vérification de la sauvegarde locale…</span></div>
  <div class="save-controls"><button id="personalSaveNow" type="button" class="secondary minor">Sauvegarder maintenant</button><button id="personalSaveErase" type="button" class="danger minor">Effacer et recommencer</button></div>
+ <div class="save-controls archive-controls"><label class="field" for="personalArchiveSelect" style="margin:0">Mes simulations archivées</label><select id="personalArchiveSelect" aria-label="Choisir une simulation archivée"><option value="">Aucune archive disponible</option></select><button id="personalRestoreArchive" type="button" class="secondary minor" disabled>Restaurer</button></div>
 </section>
 <div id="prepPage">
 <section class="section card">
- <div class="studiohead"><div><h2>Studio — Construire mon CombiMax</h2><p class="muted">Choisir quatre matchs parmi ceux présélectionnés, établir son budget et générer les 12 mises.</p></div><span class="studiobadge" id="prepOrigin">PRODUCTION · copie vérifiée au 9 novembre 2026</span></div>
+ <div class="studiohead"><div><h2>Studio — Construire mon CombiMax</h2><p class="muted">Choisir quatre matchs parmi ceux présélectionnés, établir son budget et générer les 12 mises.</p></div><span class="studiobadge" id="prepOrigin">Démonstration · exemples fictifs</span></div>
  <div class="inline topgap"><label class="field" for="prepCircuit" style="margin:0">Circuit</label><select id="prepCircuit" style="width:180px"><option value="national">National</option><option value="europe">Europe</option></select><span class="fine" id="prepPoolCount"></span><span class="fine">ME = Match Etudié / CM = CombiMax / S = Solo Live</span></div>
  <div class="sep"></div>
  <div class="space"><h3>01 · Les quatre matchs — ordre M1 à M4 personnalisable</h3><button id="prepAutoSort" class="secondary minor">Classer par cote 1</button></div>
  <p class="help">Choisissez les matchs puis utilisez « Monter » ou « Descendre » pour décider de leur position dans les 12 paris. Le classement par cote 1 reste facultatif.</p>
- <div class="inline topgap"><button id="prepSyncProductionTop" type="button" class="secondary minor">Actualiser les matchs depuis PRODUCTION</button></div>
  <div id="prepMatches" class="studiogrid topgap"></div>
- <div id="prepOddsWarning" class="studiostatus warn hide topgap" role="status"></div>
  
 </section>
 <div class="studioprepare section">
@@ -357,7 +354,7 @@ button:focus-visible,.input:focus-visible,select:focus-visible{outline:3px solid
  <div id="prepAudit" class="studiostatus" role="status"></div>
  <div class="prep-footer topgap"><div><strong id="prepChron">Ordre chronologique : —</strong><p class="fine">L'ordre M1 → M4 est choisi par le visiteur. L'ordre chronologique reste distinct et modifiable dans le simulateur Live.</p></div><button id="prepToLive" class="gold">Scénarios &amp; Stratégies Live</button></div>
 </section>
-<section class="section card"><div class="space"><h3>05 · Synchronisation avec GreenBallFoot — PRODUCTION</h3><div class="inline"><button class="minor" id="prepSyncProduction" type="button">Actualiser depuis PRODUCTION</button><button class="secondary minor" id="prepDownloadCatalogue">Exporter le catalogue JSON</button><label class="minor" style="color:var(--green);font-weight:750;cursor:pointer">Importer un catalogue JSON<input type="file" id="prepImportCatalogue" accept=".json,application/json" style="display:none"></label></div></div><div id="prepSyncState" class="studiostatus" role="status">Initialisation de la source…</div><div id="prepCatalogMsg" class="fine topgap"></div></section>
+<section class="section card"><div class="space"><h3>05 · Synchronisation avec GreenBallFoot — PRODUCTION</h3><div class="inline"><button class="minor" id="prepSyncProduction" type="button">Actualiser depuis PRODUCTION</button><button class="secondary minor hide" id="prepLoadCurrent" type="button">Charger la série actuelle</button><button class="secondary minor" id="prepDownloadCatalogue">Exporter le catalogue JSON</button><label class="minor" style="color:var(--green);font-weight:750;cursor:pointer">Importer un catalogue JSON<input type="file" id="prepImportCatalogue" accept=".json,application/json" style="display:none"></label></div></div><div id="prepSyncState" class="studiostatus" role="status">Initialisation de la source…</div><div id="prepCatalogMsg" class="fine topgap"></div></section>
 </div>
 <div id="livePage" class="hide">
 
@@ -536,7 +533,7 @@ const signed=n=>(n>0?'+':'')+money(n);
 const nval=(v,def=0)=>Number.isFinite(Number(v))?Number(v):def;
 const round=n=>Math.round((n+Number.EPSILON)*100)/100;
 const escapeHtml=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let S={circuit:"national",matchIds:["n3","n4","n0","n6"],bankroll:1000,seriesPct:10,split:85,odds:DEFAULT_ODDS.map(x=>x.slice()),pendingOdds:Array.from({length:4},()=>[false,false,false]),prob:Array.from({length:4},()=>['','','']),config:{...DEFAULT_CFG},chron:[0,1,2,3],known:['','','',''],live:[],liveOdds:DEFAULT_ODDS.map(x=>x.slice()),target:0,compareStake:5,sort:'sequence',cashouts:[],cashoutDraft:{key:'',percent:100,amount:''}};
+let S={circuit:"national",matchIds:["n3","n4","n0","n6"],bankroll:1000,seriesPct:10,split:85,odds:DEFAULT_ODDS.map(x=>x.slice()),prob:Array.from({length:4},()=>['','','']),config:{...DEFAULT_CFG},chron:[0,1,2,3],known:['','','',''],live:[],liveOdds:DEFAULT_ODDS.map(x=>x.slice()),target:0,compareStake:5,sort:'sequence',cashouts:[],cashoutDraft:{key:'',percent:100,amount:''}};
 const DEFAULT_USER_STATE=JSON.parse(JSON.stringify(S));
 const $=id=>document.getElementById(id);
 const budget=()=>Math.max(0,S.bankroll)*Math.min(100,Math.max(0,S.seriesPct))/100;
@@ -1160,7 +1157,6 @@ function restoreSimulationData(data){
  const next={
    circuit,matchIds:ids,bankroll:Math.max(0,nval(data.bankroll,1000)),
    seriesPct:clamp(nval(data.seriesPct,10),0,100),split:clamp(nval(data.split,85),0,100),odds,
-   pendingOdds:(Array.isArray(data.pendingOdds)&&data.pendingOdds.length===4?data.pendingOdds:Array.from({length:4},()=>[false,false,false])).map(row=>Array.isArray(row)&&row.length===3?row.map(Boolean):[false,false,false]),
    prob:(Array.isArray(data.prob)&&data.prob.length===4?data.prob:Array.from({length:4},()=>['','',''])).map(row=>
       Array.isArray(row)&&row.length===3?row.map(x=>String(x??'').slice(0,30)):['','','']),
    config:cfg,chron:data.chron.map(Number),
@@ -1210,14 +1206,15 @@ $('importJson').onchange=async e=>{
 
 /* Studio V9 · Catalogue embarqué depuis PRODUCTION pour usage local hors ligne.
    En ligne, google.script.run lit exclusivement les données publiques filtrées du classeur. */
-const BASE_CATALOG={"national":[{"id":"n0","name":"Real Sociedad – Rayo Vallecano","date":"08/11/2026","hour":"16:15","ig":52.3,"selection":"CM","odds":[1.63,3.88,4.2],"europe":"LE","oddsSource":"CombiMax"},{"id":"n1","name":"Stade Rennais – Lille OSC","date":"08/11/2026","hour":"15:00","ig":48.9,"selection":"ME","odds":[1.98,3.47,3.07],"europe":"LE/CL","oddsSource":"Choix des matchs"},{"id":"n2","name":"Roma – Sassuolo","date":"07/11/2026","hour":"20:45","ig":48.6,"selection":"ME","odds":[1.29,5,6.75],"europe":"CL","oddsSource":"Choix des matchs"},{"id":"n3","name":"RB Leipzig – Augsburg","date":"07/11/2026","hour":"15:30","ig":46.7,"selection":"CM","odds":[1.39,5.1,5.4],"europe":"CL","oddsSource":"CombiMax"},{"id":"n4","name":"SC Freiburg – Union Berlin","date":"08/11/2026","hour":"17:30","ig":43.0,"selection":"CM","odds":[1.44,4.3,5.5],"europe":"","oddsSource":"CombiMax"},{"id":"n5","name":"Borussia Dortmund – Elversberg","date":"07/11/2026","hour":"15:30","ig":42.2,"selection":"ME","odds":[1.26,5.75,7.5],"europe":"CL","oddsSource":"Choix des matchs"},{"id":"n6","name":"Inter Milan – Como","date":"08/11/2026","hour":"18:00","ig":41.2,"selection":"CM","odds":[1.81,3.85,3.35],"europe":"CL","oddsSource":"CombiMax"},{"id":"n7","name":"Brighton – Brentford","date":"08/11/2026","hour":"15:00","ig":37.6,"selection":"ME","odds":[1.79,3.63,3.5],"europe":"","oddsSource":"Choix des matchs"},{"id":"n8","name":"Atlético Madrid – FC Barcelona","date":"08/11/2026","hour":"21:00","ig":37.1,"selection":"ME","odds":[3.45,4.05,1.71],"europe":"CL","oddsSource":"Choix des matchs"},{"id":"n9","name":"Fiorentina – Juventus","date":"08/11/2026","hour":"20:45","ig":27.0,"selection":"ME","odds":[3.18,3.37,1.97],"europe":"LE","oddsSource":"Choix des matchs"},{"id":"n10","name":"Manchester United – Aston Villa","date":"08/11/2026","hour":"17:30","ig":26.1,"selection":"ME","odds":[2.03,3.45,2.95],"europe":"CL","oddsSource":"Choix des matchs"},{"id":"n11","name":"Stuttgart – Werder Bremen","date":"07/11/2026","hour":"18:30","ig":25.9,"selection":"ME","odds":[1.46,4.55,4.65],"europe":"CL","oddsSource":"Choix des matchs"},{"id":"n12","name":"Napoli – Lazio","date":"08/11/2026","hour":"12:30","ig":28.2,"selection":"ME","odds":[1.85,3.45,3.45],"europe":"CL","oddsSource":"Choix des matchs"},{"id":"n13","name":"Cagliari – Frosinone","date":"07/11/2026","hour":"15:00","ig":24.5,"selection":"ME","odds":[2.62,3.47,2.22],"europe":"","oddsSource":"Choix des matchs"}],"europe":[{"id":"e0","name":"Real Sociedad – Lyon","date":"05/11/2026","hour":"18:45","ig":67.3,"selection":"CM","odds":[1.73,3.78,3.6],"europe":"LE","oddsSource":"CombiMax"},{"id":"e1","name":"Leverkusen – Marseille","date":"05/11/2026","hour":"21:00","ig":69.6,"selection":"CM","odds":[1.32,4.9,6.25],"europe":"LE","oddsSource":"CombiMax"},{"id":"e2","name":"Bodø/Glimt – Lille","date":"03/11/2026","hour":"21:00","ig":60.6,"selection":"ME","odds":[1.78,3.7,3.5],"europe":"LDC","oddsSource":"Choix des matchs"},{"id":"e3","name":"Porto – Napoli","date":"04/11/2026","hour":"21:00","ig":55.5,"selection":"CM","odds":[1.83,3.6,3.78],"europe":"LDC","oddsSource":"CombiMax"},{"id":"e4","name":"Borussia Dortmund – Real Betis","date":"04/11/2026","hour":"21:00","ig":47.0,"selection":"CM","odds":[1.62,4.1,4.4],"europe":"LDC","oddsSource":"CombiMax"},{"id":"e5","name":"Sunderland – GNK Dinamo","date":"05/11/2026","hour":"21:00","ig":45.6,"selection":"ME","odds":[1.34,4.3,5.8],"europe":"LE","oddsSource":"Choix des matchs"}]};
+// Exemples fictifs uniquement : aucune présélection de PRODUCTION dans le HTML public.
+const BASE_CATALOG={"national":[{"id":"n0","name":"Exemple fictif national 1 – Équipe test","date":"01/01/2026","hour":"15:00","ig":0,"selection":"DEMO","odds":[1.35,3.15,4.5],"europe":"","oddsSource":"Démonstration fictive"},{"id":"n1","name":"Exemple fictif national 2 – Équipe test","date":"02/01/2026","hour":"18:00","ig":0,"selection":"DEMO","odds":[1.42,3.26,4.63],"europe":"","oddsSource":"Démonstration fictive"},{"id":"n2","name":"Exemple fictif national 3 – Équipe test","date":"03/01/2026","hour":"20:30","ig":0,"selection":"DEMO","odds":[1.49,3.37,4.76],"europe":"","oddsSource":"Démonstration fictive"},{"id":"n3","name":"Exemple fictif national 4 – Équipe test","date":"04/01/2026","hour":"21:00","ig":0,"selection":"DEMO","odds":[1.56,3.48,4.89],"europe":"","oddsSource":"Démonstration fictive"},{"id":"n4","name":"Exemple fictif national 5 – Équipe test","date":"01/01/2026","hour":"15:00","ig":0,"selection":"DEMO","odds":[1.63,3.59,5.02],"europe":"","oddsSource":"Démonstration fictive"},{"id":"n5","name":"Exemple fictif national 6 – Équipe test","date":"02/01/2026","hour":"18:00","ig":0,"selection":"DEMO","odds":[1.7,3.7,5.15],"europe":"","oddsSource":"Démonstration fictive"},{"id":"n6","name":"Exemple fictif national 7 – Équipe test","date":"03/01/2026","hour":"20:30","ig":0,"selection":"DEMO","odds":[1.77,3.81,5.28],"europe":"","oddsSource":"Démonstration fictive"}],"europe":[{"id":"e0","name":"Exemple fictif Europe 1 – Équipe test","date":"01/01/2026","hour":"15:00","ig":0,"selection":"DEMO","odds":[1.35,3.15,4.5],"europe":"","oddsSource":"Démonstration fictive"},{"id":"e1","name":"Exemple fictif Europe 2 – Équipe test","date":"02/01/2026","hour":"18:00","ig":0,"selection":"DEMO","odds":[1.42,3.26,4.63],"europe":"","oddsSource":"Démonstration fictive"},{"id":"e2","name":"Exemple fictif Europe 3 – Équipe test","date":"03/01/2026","hour":"20:30","ig":0,"selection":"DEMO","odds":[1.49,3.37,4.76],"europe":"","oddsSource":"Démonstration fictive"},{"id":"e3","name":"Exemple fictif Europe 4 – Équipe test","date":"04/01/2026","hour":"21:00","ig":0,"selection":"DEMO","odds":[1.56,3.48,4.89],"europe":"","oddsSource":"Démonstration fictive"},{"id":"e4","name":"Exemple fictif Europe 5 – Équipe test","date":"01/01/2026","hour":"15:00","ig":0,"selection":"DEMO","odds":[1.63,3.59,5.02],"europe":"","oddsSource":"Démonstration fictive"},{"id":"e5","name":"Exemple fictif Europe 6 – Équipe test","date":"02/01/2026","hour":"18:00","ig":0,"selection":"DEMO","odds":[1.7,3.7,5.15],"europe":"","oddsSource":"Démonstration fictive"}]};
 let catalog=JSON.parse(JSON.stringify(BASE_CATALOG));
-let catalogLabel='PRODUCTION · copie vérifiée le 09/11/2026 · mode local';
+let latestProductionPayload=null;
+let catalogLabel='Démonstration · matchs fictifs · sans données privées';
 function mkOptions(pool,current){
- return '<option value="">— Choisir un match —</option>'+pool.map(m=>'<option value="'+escapeHtml(m.id)+'" '+(m.id===current?'selected':'')+'>'+escapeHtml('['+m.selection+'] '+m.name+' · 1 : '+(Number(m.odds[0])>1?Number(m.odds[0]).toFixed(2):'à renseigner'))+'</option>').join('');
+ return '<option value="">— Choisir un match —</option>'+pool.map(m=>'<option value="'+escapeHtml(m.id)+'" '+(m.id===current?'selected':'')+'>'+escapeHtml('['+m.selection+'] '+m.name+' · 1 : '+m.odds[0].toFixed(2))+'</option>').join('');
 }
 function selectedMatches(){return S.matchIds.map(id=>(catalog[S.circuit]||[]).find(m=>m.id===id)).filter(Boolean);}
-function hasPendingOdds(){return Array.isArray(S.pendingOdds)&&S.pendingOdds.some(row=>Array.isArray(row)&&row.some(Boolean));}
 // Les valeurs du catalogue sont la référence d'origine (production en ligne,
 // instantané hors ligne). Les modifications personnelles n'écrivent pas dedans.
 function selectedSourceOdds(){
@@ -1228,7 +1225,6 @@ function selectedSourceOdds(){
  return matches.map(m=>m.odds.map(Number));
 }
 function setPrepView(view,scroll=true){
- if(view==='live'&&hasPendingOdds()){alert('Renseignez les cotes 1/N/2 manquantes avant de lancer les scénarios.');return;}
  $('prepPage').classList.toggle('hide',view!=='prepare');$('livePage').classList.toggle('hide',view!=='live');
  $('goPrepare').classList.toggle('active',view==='prepare');$('goLive').classList.toggle('active',view==='live');
  if(scroll)document.querySelector('.studionav').scrollIntoView({behavior:'instant',block:'start'});
@@ -1236,13 +1232,8 @@ function setPrepView(view,scroll=true){
 }
 function resetLiveForNewSelection(){S.live=[];S.cashouts=[];S.cashoutDraft={key:'',percent:100,amount:''};S.known=['','','',''];S.prob=Array.from({length:4},()=>['','','']);S.target=0;}
 function adoptMatches(opts={reset:true}){
- const chosen=selectedMatches();
- if(chosen.length!==4||new Set(S.matchIds).size!==4)return false;
- const pending=chosen.map(m=>m.odds.map(v=>!(Number(v)>1&&Number(v)<1000)));
- // Valeurs techniques temporaires, jamais affichées comme des cotes de PRODUCTION.
- const sourceOdds=chosen.map((m,i)=>m.odds.map((v,j)=>pending[i][j]?DEFAULT_ODDS[i][j]:Number(v)));
+ const chosen=selectedMatches(),sourceOdds=selectedSourceOdds();if(!sourceOdds)return false;
  if(opts.reset)resetLiveForNewSelection();
- S.pendingOdds=pending;
  S.odds=sourceOdds;S.liveOdds=sourceOdds.map(row=>row.slice());
  S.chron=chosen.map((m,i)=>({i,date:m.date,hour:m.hour||'00:00'})).sort((a,b)=>{
   const dateToKey=x=>x.date.split('/').reverse().join('-')+'T'+x.hour;
@@ -1252,11 +1243,7 @@ function adoptMatches(opts={reset:true}){
 }
 function autoSortMatches(){
  const selected=selectedMatches();if(selected.length!==4)return;
- selected.sort((a,b)=>{
-  const oa=Number(a.odds[0])>1?Number(a.odds[0]):Infinity;
-  const ob=Number(b.odds[0])>1?Number(b.odds[0]):Infinity;
-  return oa-ob||(Number(b.ig)||0)-(Number(a.ig)||0)||a.name.localeCompare(b.name);
- });
+ selected.sort((a,b)=>a.odds[0]-b.odds[0]||a.name.localeCompare(b.name));
  S.matchIds=selected.map(m=>m.id);adoptMatches();
 }
 // Chaque cote et probabilité reste attachée à son match lors d'un déplacement.
@@ -1268,11 +1255,10 @@ function applyMatchOrder(ids){
  if(!allowNewSelection())return false;
  const permutation=ids.map(id=>S.matchIds.indexOf(id));
  const odds=permutation.map(i=>S.odds[i].slice());
- const pendingOdds=permutation.map(i=>(S.pendingOdds[i]||[false,false,false]).slice());
  const liveOdds=permutation.map(i=>S.liveOdds[i].slice());
  const prob=permutation.map(i=>S.prob[i].slice());
  const chron=S.chron.map(i=>permutation.indexOf(i));
- S.matchIds=ids.slice();S.odds=odds;S.pendingOdds=pendingOdds;S.liveOdds=liveOdds;S.chron=chron;
+ S.matchIds=ids.slice();S.odds=odds;S.liveOdds=liveOdds;S.chron=chron;
  resetLiveForNewSelection();
  S.prob=prob;
  renderAll();
@@ -1682,8 +1668,8 @@ function refreshStudio(){
    '<button type="button" class="secondary minor" data-prep-move="'+i+'" data-offset="1" aria-label="Descendre le match M'+(i+1)+'" '+(i===3?'disabled':'')+'>↓ Descendre</button></div></div>'+ 
    '<label class="field" for="prepMatch'+i+'">Match présélectionné</label><select id="prepMatch'+i+'" data-prep-match="'+i+'">'+mkOptions(pool,S.matchIds[i])+'</select>'+
    '<div class="minimeta">'+(m?escapeHtml([m.date,m.hour].filter(Boolean).join(' · ')):'Sélectionner un match')+'</div>'+
-   '<div class="fine smallgap">'+(m?'Cotes : '+escapeHtml(m.oddsSource||'Choix des matchs'):'')+'</div>'+
-   '<div class="mini-odds">'+['1','N','2'].map((t,j)=>'<label>'+t+'<input type="number" class="input" min="1.01" step="0.01" value="'+(S.pendingOdds?.[i]?.[j]?'':(Number(odds[j])||1.01).toFixed(2))+'" placeholder="'+(S.pendingOdds?.[i]?.[j]?'À renseigner':'')+'" data-prep-odd="'+i+':'+j+'"></label>').join('')+'</div></article>';
+   '<div class="fine smallgap">'+(m?'Source = CombiMax':'')+'</div>'+
+   '<div class="mini-odds">'+['1','N','2'].map((t,j)=>'<label>'+t+'<input type="number" class="input" min="1.01" step="0.01" value="'+(Number(odds[j])||1.01).toFixed(2)+'" data-prep-odd="'+i+':'+j+'"></label>').join('')+'</div></article>';
  }).join('');
  $('prepBankroll').value=S.bankroll;$('prepBudget').value=round(budget());$('prepPct').value=Number(S.seriesPct.toFixed(3));
  const md=model();renderStudioShares(md,chosen);
@@ -1728,29 +1714,6 @@ function refreshStudio(){
    $('prepOptimizeReport').classList.remove('hide');
  }
  renderOptimizationMode();
- const incomplete=hasPendingOdds();
- $('prepPage').classList.toggle('gbf-awaiting-odds',incomplete);
- $('goLive').disabled=incomplete;
- $('prepOddsWarning').classList.toggle('hide',!incomplete);
- if(incomplete){
-   const count=S.pendingOdds.flat().filter(Boolean).length;
-   const message=count+' cote'+(count>1?'s':'')+' 1/N/2 à renseigner pour les quatre matchs. Les calculs des mises et les stratégies Live sont suspendus jusque-là.';
-   $('prepOddsWarning').textContent=message;
-   $('prepPoolCount').textContent=pool.length+' matchs présélectionnés · cotes incomplètes.';
-   $('prepInitial').textContent='—';
-   $('prepCombiTotal').textContent='—';
-   $('prepSimpleTotal').textContent='—';
-   $('prepSimpleRows').innerHTML='<div class="fine">Calcul en attente des cotes.</div>';
-   $('prepTargets').textContent='Calcul en attente des cotes.';
-   $('prepBetsRows').innerHTML='<tr><td colspan="8" style="text-align:left">Les 12 mises seront calculées après saisie des trois cotes de chaque match choisi.</td></tr>';
-   $('prepAudit').innerHTML='<strong>Préparation en cours</strong> · '+escapeHtml(message);
-   $('prepValidation').textContent='Cotes à compléter';
-   $('prepValidation').className='pill pending';
-   $('prepToLive').disabled=true;
-   $('prepOptimize').disabled=true;
-   $('prepOptimizeDepth').disabled=true;
-   $('prepOptimizeReport').classList.add('hide');
- }
 }
 function allowNewSelection(){return !(S.known.some(Boolean)||S.live.length||S.cashouts.length)||confirm('Changer la sélection effacera les résultats et interventions Live déjà simulés. Continuer ?');}
 function changeCircuit(circuit){
@@ -1771,10 +1734,10 @@ function validateCatalog(data){
  if(data.schema!=='gbf-preselection-v1')throw new Error('Schéma attendu : gbf-preselection-v1');
  const valid=(arr,origin)=>{
   if(!Array.isArray(arr)||arr.length>100)throw new Error('Catalogue '+origin+' invalide');
-  return arr.filter(m=>['CM','ME','S'].includes(m.selection)).map((m,i)=>{
+  return arr.filter(m=>['CM','ME','S','PUB','DEMO'].includes(m.selection)).map((m,i)=>{
    if(!Array.isArray(m.odds)||m.odds.length!==3)throw new Error('Trois cotes requises pour '+origin+' ligne '+(i+1));
-   const odds=m.odds.map(o=>o===null||o===''||o===undefined?null:Number(o));
-   if(!m.name||odds.some(o=>o!==null&&!(o>1&&o<1000)))throw new Error('Cotes invalides pour '+origin+' ligne '+(i+1));
+   const odds=m.odds.map(Number);
+   if(!m.name||odds.some(o=>!(o>1&&o<1000)))throw new Error('Cotes invalides pour '+origin+' ligne '+(i+1));
    return {id:String(m.id||origin+i).slice(0,64),name:String(m.name).slice(0,160),date:String(m.date||'').slice(0,20),hour:String(m.hour||'').slice(0,8),ig:Math.max(0,Number(m.ig)||0),selection:m.selection,odds,europe:String(m.europe||'').slice(0,30),oddsSource:String(m.oddsSource||'Choix des matchs').slice(0,40)};
   });
  };
@@ -1800,7 +1763,6 @@ function updateStudioMatchOdd(i,j,newOdd){
     !(Number(newOdd)>1&&Number(newOdd)<1000))return false;
  const selectedId=S.matchIds[i],mode=studioOptimizationMode;
  S.odds[i][j]=Number(newOdd);
- if(Array.isArray(S.pendingOdds?.[i]))S.pendingOdds[i][j]=false;
  S.liveOdds[i][j]=Number(newOdd);
  const canOptimize=(mode==='gain'||mode==='depth')&&gainsMaxiBase&&
   !S.known.some(Boolean)&&!S.live.length&&!S.cashouts.length;
@@ -1842,9 +1804,26 @@ function productionSyncStatus(message,isWarning){
   $('prepSyncState').textContent=message;
   $('prepSyncState').classList.toggle('warn',!!isWarning);
 }
-function applyProductionCatalog(payload){
+function applyProductionCatalog(payload,options={}){
   const incoming=validateCatalog(payload);
-  if(incoming.national.length<4 && incoming.europe.length<4) throw Error('Moins de quatre matchs éligibles avec trois cotes valides.');
+  if(incoming.national.length<4 && incoming.europe.length<4) throw Error('Aucune série autorisée disponible : les exemples fictifs restent utilisables.');
+  latestProductionPayload=payload;
+  if(options.previewOnly){
+    // Une ancienne simulation peut être restaurée sans perdre matchs, cotes
+    // personnalisées, mises, résultats ni interventions Live.
+    const old=selectedMatches().map(m=>normalizeMatchName(m.name));
+    const fresh=(incoming[S.circuit]||[]).map(m=>normalizeMatchName(m.name));
+    const same=old.length===4&&old.every(n=>fresh.includes(n));
+    $('prepLoadCurrent').classList.toggle('hide',same);
+    const counts=incoming.national.length+' matchs nationaux · '+incoming.europe.length+' matchs européens';
+    productionSyncStatus(same?
+      'PRODUCTION vérifié ('+counts+'). Ta simulation et tes cotes sont conservées.':
+      'Nouvelle série disponible ('+counts+'). Ta simulation précédente est conservée.',false);
+    $('prepCatalogMsg').textContent=same?
+      'Pour remplacer volontairement les cotes, utiliser « Actualiser depuis PRODUCTION ».':
+      'Clique sur « Charger la série actuelle » pour préparer les nouveaux matchs : ta simulation sera archivée avant le changement.';
+    return true;
+  }
   const active=(catalog[S.circuit]||[]);
   const wanted=S.matchIds.map(id=>active.find(m=>m.id===id)).filter(Boolean).map(m=>normalizeMatchName(m.name));
   let circuit=S.circuit;
@@ -1859,9 +1838,14 @@ function applyProductionCatalog(payload){
   }
   if(selected.length!==4)throw Error('Aucune sélection de quatre matchs possible.');
   const used=!!(S.known.some(Boolean)||S.live.length||S.cashouts.length);
-  if(used&&!confirm('Actualiser le catalogue remplacera les cotes sélectionnées et effacera les résultats et interventions Solo Live de cette simulation. Continuer ?')){
+  if(used&&!confirm('Charger la série actuelle remplacera les matchs et les cotes de cette session. La simulation précédente sera archivée et restera restaurable. Continuer ?')){
     productionSyncStatus('Actualisation annulée : ta simulation est conservée.',true);return false;
   }
+  if(!archivePersonalSimulation()){
+    productionSyncStatus('Chargement annulé pour protéger ta simulation. Exporte-la en JSON avant de réessayer.',true);
+    return false;
+  }
+  $('prepLoadCurrent').classList.add('hide');
   catalog=incoming;
   S.circuit=circuit;
   S.matchIds=selected.map(m=>m.id);
@@ -1872,29 +1856,28 @@ function applyProductionCatalog(payload){
   $('prepCatalogMsg').textContent='Cotes et matchs lus depuis PRODUCTION. Les réglages, paris et simulations restent privés à ce navigateur.';
   return true;
 }
-function syncFromProduction(){
+function syncFromProduction(options={}){
   if(!productionBridgeAvailable){
-    productionSyncStatus('Mode local : copie de PRODUCTION vérifiée le 09/11/2026. Pour une synchronisation automatique, utiliser la version déployée depuis Apps Script.',true);
+    productionSyncStatus('Mode local : exemples fictifs. Les données de PRODUCTION ne sont pas incluses dans ce fichier.',true);
     return;
   }
   if(productionSyncPending)return;
   productionSyncPending=true;
   $('prepSyncProduction').disabled=true;
-  $('prepSyncProductionTop').disabled=true;
   productionSyncStatus('Lecture des matchs et cotes depuis PRODUCTION…',false);
   window.google.script.run
     .withSuccessHandler(function(data){
-      productionSyncPending=false;$('prepSyncProduction').disabled=false;$('prepSyncProductionTop').disabled=false;
-      try{applyProductionCatalog(data);}catch(error){productionSyncStatus('Catalogue reçu mais invalide : '+error.message,true);}
+      productionSyncPending=false;$('prepSyncProduction').disabled=false;
+      try{applyProductionCatalog(data,options);}catch(error){productionSyncStatus('Catalogue public indisponible ou non publié : '+error.message,true);}
     })
     .withFailureHandler(function(error){
-      productionSyncPending=false;$('prepSyncProduction').disabled=false;$('prepSyncProductionTop').disabled=false;
-      productionSyncStatus('Connexion indisponible : '+String(error&&error.message||'erreur serveur')+'. La copie locale reste utilisable.',true);
+      productionSyncPending=false;$('prepSyncProduction').disabled=false;
+      productionSyncStatus('Connexion indisponible : '+String(error&&error.message||'erreur serveur')+'. La démonstration fictive reste utilisable.',true);
     })
     .getCataloguePublic();
 }
-$('prepSyncProduction').onclick=syncFromProduction;
-$('prepSyncProductionTop').onclick=syncFromProduction;
+$('prepSyncProduction').onclick=()=>syncFromProduction();
+$('prepLoadCurrent').onclick=()=>{if(latestProductionPayload)applyProductionCatalog(latestProductionPayload);};
 
 // Les actions historiques du V7 appellent renderDynamic()/renderAll() : connecter le studio à ce flux.
 const originalRenderDynamic=renderDynamic;
@@ -1903,7 +1886,68 @@ renderDynamic=function(){originalRenderDynamic();refreshStudio();schedulePersona
 // Sauvegarde locale : aucun identifiant, mise, cote personnelle ou cashout n'est transmis
 // au serveur par cette fonctionnalité. La clé est propre à l'origine et au profil navigateur.
 const PERSONAL_SAVE_KEY='greenballfoot.simulateur.session.v1';
+const PERSONAL_ARCHIVE_KEY='greenballfoot.simulateur.archives.v1';
 let personalSaveEnabled=false,personalStorageAvailable=false,personalSaveDirty=false,personalSaveTimer=null;
+// Archives locales indépendantes de la simulation courante : aucun écrasement
+// silencieux et aucun effacement automatique lors d'un changement de série.
+function personalArchives(){
+  try{
+    const data=JSON.parse(localStorage.getItem(PERSONAL_ARCHIVE_KEY)||'[]');
+    return Array.isArray(data)?data:[];
+  }catch(_err){return [];}
+}
+function renderPersonalArchives(){
+  const items=personalArchives(),menu=$('personalArchiveSelect');
+  menu.innerHTML='<option value="">'+(items.length?'Choisir une ancienne simulation':'Aucune archive disponible')+'</option>'+
+    items.map(x=>'<option value="'+escapeHtml(x.id)+'">'+escapeHtml(x.title||'Simulation archivée')+'</option>').join('');
+  $('personalRestoreArchive').disabled=true;
+}
+function archivePersonalSimulation(){
+  if(!personalStorageAvailable){
+    return !S.known.some(Boolean)&&!S.live.length&&!S.cashouts.length;
+  }
+  try{
+    if(!localStorage.getItem(PERSONAL_SAVE_KEY)&&!personalSaveDirty)return true;
+    const match=selectedMatches()[0];
+    const title=(S.circuit==='national'?'National':'Europe')+' · '+
+      (match?.date||'date inconnue')+' · '+(match?.name||'Mon CombiMax')+
+      ' · '+new Date().toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'});
+    const archive={id:String(Date.now())+'-'+Math.floor(Math.random()*1000000),
+      title,payload:personalPayload()};
+    // Ne jamais supprimer des archives pour faire de la place : si le quota
+    // navigateur est atteint, le changement de série est refusé.
+    localStorage.setItem(PERSONAL_ARCHIVE_KEY,
+      JSON.stringify([archive,...personalArchives()]));
+    renderPersonalArchives();
+    return true;
+  }catch(_err){return false;}
+}
+$('personalArchiveSelect').onchange=()=>{
+  $('personalRestoreArchive').disabled=!$('personalArchiveSelect').value;
+};
+$('personalRestoreArchive').onclick=()=>{
+  const entry=personalArchives().find(x=>x.id===$('personalArchiveSelect').value);
+  if(!entry||!entry.payload?.state)return;
+  if(!confirm('Restaurer cette simulation archivée ? La session actuelle sera archivée avant le changement.'))return;
+  if(!archivePersonalSimulation()){
+    setPersonalSaveStatus('Restauration annulée : sauvegarde de sécurité impossible. Exporte la session en JSON.',true);
+    return;
+  }
+  try{
+    restoreSimulationData(entry.payload.state);
+    $('advisorGoal').value=['auto','risk','value','cashout'].includes(entry.payload.advisorGoal)?
+      entry.payload.advisorGoal:'auto';
+    setPrepView(entry.payload.activeView==='live'?'live':'prepare',false);
+    personalSaveDirty=true;
+    personalSaveNow(true);
+    renderPersonalArchives();
+    $('prepLoadCurrent').classList.add('hide');
+    if(latestProductionPayload)applyProductionCatalog(latestProductionPayload,{previewOnly:true});
+    setPersonalSaveStatus('Ancienne simulation restaurée. La session précédente a été archivée.');
+  }catch(error){
+    setPersonalSaveStatus('Restauration impossible : '+error.message,true);
+  }
+};
 function setPersonalSaveStatus(message,isError=false){
   $('personalSaveStatus').textContent=message;
   $('personalSavePanel').classList.toggle('error',!!isError);
@@ -2012,17 +2056,16 @@ window.addEventListener('storage',e=>{
 });
 
 personalStorageAvailable=personalSaveAvailable();
+renderPersonalArchives();
 if(S.matchIds.length===4)adoptMatches();
 const hadPersonalSave=restorePersonalSave();
 if(!hadPersonalSave)renderAll();
 personalSaveDirty=false;
 personalSaveEnabled=true;
-// Ne jamais écraser une simulation personnelle lors de la synchronisation automatique.
-// Après une restauration, l'utilisateur choisit s'il souhaite actualiser les cotes.
+// Toujours consulter la série actuelle, sans remplacer une session restaurée.
 if(productionBridgeAvailable){
-  if(hadPersonalSave)productionSyncStatus('Simulation personnelle restaurée. Pour actualiser les matchs/cotes de PRODUCTION, cliquer sur « Actualiser depuis PRODUCTION ».',false);
-  else syncFromProduction();
+  syncFromProduction({previewOnly:hadPersonalSave});
 }else{
- productionSyncStatus('Mode local : copie de PRODUCTION datée du 09/11/2026. Le stockage personnel fonctionne dans ce navigateur s’il est autorisé.',true);
+ productionSyncStatus('Mode local : exemples fictifs. Les anciennes simulations restent restaurables dans ce navigateur.',true);
 }
 </script></body></html>
